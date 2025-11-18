@@ -6,7 +6,10 @@ let userState = {
     recCalories: 0, currentCalories: 0
 };
 
-// 데이터베이스: 식당이름, 가격, 레시피 포함
+// 현재 선택된 카테고리 저장 (다시 추천 기능을 위해)
+let lastSelectedCategory = '';
+
+// 데이터베이스
 const foodDatabase = {
     'korean': [
         { name: "비빔밥", restaurant: "한울관 학생식당", kcal: 550, price: 5500 },
@@ -14,28 +17,33 @@ const foodDatabase = {
         { name: "제육덮밥", restaurant: "밥은화", kcal: 750, price: 6500 },
         { name: "갈비탕", restaurant: "선비촌", kcal: 700, price: 14000 },
         { name: "불고기 정식", restaurant: "학교 앞 기사식당", kcal: 800, price: 11000 },
-        { name: "순두부찌개", restaurant: "맛있는 밥집", kcal: 500, price: 7500 }
+        { name: "순두부찌개", restaurant: "맛있는 밥집", kcal: 500, price: 7500 },
+        { name: "부대찌개", restaurant: "킹콩부대찌개", kcal: 700, price: 9000 },
+        { name: "삼겹살 정식", restaurant: "배달삼겹", kcal: 900, price: 12000 }
     ],
     'chinese': [
         { name: "짜장면", restaurant: "홍콩반점", kcal: 700, price: 7000 },
         { name: "짬뽕", restaurant: "수라청", kcal: 600, price: 9000 },
         { name: "볶음밥", restaurant: "동해루", kcal: 850, price: 8000 },
         { name: "마라탕(기본)", restaurant: "탕화쿵푸", kcal: 900, price: 13000 },
-        { name: "탕수육(소)", restaurant: "차이웍", kcal: 400, price: 14000 }
+        { name: "탕수육(소)", restaurant: "차이웍", kcal: 400, price: 14000 },
+        { name: "잡채밥", restaurant: "북경", kcal: 750, price: 8500 }
     ],
     'western': [
         { name: "치즈버거 세트", restaurant: "맥도날드", kcal: 900, price: 9500 },
         { name: "토마토 파스타", restaurant: "파스타부오노", kcal: 600, price: 10000 },
         { name: "돈까스 정식", restaurant: "비슐랭", kcal: 800, price: 11000 },
         { name: "치킨 샌드위치", restaurant: "써브웨이", kcal: 450, price: 7500 },
-        { name: "페퍼로니 피자", restaurant: "피자스쿨", kcal: 500, price: 9000 }
+        { name: "페퍼로니 피자", restaurant: "피자스쿨", kcal: 500, price: 9000 },
+        { name: "함박 스테이크", restaurant: "경양식당", kcal: 850, price: 12000 }
     ],
     'snack': [
         { name: "엽기 떡볶이", restaurant: "동대문엽기떡볶이", kcal: 350, price: 14000 },
         { name: "순대", restaurant: "죠스떡볶이", kcal: 400, price: 5000 },
         { name: "라면+김밥", restaurant: "김밥천국", kcal: 800, price: 7500 },
         { name: "닭강정(컵)", restaurant: "가마로강정", kcal: 500, price: 5000 },
-        { name: "이삭 토스트", restaurant: "이삭토스트", kcal: 400, price: 4500 }
+        { name: "이삭 토스트", restaurant: "이삭토스트", kcal: 400, price: 4500 },
+        { name: "오뎅 3꼬치", restaurant: "길거리", kcal: 200, price: 3000 }
     ],
     'cook': [
         { 
@@ -116,7 +124,7 @@ function logout() {
     location.reload();
 }
 
-// --- [기능 2] 기본 정보 계산 ---
+// --- [기능 2] 기본 정보 계산 및 화면 이동 ---
 function calculateBaseInfo() {
     const h = document.getElementById('height').value;
     const w = document.getElementById('weight').value;
@@ -149,12 +157,26 @@ function calculateBaseInfo() {
     document.getElementById('rec-cal').innerText = userState.recCalories;
     document.getElementById('rec-cal-target').innerText = userState.recCalories;
 
+    // 정보 입력창 숨기고 상태창(Step 2) 보여주기
     document.getElementById('user-info-section').style.display = 'none';
-    document.getElementById('dashboard-section').style.display = 'block';
+    document.getElementById('status-section').style.display = 'block';
 }
 
-// --- [기능 3] 필터링 및 추천 (식당, 칼로리 표시) ---
+// --- [기능 2-1] 화면 전환 로직 ---
+function goToFoodSelection() {
+    document.getElementById('status-section').style.display = 'none';
+    document.getElementById('food-selection-section').style.display = 'block';
+}
+
+function goToStatus() {
+    document.getElementById('food-selection-section').style.display = 'none';
+    document.getElementById('status-section').style.display = 'block';
+}
+
+// --- [기능 3] 추천 로직 (다시 추천 기능 포함) ---
 function recommendFood(category) {
+    lastSelectedCategory = category; // 재추천을 위해 저장
+    
     let list = foodDatabase[category];
     if (!list) return;
 
@@ -174,9 +196,11 @@ function recommendFood(category) {
 
     if (list.length === 0) {
         container.innerHTML += `<p>조건에 맞는 음식이 없습니다. 가격대를 조정해보세요.</p>`;
+        document.getElementById('retry-btn').style.display = 'none';
         return;
     }
 
+    // 랜덤 섞기 (다시 추천 시 매번 바뀜)
     const shuffled = [...list].sort(() => 0.5 - Math.random()).slice(0, 5);
 
     shuffled.forEach(food => {
@@ -188,7 +212,6 @@ function recommendFood(category) {
             recipeBtn = `<button class="recipe-btn" onclick="showRecipe('${food.name}', '${food.recipe}')">레시피</button>`;
         }
 
-        // 식당 이름과 칼로리 강조 표시 적용됨
         div.innerHTML = `
             <div>
                 <strong>[${food.restaurant}] ${food.name} <span style="color:#e74c3c;">(${food.kcal} kcal)</span></strong>
@@ -201,6 +224,16 @@ function recommendFood(category) {
         `;
         container.appendChild(div);
     });
+
+    // '다시 추천' 버튼 활성화
+    document.getElementById('retry-btn').style.display = 'block';
+}
+
+// 다시 추천 버튼 클릭 시 실행되는 함수
+function retryRecommendation() {
+    if (lastSelectedCategory) {
+        recommendFood(lastSelectedCategory);
+    }
 }
 
 // --- [기능 4] 기타 유틸리티 ---
@@ -223,6 +256,9 @@ window.onclick = function(event) {
 
 function addFood(kcal) {
     userState.currentCalories += kcal;
+    // 먹기 버튼을 누르면 섭취량을 반영하고 상태 화면으로 이동할지 선택할 수도 있지만
+    // 일단은 알림만 띄우고 계속 추천받을 수 있게 유지
+    alert(`${kcal}kcal 섭취가 기록되었습니다!`);
     updateDashboard();
 }
 

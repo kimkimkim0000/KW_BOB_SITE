@@ -297,6 +297,12 @@ input:focus, select:focus {
   z-index: 40;
 }
 
+/* 숨겨진 모달일 때는 안 보이게 */
+.modal.hidden {
+  display: none;
+}
+
+
 .modal-content {
   background: #fff;
   border-radius: 16px;

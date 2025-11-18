@@ -1,47 +1,71 @@
-body { font-family: 'Noto Sans KR', sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; color: #333; }
-.container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+/* 기본 폰트 및 레이아웃 */
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
 header { text-align: center; margin-bottom: 20px; }
 header h1 { color: #8a0e26; margin: 0 0 10px 0; }
 
-/* 버튼 */
+/* 버튼 스타일 */
 button { cursor: pointer; border: none; border-radius: 8px; font-weight: bold; transition: 0.2s; }
-.btn-primary { background-color: #8a0e26; color: white; padding: 12px; width: 100%; font-size: 16px; margin-top: 10px; }
+.btn-primary { background-color: #8a0e26; color: white; padding: 12px; width: 100%; font-size: 16px; margin-top: 10px;}
 .btn-primary:hover { background-color: #6d0b1e; }
 .btn-small { background-color: #666; color: white; padding: 5px 10px; font-size: 12px; float: right; }
 .btn-large { background-color: #8a0e26; color: white; padding: 15px; width: 100%; font-size: 18px; margin-top: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
 .btn-back { background-color: white; color: #555; border: 1px solid #ccc; padding: 8px 12px; margin-bottom: 20px; }
+.btn-back:hover { background-color: #f0f0f0; }
 .btn-retry { background-color: #34495e; color: white; padding: 12px; width: 100%; margin-top: 20px; font-size: 16px; }
 .eat-btn { background-color: #4CAF50; color: white; padding: 6px 12px; font-size: 13px; margin-left: 5px; }
 .recipe-btn { background-color: #FF9800; color: white; padding: 6px 12px; font-size: 13px; }
 
-/* 입력 */
+/* 입력 폼 */
 .auth-box { max-width: 320px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; }
-.input-group { display: flex; gap: 10px; }
 input, select { padding: 12px; border-radius: 8px; border: 1px solid #ddd; font-size: 15px; width: 100%; box-sizing: border-box; margin-bottom: 10px; }
 .toggle-auth { font-size: 14px; margin-top: 15px; }
 .signup-guide { font-size: 13px; color: #666; margin-bottom: 10px; text-align: left; }
+
+/* 회원가입 슬라이드 애니메이션 */
 #signup-fields { margin-top: 10px; animation: slideDown 0.3s ease-out; }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+hr { border: 0; border-top: 1px solid #eee; margin: 15px 0; }
 
-/* 아바타 스타일 (중요) */
-.avatar-wrapper { text-align: center; height: 130px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; }
-#user-avatar-img { width: 90px; height: 90px; border-radius: 50%; border: 3px solid #8a0e26; background-color: white; padding: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-
-/* 카드 및 기타 */
+/* 대시보드 카드 */
 .status-card { background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: center; border: 1px solid #eee; }
 .status-card.highlight { border: 2px solid #8a0e26; background-color: #fff5f7; }
+.status-card p { margin: 8px 0; }
+
 .progress-bar { width: 100%; height: 12px; background: #e0e0e0; border-radius: 6px; margin-top: 10px; overflow: hidden; }
 #progress-fill { height: 100%; background: #4CAF50; transition: width 0.5s ease; }
+
+/* 추천 화면 스타일 */
 .price-filter { background: #fff0f3; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
 .radio-group { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px; font-size: 14px; }
+
 .category-buttons { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 20px; }
 .category-buttons button { background-color: #555; color: white; padding: 10px 0; font-size: 14px; }
+.category-buttons button:hover { background-color: #333; }
+
 .food-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; animation: fadeIn 0.3s; }
 .food-info { text-align: left; }
 .food-info strong { font-size: 15px; display: block; margin-bottom: 4px; }
 .food-meta { font-size: 13px; color: #888; }
 
+/* 모달 */
 .modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
 .modal-content { background-color: #fefefe; margin: 20% auto; padding: 25px; border: 1px solid #888; width: 85%; max-width: 400px; border-radius: 12px; position: relative; }
 .close { float: right; font-size: 28px; font-weight: bold; cursor: pointer; color: #aaa; }
-@keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
 @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }

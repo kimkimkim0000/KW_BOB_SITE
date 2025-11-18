@@ -42,7 +42,7 @@
                 <button onclick="calculateBaseInfo()">정보 저장 및 시작</button>
             </section>
 
-            <section id="dashboard-section" style="display:none;">
+            <section id="status-section" style="display:none;">
                 <div class="header-row">
                     <h3>반갑습니다, <span id="user-name-display">사용자</span>님!</h3>
                     <button onclick="logout()" class="logout-btn">로그아웃</button>
@@ -59,7 +59,13 @@
                     </div>
                 </div>
 
-                <h2>2. 옵션 선택 및 추천</h2>
+                <button onclick="goToFoodSelection()" class="full-width-btn">🍽️ 오늘 뭐 먹지? (메뉴 추천받기)</button>
+            </section>
+
+            <section id="food-selection-section" style="display:none;">
+                <button onclick="goToStatus()" class="back-btn">← 내 상태로 돌아가기</button>
+                
+                <h2>옵션 선택 및 추천</h2>
                 
                 <div class="price-filter">
                     <h4>💰 가격대 선택</h4>
@@ -80,6 +86,8 @@
                 </div>
 
                 <div id="recommendation-area"></div>
+
+                <button id="retry-btn" onclick="retryRecommendation()" style="display:none; margin-top:15px; background-color:#555;">🔄 다른 메뉴 추천받기</button>
             </section>
         </div>
     </div>

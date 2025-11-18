@@ -1,145 +1,147 @@
-// 사용자 상태 관리
+// 1. 사용자 상태 관리 (Global State)
 let userState = {
     isLoggedIn: false,
     username: "",
     height: 0, weight: 0, age: 0, bmi: 0,
+    goal: "", // maintain, lose, gain
     recCalories: 0, currentCalories: 0
 };
 
-// 현재 선택된 카테고리 저장 (다시 추천 기능을 위해)
-let lastSelectedCategory = '';
+let lastSelectedCategory = ''; 
 
-// 데이터베이스
+// 2. 음식 데이터베이스 (식당, 가격, 칼로리, 레시피 포함)
 const foodDatabase = {
     'korean': [
-        { name: "비빔밥", restaurant: "한울관 학생식당", kcal: 550, price: 5500 },
+        { name: "비빔밥", restaurant: "한울관 식당", kcal: 550, price: 5500 },
         { name: "김치찌개", restaurant: "광운분식", kcal: 600, price: 8000 },
         { name: "제육덮밥", restaurant: "밥은화", kcal: 750, price: 6500 },
         { name: "갈비탕", restaurant: "선비촌", kcal: 700, price: 14000 },
-        { name: "불고기 정식", restaurant: "학교 앞 기사식당", kcal: 800, price: 11000 },
+        { name: "불고기 백반", restaurant: "기사식당", kcal: 800, price: 11000 },
         { name: "순두부찌개", restaurant: "맛있는 밥집", kcal: 500, price: 7500 },
         { name: "부대찌개", restaurant: "킹콩부대찌개", kcal: 700, price: 9000 },
-        { name: "삼겹살 정식", restaurant: "배달삼겹", kcal: 900, price: 12000 }
+        { name: "돌솥비빔밥", restaurant: "본죽&비빔밥", kcal: 650, price: 9500 },
+        { name: "참치마요덮밥", restaurant: "한솥도시락", kcal: 600, price: 4500 }
     ],
     'chinese': [
         { name: "짜장면", restaurant: "홍콩반점", kcal: 700, price: 7000 },
         { name: "짬뽕", restaurant: "수라청", kcal: 600, price: 9000 },
         { name: "볶음밥", restaurant: "동해루", kcal: 850, price: 8000 },
-        { name: "마라탕(기본)", restaurant: "탕화쿵푸", kcal: 900, price: 13000 },
+        { name: "마라탕", restaurant: "탕화쿵푸", kcal: 900, price: 13000 },
         { name: "탕수육(소)", restaurant: "차이웍", kcal: 400, price: 14000 },
-        { name: "잡채밥", restaurant: "북경", kcal: 750, price: 8500 }
+        { name: "잡채밥", restaurant: "북경", kcal: 750, price: 8500 },
+        { name: "군만두", restaurant: "서비스", kcal: 300, price: 0 }
     ],
     'western': [
         { name: "치즈버거 세트", restaurant: "맥도날드", kcal: 900, price: 9500 },
-        { name: "토마토 파스타", restaurant: "파스타부오노", kcal: 600, price: 10000 },
-        { name: "돈까스 정식", restaurant: "비슐랭", kcal: 800, price: 11000 },
-        { name: "치킨 샌드위치", restaurant: "써브웨이", kcal: 450, price: 7500 },
-        { name: "페퍼로니 피자", restaurant: "피자스쿨", kcal: 500, price: 9000 },
-        { name: "함박 스테이크", restaurant: "경양식당", kcal: 850, price: 12000 }
+        { name: "파스타", restaurant: "파스타부오노", kcal: 600, price: 10000 },
+        { name: "돈까스", restaurant: "비슐랭", kcal: 800, price: 11000 },
+        { name: "샌드위치", restaurant: "써브웨이", kcal: 450, price: 7500 },
+        { name: "피자 2조각", restaurant: "피자스쿨", kcal: 500, price: 5000 },
+        { name: "스테이크", restaurant: "빕스", kcal: 900, price: 25000 },
+        { name: "샐러드 보울", restaurant: "샐러디", kcal: 350, price: 8500 }
     ],
     'snack': [
-        { name: "엽기 떡볶이", restaurant: "동대문엽기떡볶이", kcal: 350, price: 14000 },
+        { name: "떡볶이", restaurant: "엽기떡볶이", kcal: 350, price: 14000 },
         { name: "순대", restaurant: "죠스떡볶이", kcal: 400, price: 5000 },
-        { name: "라면+김밥", restaurant: "김밥천국", kcal: 800, price: 7500 },
-        { name: "닭강정(컵)", restaurant: "가마로강정", kcal: 500, price: 5000 },
-        { name: "이삭 토스트", restaurant: "이삭토스트", kcal: 400, price: 4500 },
-        { name: "오뎅 3꼬치", restaurant: "길거리", kcal: 200, price: 3000 }
+        { name: "라면", restaurant: "김밥천국", kcal: 500, price: 4500 },
+        { name: "닭강정", restaurant: "가마로강정", kcal: 600, price: 8000 },
+        { name: "토스트", restaurant: "이삭토스트", kcal: 400, price: 4500 },
+        { name: "오뎅 2개", restaurant: "길거리", kcal: 150, price: 2000 }
     ],
     'cook': [
-        { 
-            name: "닭가슴살 샐러드", restaurant: "나의 주방", kcal: 200, price: 5000, 
-            recipe: "1. 닭가슴살을 삶아 찢는다.<br>2. 양상추와 토마토를 씻어 자른다.<br>3. 오리엔탈 드레싱을 뿌려 마무리." 
-        },
-        { 
-            name: "간장계란밥", restaurant: "나의 주방", kcal: 450, price: 2000, 
-            recipe: "1. 따뜻한 밥 위에 반숙 계란후라이를 올린다.<br>2. 간장 1스푼, 참기름 1스푼을 넣는다.<br>3. 깨를 뿌려 비벼 먹는다." 
-        },
-        { 
-            name: "김치볶음밥", restaurant: "나의 주방", kcal: 600, price: 3000, 
-            recipe: "1. 파기름을 내고 김치를 볶는다.<br>2. 밥을 넣고 굴소스를 약간 넣는다.<br>3. 센 불에 볶아 마무리한다." 
-        },
-        { 
-            name: "오트밀 죽", restaurant: "기숙사 휴게실", kcal: 300, price: 1500, 
-            recipe: "1. 오트밀 40g에 우유 200ml를 붓는다.<br>2. 전자레인지에 2분 돌린다.<br>3. 바나나나 견과류를 토핑한다." 
-        }
+        { name: "닭가슴살 샐러드", restaurant: "자취방", kcal: 200, price: 5000, recipe: "1. 닭가슴살 삶기<br>2. 야채 씻기<br>3. 드레싱 뿌리기" },
+        { name: "간장계란밥", restaurant: "자취방", kcal: 450, price: 2000, recipe: "1. 밥에 계란후라이<br>2. 간장, 참기름 넣기<br>3. 비비기" },
+        { name: "김치볶음밥", restaurant: "자취방", kcal: 600, price: 3000, recipe: "1. 김치 볶기<br>2. 밥 넣고 볶기<br>3. 김가루 뿌리기" },
+        { name: "오트밀 죽", restaurant: "기숙사", kcal: 300, price: 1500, recipe: "1. 오트밀+우유<br>2. 전자레인지 2분" }
     ]
 };
 
-// --- [기능 1] 로그인/회원가입 ---
+// 3. 화면 전환 함수 (한 번에 하나만 보여주기)
+function showScreen(screenId) {
+    const screens = ['screen-login', 'screen-dashboard', 'screen-recommendation'];
+    screens.forEach(id => {
+        document.getElementById(id).style.display = (id === screenId) ? 'block' : 'none';
+    });
+}
+
+// 4. 로그인/회원가입 로직
 let isSignupMode = false;
 
 function toggleAuthMode() {
     isSignupMode = !isSignupMode;
-    const title = document.getElementById('auth-title');
-    const btn = document.getElementById('login-btn');
-    const msg = document.getElementById('auth-msg');
-    const toggleBtn = document.getElementById('auth-toggle-btn');
-
-    if (isSignupMode) {
-        title.innerText = "회원가입";
-        btn.innerText = "가입하기";
-        msg.innerText = "이미 계정이 있으신가요?";
-        toggleBtn.innerText = "로그인";
-    } else {
-        title.innerText = "로그인";
-        btn.innerText = "로그인";
-        msg.innerText = "계정이 없으신가요?";
-        toggleBtn.innerText = "회원가입";
-    }
+    
+    document.getElementById('auth-title').innerText = isSignupMode ? "회원가입" : "로그인";
+    document.getElementById('auth-action-btn').innerText = isSignupMode ? "가입하고 시작하기" : "로그인";
+    document.getElementById('auth-msg').innerText = isSignupMode ? "이미 계정이 있으신가요?" : "계정이 없으신가요?";
+    document.getElementById('auth-toggle-btn').innerText = isSignupMode ? "로그인" : "회원가입";
+    document.getElementById('signup-fields').style.display = isSignupMode ? "block" : "none";
 }
 
-function handleLogin() {
-    const userIn = document.getElementById('username').value;
-    const passIn = document.getElementById('password').value;
+function handleAuthAction() {
+    const id = document.getElementById('username').value;
+    const pw = document.getElementById('password').value;
 
-    if (!userIn || !passIn) {
-        alert("아이디와 비밀번호를 입력하세요.");
-        return;
-    }
+    if(!id || !pw) { alert("아이디와 비밀번호를 입력하세요."); return; }
 
     if (isSignupMode) {
-        if (localStorage.getItem(userIn)) {
+        // [회원가입] 정보 저장
+        const h = document.getElementById('height').value;
+        const w = document.getElementById('weight').value;
+        const a = document.getElementById('age').value;
+        const g = document.getElementById('gender').value;
+        const goal = document.getElementById('goal').value;
+
+        if (!h || !w || !a) { alert("모든 상세 정보를 입력해주세요."); return; }
+
+        if (localStorage.getItem(id)) {
             alert("이미 존재하는 아이디입니다.");
-        } else {
-            localStorage.setItem(userIn, passIn);
-            alert("가입 완료! 로그인해주세요.");
-            toggleAuthMode();
+            return;
         }
+
+        // 사용자 데이터를 객체로 저장
+        const userData = {
+            password: pw, height: h, weight: w, age: a, gender: g, goal: goal
+        };
+        localStorage.setItem(id, JSON.stringify(userData));
+        
+        alert("가입 완료! 로그인해주세요.");
+        toggleAuthMode(); 
+
     } else {
-        const storedPass = localStorage.getItem(userIn);
-        if (storedPass && storedPass === passIn) {
+        // [로그인] 정보 불러오기
+        const dataString = localStorage.getItem(id);
+        if (!dataString) { alert("존재하지 않는 아이디입니다."); return; }
+
+        const userData = JSON.parse(dataString);
+
+        if (userData.password === pw) {
             alert("로그인 성공!");
             userState.isLoggedIn = true;
-            userState.username = userIn;
-            document.getElementById('user-name-display').innerText = userIn;
-            document.getElementById('auth-section').style.display = 'none';
-            document.getElementById('main-app').style.display = 'block';
+            userState.username = id;
+            
+            // 저장된 정보 불러오기
+            userState.height = parseFloat(userData.height);
+            userState.weight = parseFloat(userData.weight);
+            userState.age = parseFloat(userData.age);
+            userState.goal = userData.goal;
+            document.getElementById('user-name-display').innerText = id;
+
+            calculateMetrics(); // 대사량 및 목표 계산
+            showScreen('screen-dashboard');
         } else {
-            alert("아이디 혹은 비밀번호가 틀렸습니다.");
+            alert("비밀번호가 틀렸습니다.");
         }
     }
 }
 
-function logout() {
-    location.reload();
-}
+function logout() { location.reload(); }
 
-// --- [기능 2] 기본 정보 계산 및 화면 이동 ---
-function calculateBaseInfo() {
-    const h = document.getElementById('height').value;
-    const w = document.getElementById('weight').value;
-    const a = document.getElementById('age').value;
-    const g = document.getElementById('gender').value;
-
-    if (!h || !w || !a) { alert("모든 정보를 입력해주세요."); return; }
-
-    userState.height = parseFloat(h);
-    userState.weight = parseFloat(w);
-    userState.age = parseFloat(a);
-
-    const heightM = userState.height / 100;
-    userState.bmi = (userState.weight / (heightM * heightM)).toFixed(1);
-
+// 5. BMI 및 권장 칼로리 계산 로직
+function calculateMetrics() {
+    // BMI
+    const h_m = userState.height / 100;
+    userState.bmi = (userState.weight / (h_m * h_m)).toFixed(1);
+    
     let status = "정상";
     if (userState.bmi < 18.5) status = "저체중";
     else if (userState.bmi >= 23 && userState.bmi < 25) status = "과체중";
@@ -148,59 +150,77 @@ function calculateBaseInfo() {
     document.getElementById('bmi-display').innerText = userState.bmi;
     document.getElementById('bmi-status').innerText = status;
 
-    if (g === 'male') {
-        userState.recCalories = Math.round((66.47 + (13.75 * userState.weight) + (5 * userState.height) - (6.76 * userState.age)) * 1.375);
+    // 목표 텍스트 표시
+    let goalText = "체중 유지";
+    if (userState.goal === 'lose') goalText = "체중 감량";
+    else if (userState.goal === 'gain') goalText = "체중 증가";
+    document.getElementById('goal-display').innerText = goalText;
+
+    // 일일 권장 칼로리 계산 (표준체중법 간소화)
+    const standardWeight = (userState.height - 100) * 0.9;
+    let baseCal = standardWeight * 30; // 활동량 보통 기준
+
+    // 목표에 따른 조정
+    if (userState.goal === 'lose') {
+        userState.recCalories = Math.round(baseCal * 0.8); // 감량 시 20% 감소
+    } else if (userState.goal === 'gain') {
+        userState.recCalories = Math.round(baseCal * 1.2); // 증량 시 20% 증가
     } else {
-        userState.recCalories = Math.round((655.1 + (9.56 * userState.weight) + (1.85 * userState.height) - (4.68 * userState.age)) * 1.375);
+        userState.recCalories = Math.round(baseCal);
     }
 
     document.getElementById('rec-cal').innerText = userState.recCalories;
     document.getElementById('rec-cal-target').innerText = userState.recCalories;
-
-    // 정보 입력창 숨기고 상태창(Step 2) 보여주기
-    document.getElementById('user-info-section').style.display = 'none';
-    document.getElementById('status-section').style.display = 'block';
 }
 
-// --- [기능 2-1] 화면 전환 로직 ---
-function goToFoodSelection() {
-    document.getElementById('status-section').style.display = 'none';
-    document.getElementById('food-selection-section').style.display = 'block';
-}
-
-function goToStatus() {
-    document.getElementById('food-selection-section').style.display = 'none';
-    document.getElementById('status-section').style.display = 'block';
-}
-
-// --- [기능 3] 추천 로직 (다시 추천 기능 포함) ---
+// 6. 음식 추천 로직 (핵심: 목표별 필터링)
 function recommendFood(category) {
-    lastSelectedCategory = category; // 재추천을 위해 저장
-    
+    lastSelectedCategory = category;
     let list = foodDatabase[category];
-    if (!list) return;
-
-    const priceOption = document.querySelector('input[name="price"]:checked').value;
     
-    if (priceOption !== "0") { 
-        list = list.filter(food => {
-            if (priceOption === "1") return food.price < 10000;
-            if (priceOption === "2") return food.price >= 10000 && food.price < 12000;
-            if (priceOption === "3") return food.price >= 12000 && food.price <= 15000;
+    // (1) 가격 필터 적용
+    const priceOption = document.querySelector('input[name="price"]:checked').value;
+    if (priceOption !== "0") {
+        list = list.filter(f => {
+            if (priceOption === "1") return f.price < 10000;
+            if (priceOption === "2") return f.price >= 10000 && f.price < 12000;
+            if (priceOption === "3") return f.price >= 12000;
             return true;
         });
     }
 
-    const container = document.getElementById('recommendation-area');
-    container.innerHTML = `<h3>'${category}' 추천 결과 (총 ${list.length}개)</h3>`;
+    // (2) 목표별 칼로리 필터 (한 끼 권장량 기준)
+    const oneMealCal = Math.round(userState.recCalories / 3); 
+    let filterMsg = "";
 
-    if (list.length === 0) {
-        container.innerHTML += `<p>조건에 맞는 음식이 없습니다. 가격대를 조정해보세요.</p>`;
+    if (userState.goal === 'lose') {
+        // 감량: 한 끼 권장량 '이하'인 음식만
+        list = list.filter(f => f.kcal <= oneMealCal);
+        filterMsg = `<span style="font-size:14px; color:#e74c3c;">(목표: ${oneMealCal}kcal 이하)</span>`;
+    } else if (userState.goal === 'gain') {
+        // 증량: 한 끼 권장량 '이상'인 음식만
+        list = list.filter(f => f.kcal >= oneMealCal);
+        filterMsg = `<span style="font-size:14px; color:#4CAF50;">(목표: ${oneMealCal}kcal 이상)</span>`;
+    } else {
+        // 유지: 필터 없음
+        filterMsg = `<span style="font-size:14px; color:#666;">(균형 식단)</span>`;
+    }
+
+    // 결과 렌더링
+    const container = document.getElementById('recommendation-area');
+    container.innerHTML = `<h3>'${category}' 결과 ${filterMsg}</h3>`;
+
+    if (!list || list.length === 0) {
+        container.innerHTML += `
+            <div style="padding:20px; color:#666; background:#f9f9f9; border-radius:8px;">
+                조건에 맞는 음식이 없습니다 😢<br>
+                <small>목표 칼로리(${oneMealCal}kcal) 기준에 맞는 메뉴가 이 카테고리에는 없네요.</small>
+            </div>`;
         document.getElementById('retry-btn').style.display = 'none';
         return;
     }
 
-    // 랜덤 섞기 (다시 추천 시 매번 바뀜)
+    // 랜덤 섞어서 최대 5개
     const shuffled = [...list].sort(() => 0.5 - Math.random()).slice(0, 5);
 
     shuffled.forEach(food => {
@@ -212,65 +232,55 @@ function recommendFood(category) {
             recipeBtn = `<button class="recipe-btn" onclick="showRecipe('${food.name}', '${food.recipe}')">레시피</button>`;
         }
 
+        // 목표에 부합하면 초록색 강조, 아니면 일반 회색
+        let kcalColor = '#666';
+        if(userState.goal === 'lose' && food.kcal <= oneMealCal) kcalColor = '#4CAF50'; 
+        if(userState.goal === 'gain' && food.kcal >= oneMealCal) kcalColor = '#4CAF50'; 
+
         div.innerHTML = `
-            <div>
-                <strong>[${food.restaurant}] ${food.name} <span style="color:#e74c3c;">(${food.kcal} kcal)</span></strong>
+            <div class="food-info">
+                <strong>[${food.restaurant}] ${food.name}</strong> 
+                <span style="color:${kcalColor}; font-weight:bold;">(${food.kcal} kcal)</span>
                 <span class="food-meta">가격: ${food.price.toLocaleString()}원</span>
             </div>
-            <div class="btn-group">
+            <div>
                 ${recipeBtn}
-                <button onclick="addFood(${food.kcal})">먹기</button>
+                <button class="eat-btn" onclick="addFood(${food.kcal})">먹기</button>
             </div>
         `;
         container.appendChild(div);
     });
 
-    // '다시 추천' 버튼 활성화
     document.getElementById('retry-btn').style.display = 'block';
 }
 
-// 다시 추천 버튼 클릭 시 실행되는 함수
+// 다시 추천
 function retryRecommendation() {
-    if (lastSelectedCategory) {
-        recommendFood(lastSelectedCategory);
-    }
+    if (lastSelectedCategory) recommendFood(lastSelectedCategory);
 }
 
-// --- [기능 4] 기타 유틸리티 ---
-function showRecipe(name, recipeContent) {
-    document.getElementById('recipe-title').innerText = name + " 레시피";
-    document.getElementById('recipe-body').innerHTML = recipeContent;
-    document.getElementById('recipe-modal').style.display = "block";
-}
-
-function closeModal() {
-    document.getElementById('recipe-modal').style.display = "none";
-}
-
-window.onclick = function(event) {
-    const modal = document.getElementById('recipe-modal');
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
-
+// 7. 먹기 버튼 & 레시피 모달
 function addFood(kcal) {
     userState.currentCalories += kcal;
-    // 먹기 버튼을 누르면 섭취량을 반영하고 상태 화면으로 이동할지 선택할 수도 있지만
-    // 일단은 알림만 띄우고 계속 추천받을 수 있게 유지
-    alert(`${kcal}kcal 섭취가 기록되었습니다!`);
-    updateDashboard();
-}
-
-function updateDashboard() {
-    const current = userState.currentCalories;
+    
     const max = userState.recCalories;
-    const percentage = Math.min((current / max) * 100, 100);
+    const pct = Math.min((userState.currentCalories / max) * 100, 100);
+    
+    document.getElementById('current-cal').innerText = userState.currentCalories;
+    document.getElementById('progress-fill').style.width = pct + "%";
+    
+    if(userState.currentCalories > max) {
+        document.getElementById('progress-fill').style.backgroundColor = "#e74c3c"; // 초과 시 빨간색
+    }
 
-    document.getElementById('current-cal').innerText = current;
-    document.getElementById('progress-fill').style.width = `${percentage}%`;
-
-    if (current > max) {
-        document.getElementById('progress-fill').style.backgroundColor = '#ff4444';
+    if(confirm(`${kcal}kcal 섭취 기록 완료!\n대시보드로 이동해서 그래프를 보시겠습니까?`)) {
+        showScreen('screen-dashboard');
     }
 }
+
+function showRecipe(title, content) {
+    document.getElementById('recipe-title').innerText = title;
+    document.getElementById('recipe-body').innerHTML = content;
+    document.getElementById('recipe-modal').style.display = 'block';
+}
+function closeModal() { document.getElementById('recipe-modal').style.display = 'none'; }

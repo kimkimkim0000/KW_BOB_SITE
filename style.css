@@ -1,3 +1,5 @@
+/* 기존 CSS 내용 유지 + 아래 내용 추가/수정 */
+
 body {
     font-family: 'Noto Sans KR', sans-serif;
     background-color: #f4f4f4;
@@ -15,57 +17,19 @@ body {
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-header {
-    text-align: center;
-    margin-bottom: 30px;
-}
-header h1 {
-    color: #8a0e26; /* 광운대 버건디 */
-    margin-bottom: 5px;
-}
+header { text-align: center; margin-bottom: 30px; }
+header h1 { color: #8a0e26; margin-bottom: 5px; }
 
 /* 로그인 섹션 */
-#auth-section {
-    text-align: center;
-    padding: 20px;
-}
-.auth-box {
-    max-width: 300px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-.toggle-auth {
-    font-size: 14px;
-    margin-top: 10px;
-}
-.logout-btn {
-    background-color: #666;
-    padding: 5px 10px;
-    font-size: 12px;
-    border: none;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    float: right;
-}
+#auth-section { text-align: center; padding: 20px; }
+.auth-box { max-width: 300px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+.toggle-auth { font-size: 14px; margin-top: 10px; }
+.logout-btn { background-color: #666; padding: 5px 10px; font-size: 12px; border: none; color: white; border-radius: 5px; cursor: pointer; float: right; }
 
-/* 입력 그룹 */
-.input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-input, select {
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    font-size: 16px;
-}
+/* 입력 및 버튼 */
+.input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
+input, select { padding: 12px; border-radius: 8px; border: 1px solid #ddd; font-size: 16px; }
 
-/* 메인 버튼 */
 button {
     background-color: #8a0e26;
     color: white;
@@ -77,119 +41,39 @@ button {
     border-radius: 8px;
     font-size: 16px;
 }
-button:hover {
-    background-color: #6d0b1e;
-}
+button:hover { background-color: #6d0b1e; }
+
+/* 화면 전환용 버튼들 */
+.full-width-btn { width: 100%; margin-top: 20px; font-size: 18px; }
+.back-btn { background-color: transparent; color: #666; border: 1px solid #ddd; margin-bottom: 15px; width: auto; display: inline-block; padding: 8px 15px; }
+.back-btn:hover { background-color: #eee; color: #333; }
 
 /* 상태 카드 */
-.status-card {
-    background: #f9f9f9;
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    text-align: center;
-}
-.status-card.highlight {
-    border: 2px solid #8a0e26;
-}
+.status-card { background: #f9f9f9; padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: center; }
+.status-card.highlight { border: 2px solid #8a0e26; }
 
 /* 프로그레스 바 */
-.progress-bar {
-    width: 100%;
-    height: 10px;
-    background: #eee;
-    border-radius: 5px;
-    margin-top: 10px;
-    overflow: hidden;
-}
-#progress-fill {
-    height: 100%;
-    background: #4CAF50;
-    transition: width 0.5s ease;
-}
+.progress-bar { width: 100%; height: 10px; background: #eee; border-radius: 5px; margin-top: 10px; overflow: hidden; }
+#progress-fill { height: 100%; background: #4CAF50; transition: width 0.5s ease; }
 
 /* 가격 필터 */
-.price-filter {
-    background: #fff0f3;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-}
-.radio-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
-    font-size: 14px;
-}
+.price-filter { background: #fff0f3; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+.radio-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; font-size: 14px; }
 
 /* 카테고리 버튼 */
-.category-buttons {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-    gap: 10px;
-    margin-bottom: 20px;
-}
-.category-buttons button {
-    background-color: #555;
-    font-size: 14px;
-}
+.category-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 10px; margin-bottom: 20px; }
+.category-buttons button { background-color: #555; font-size: 14px; }
 
-/* 음식 아이템 리스트 */
-.food-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px;
-    border-bottom: 1px solid #eee;
-    animation: fadeIn 0.5s;
-}
-.food-meta {
-    font-size: 13px;
-    color: #666;
-    display: block;
-    margin-top: 4px;
-}
-.btn-group button {
-    margin-left: 5px;
-    padding: 6px 10px;
-    font-size: 12px;
-}
-.recipe-btn {
-    background-color: #FF9800; /* 주황색 */
-}
+/* 음식 리스트 */
+.food-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee; animation: fadeIn 0.5s; }
+.food-meta { font-size: 13px; color: #666; display: block; margin-top: 4px; }
+.btn-group button { margin-left: 5px; padding: 6px 10px; font-size: 12px; }
+.recipe-btn { background-color: #FF9800; }
 
 /* 모달창 */
-.modal {
-    display: none; 
-    position: fixed; 
-    z-index: 999; 
-    left: 0;
-    top: 0;
-    width: 100%; 
-    height: 100%; 
-    background-color: rgba(0,0,0,0.5); 
-}
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto; 
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%; 
-    max-width: 500px;
-    border-radius: 10px;
-    position: relative;
-}
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
+.modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
+.modal-content { background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 500px; border-radius: 10px; position: relative; }
+.close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
 .close:hover { color: black; }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }

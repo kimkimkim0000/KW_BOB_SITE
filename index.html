@@ -23,13 +23,17 @@
                 <div id="signup-fields" style="display: none;">
                     <hr>
                     <p class="signup-guide">👇 정확한 분석을 위해 정보를 입력해주세요</p>
-                    <input type="number" id="height" placeholder="키 (cm)">
-                    <input type="number" id="weight" placeholder="몸무게 (kg)">
-                    <input type="number" id="age" placeholder="나이 (세)">
-                    <select id="gender">
-                        <option value="male">남성</option>
-                        <option value="female">여성</option>
-                    </select>
+                    <div class="input-group">
+                        <input type="number" id="height" placeholder="키 (cm)">
+                        <input type="number" id="weight" placeholder="몸무게 (kg)">
+                    </div>
+                    <div class="input-group">
+                        <input type="number" id="age" placeholder="나이 (세)">
+                        <select id="gender">
+                            <option value="male">남성</option>
+                            <option value="female">여성</option>
+                        </select>
+                    </div>
                     <select id="goal">
                         <option value="maintain">체중 유지</option>
                         <option value="lose">체중 감량 (다이어트)</option>
@@ -48,6 +52,10 @@
 
         <section id="screen-dashboard" style="display: none;">
             <div class="header-row">
+                <div class="avatar-wrapper">
+                    <img id="user-avatar-img" src="" alt="나의 아바타">
+                </div>
+
                 <h3>반갑습니다, <span id="user-name-display">사용자</span>님!</h3>
                 <button onclick="logout()" class="btn-small">로그아웃</button>
             </div>
@@ -111,6 +119,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=1"></script>
+    <script src="script.js?v=2"></script>
 </body>
 </html>

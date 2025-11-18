@@ -16,13 +16,12 @@
         <section id="screen-login">
             <div class="auth-box">
                 <h2 id="auth-title">로그인</h2>
-                
                 <input type="text" id="username" placeholder="아이디">
                 <input type="password" id="password" placeholder="비밀번호">
                 
                 <div id="signup-fields" style="display: none;">
                     <hr>
-                    <p class="signup-guide">👇 정확한 분석을 위해 정보를 입력해주세요</p>
+                    <p class="signup-guide">👇 정보 입력 (아바타도 생성됩니다!)</p>
                     <div class="input-group">
                         <input type="number" id="height" placeholder="키 (cm)">
                         <input type="number" id="weight" placeholder="몸무게 (kg)">
@@ -42,7 +41,6 @@
                 </div>
 
                 <button onclick="handleAuthAction()" id="auth-action-btn" class="btn-primary">로그인</button>
-                
                 <p class="toggle-auth">
                     <span id="auth-msg">계정이 없으신가요?</span>
                     <a href="#" onclick="toggleAuthMode()" id="auth-toggle-btn">회원가입</a>
@@ -53,7 +51,7 @@
         <section id="screen-dashboard" style="display: none;">
             <div class="header-row">
                 <div class="avatar-wrapper">
-                    <img id="user-avatar-img" src="" alt="나의 아바타">
+                    <img id="user-avatar-img" src="https://api.dicebear.com/9.x/micah/svg?seed=guest" alt="아바타">
                 </div>
 
                 <h3>반갑습니다, <span id="user-name-display">사용자</span>님!</h3>
@@ -82,9 +80,7 @@
 
         <section id="screen-recommendation" style="display: none;">
             <button onclick="showScreen('screen-dashboard')" class="btn-back">← 내 상태 확인하러 가기</button>
-            
             <h2>옵션 선택 및 추천</h2>
-            
             <div class="price-filter">
                 <h4>💰 가격대 선택</h4>
                 <div class="radio-group">
@@ -94,7 +90,6 @@
                     <label><input type="radio" name="price" value="3"> 1.2만~1.5만원</label>
                 </div>
             </div>
-
             <div class="category-buttons">
                 <button onclick="recommendFood('korean')">한식</button>
                 <button onclick="recommendFood('chinese')">중식</button>
@@ -102,9 +97,7 @@
                 <button onclick="recommendFood('snack')">분식</button>
                 <button onclick="recommendFood('cook')">직접 요리</button>
             </div>
-
             <div id="recommendation-area"></div>
-
             <button id="retry-btn" onclick="retryRecommendation()" class="btn-retry" style="display:none;">
                 🔄 마음에 안 들어요! (다른 메뉴 추천)
             </button>
@@ -119,6 +112,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=2"></script>
+    <script src="script.js?v=3"></script>
 </body>
 </html>

@@ -4,11 +4,12 @@ let userState = {
     username: "",
     height: 0, weight: 0, age: 0, gender: "", 
     bmi: 0, goal: "", // maintain, lose, gain
-    recCalories: 0, currentCalories: 0
+    recCalories: 0, currentCalories: 0,
+    avatarScale: 1.0 // 아바타 크기 (초기 1.0)
 };
 
 let lastSelectedCategory = ''; 
-let shownFoodNames = []; // [중복 방지] 이미 보여준 음식 이름 저장
+let shownFoodNames = []; // 중복 추천 방지 목록
 
 // 2. 음식 데이터베이스
 const foodDatabase = {
@@ -88,7 +89,7 @@ function handleAuthAction() {
 
     if(!id || !pw) { alert("아이디와 비밀번호를 입력하세요."); return; }
 
-    if (isSignupMode) {
+    if (isSignupMode) { // 회원가입
         const h = document.getElementById('height').value;
         const w = document.getElementById('weight').value;
         const a = document.getElementById('age').value;
@@ -103,8 +104,7 @@ function handleAuthAction() {
         
         alert("가입 완료! 로그인해주세요.");
         toggleAuthMode(); 
-
-    } else {
+    } else { // 로그인
         const dataString = localStorage.getItem(id);
         if (!dataString) { alert("존재하지 않는 아이디입니다."); return; }
 
@@ -132,7 +132,7 @@ function handleAuthAction() {
 
 function logout() { location.reload(); }
 
-// 5. BMR (Mifflin-St Jeor) 계산 로직
+// 5. BMR(Mifflin-St Jeor) 계산 및 아바타
 function calculateMetrics() {
     const h_m = userState.height / 100;
     userState.bmi = (userState.weight / (h_m * h_m)).toFixed(1);
@@ -150,6 +150,7 @@ function calculateMetrics() {
     else if (userState.goal === 'gain') goalText = "체중 증가";
     document.getElementById('goal-display').innerText = goalText;
 
+    // BMR 계산
     let bmr = 0;
     if (userState.gender === 'male') {
         bmr = (10 * userState.weight) + (6.25 * userState.height) - (5 * userState.age) + 5;
@@ -157,11 +158,13 @@ function calculateMetrics() {
         bmr = (10 * userState.weight) + (6.25 * userState.height) - (5 * userState.age) - 161;
     }
 
+    // 유지 칼로리 (활동 계수 1.375)
     let maintenanceCal = Math.round(bmr * 1.375);
 
+    // 목표별 ±500kcal
     if (userState.goal === 'lose') {
         userState.recCalories = maintenanceCal - 500;
-        if (userState.recCalories < 1200) userState.recCalories = 1200;
+        if (userState.recCalories < 1200) userState.recCalories = 1200; // 최소 안전장치
     } else if (userState.goal === 'gain') {
         userState.recCalories = maintenanceCal + 500;
     } else {
@@ -170,17 +173,41 @@ function calculateMetrics() {
 
     document.getElementById('rec-cal').innerText = userState.recCalories;
     document.getElementById('rec-cal-target').innerText = userState.recCalories;
+
+    // 아바타 업데이트 호출
+    updateAvatar();
 }
 
-// 6. [핵심] 3개씩 추천 로직
+// 아바타 생성 함수 (DiceBear API)
+function updateAvatar() {
+    const seed = userState.username; 
+    let avatarUrl = `https://api.dicebear.com/9.x/micah/svg?seed=${seed}&radius=50`;
+
+    // 성별에 따른 스타일 조정
+    if (userState.gender === 'male') {
+        avatarUrl += `&baseColor=f9c9b6&hair=fonze,mrT,danny`; 
+    } else {
+        avatarUrl += `&baseColor=f9c9b6&hair=pixie,full,doug`; 
+    }
+
+    const img = document.getElementById('user-avatar-img');
+    img.src = avatarUrl;
+    
+    // 크기 초기화
+    userState.avatarScale = 1.0;
+    img.style.transform = `scale(1.0)`;
+}
+
+// 6. [핵심] 3개씩 추천 + 중복 방지
 function recommendFood(category) {
     if (category !== lastSelectedCategory) {
         lastSelectedCategory = category;
-        shownFoodNames = []; 
+        shownFoodNames = []; // 카테고리 변경 시 리셋
     }
 
     let list = foodDatabase[category];
     
+    // (1) 가격 필터
     const priceOption = document.querySelector('input[name="price"]:checked').value;
     if (priceOption !== "0") {
         list = list.filter(f => {
@@ -191,6 +218,7 @@ function recommendFood(category) {
         });
     }
 
+    // (2) 목표 칼로리 필터 (한 끼 기준)
     const oneMealCal = Math.round(userState.recCalories / 3);
     let filterMsg = "";
 
@@ -204,17 +232,20 @@ function recommendFood(category) {
         filterMsg = `<span style="font-size:14px; color:#666;">(균형 식단)</span>`;
     }
 
-    // 이미 보여준 음식 제외
+    // (3) 이미 본 음식 제외 (중복 방지)
     let availableList = list.filter(f => !shownFoodNames.includes(f.name));
 
     const container = document.getElementById('recommendation-area');
     container.innerHTML = `<h3>'${category}' 결과 ${filterMsg}</h3>`;
 
+    // (4) 추천 예외 처리
     if (availableList.length === 0) {
         if (list.length === 0) {
+            // 조건에 맞는 음식이 아예 없음
             container.innerHTML += `<div style="padding:20px; color:#666; background:#f9f9f9; border-radius:8px;">조건에 맞는 음식이 없습니다 😢</div>`;
             document.getElementById('retry-btn').style.display = 'none';
         } else {
+            // 다 보여줘서 없는 경우 -> 리셋
             alert("이 카테고리의 추천 메뉴를 모두 보셨습니다! 처음부터 다시 추천합니다. 🔄");
             shownFoodNames = []; 
             recommendFood(category);
@@ -222,12 +253,14 @@ function recommendFood(category) {
         return;
     }
 
-    // [여기가 3개로 자르는 부분입니다]
+    // (5) 3개만 랜덤 선택
     const count = 3; 
     const shuffled = [...availableList].sort(() => 0.5 - Math.random()).slice(0, count);
 
+    // 본 목록에 추가
     shuffled.forEach(f => shownFoodNames.push(f.name));
 
+    // 렌더링
     shuffled.forEach(food => {
         const div = document.createElement('div');
         div.className = 'food-item';
@@ -262,9 +295,15 @@ function retryRecommendation() {
     if (lastSelectedCategory) recommendFood(lastSelectedCategory);
 }
 
-// 7. 먹기 및 모달
+// 7. 먹기 및 아바타 성장
 function addFood(kcal) {
     userState.currentCalories += kcal;
+    
+    // 아바타 5%씩 성장
+    userState.avatarScale += 0.05;
+    if (userState.avatarScale > 1.5) userState.avatarScale = 1.5; // 최대 1.5배
+    document.getElementById('user-avatar-img').style.transform = `scale(${userState.avatarScale})`;
+
     const max = userState.recCalories;
     const pct = Math.min((userState.currentCalories / max) * 100, 100);
     
@@ -275,7 +314,7 @@ function addFood(kcal) {
         document.getElementById('progress-fill').style.backgroundColor = "#e74c3c";
     }
 
-    if(confirm(`${kcal}kcal 섭취 기록 완료!\n대시보드로 이동해서 그래프를 보시겠습니까?`)) {
+    if(confirm(`${kcal}kcal 섭취 기록 완료! (아바타가 커졌어요 🐷)\n대시보드로 이동해서 확인하시겠습니까?`)) {
         showScreen('screen-dashboard');
     }
 }

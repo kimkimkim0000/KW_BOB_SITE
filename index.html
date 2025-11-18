@@ -13,24 +13,16 @@
             <p>광운대생을 위한 맞춤형 식단 추천 서비스</p>
         </header>
 
-        <section id="auth-section">
+        <section id="screen-login">
             <div class="auth-box">
                 <h2 id="auth-title">로그인</h2>
+                
                 <input type="text" id="username" placeholder="아이디">
                 <input type="password" id="password" placeholder="비밀번호">
-                <button onclick="handleLogin()" id="login-btn">로그인</button>
-                <p class="toggle-auth">
-                    <span id="auth-msg">계정이 없으신가요?</span>
-                    <a href="#" onclick="toggleAuthMode()" id="auth-toggle-btn">회원가입</a>
-                </p>
-            </div>
-        </section>
-
-        <div id="main-app" style="display: none;">
-            
-            <section id="user-info-section">
-                <h2>1. 기본 정보 입력</h2>
-                <div class="input-group">
+                
+                <div id="signup-fields" style="display: none;">
+                    <hr>
+                    <p class="signup-guide">👇 맞춤 추천을 위해 정보를 입력해주세요</p>
                     <input type="number" id="height" placeholder="키 (cm)">
                     <input type="number" id="weight" placeholder="몸무게 (kg)">
                     <input type="number" id="age" placeholder="나이 (세)">
@@ -38,65 +30,84 @@
                         <option value="male">남성</option>
                         <option value="female">여성</option>
                     </select>
-                </div>
-                <button onclick="calculateBaseInfo()">정보 저장 및 시작</button>
-            </section>
-
-            <section id="status-section" style="display:none;">
-                <div class="header-row">
-                    <h3>반갑습니다, <span id="user-name-display">사용자</span>님!</h3>
-                    <button onclick="logout()" class="logout-btn">로그아웃</button>
+                    <select id="goal">
+                        <option value="maintain">체중 유지</option>
+                        <option value="lose">체중 감량 (다이어트)</option>
+                        <option value="gain">체중 증가 (벌크업)</option>
+                    </select>
                 </div>
 
-                <div class="status-card">
-                    <p>BMI: <span id="bmi-display">-</span> (<span id="bmi-status">-</span>)</p>
-                    <p>일일 권장: <span id="rec-cal">0</span> kcal</p>
-                </div>
-                <div class="status-card highlight">
-                    <p>현재 섭취: <span id="current-cal">0</span> / <span id="rec-cal-target">0</span> kcal</p>
-                    <div class="progress-bar">
-                        <div id="progress-fill" style="width: 0%"></div>
-                    </div>
-                </div>
-
-                <button onclick="goToFoodSelection()" class="full-width-btn">🍽️ 오늘 뭐 먹지? (메뉴 추천받기)</button>
-            </section>
-
-            <section id="food-selection-section" style="display:none;">
-                <button onclick="goToStatus()" class="back-btn">← 내 상태로 돌아가기</button>
+                <button onclick="handleAuthAction()" id="auth-action-btn" class="btn-primary">로그인</button>
                 
-                <h2>옵션 선택 및 추천</h2>
-                
-                <div class="price-filter">
-                    <h4>💰 가격대 선택</h4>
-                    <div class="radio-group">
-                        <label><input type="radio" name="price" value="0" checked> 상관없음</label>
-                        <label><input type="radio" name="price" value="1"> 1만원 미만</label>
-                        <label><input type="radio" name="price" value="2"> 1만~1.2만원</label>
-                        <label><input type="radio" name="price" value="3"> 1.2만~1.5만원</label>
-                    </div>
+                <p class="toggle-auth">
+                    <span id="auth-msg">계정이 없으신가요?</span>
+                    <a href="#" onclick="toggleAuthMode()" id="auth-toggle-btn">회원가입</a>
+                </p>
+            </div>
+        </section>
+
+        <section id="screen-dashboard" style="display: none;">
+            <div class="header-row">
+                <h3>반갑습니다, <span id="user-name-display">사용자</span>님!</h3>
+                <button onclick="logout()" class="btn-small">로그아웃</button>
+            </div>
+
+            <div class="status-card">
+                <p>내 목표: <span id="goal-display" style="font-weight:bold; color:#8a0e26;">-</span></p>
+                <p>BMI: <span id="bmi-display">-</span> (<span id="bmi-status">-</span>)</p>
+                <p>일일 권장: <span id="rec-cal">0</span> kcal</p>
+            </div>
+
+            <div class="status-card highlight">
+                <p>오늘 섭취량: <span id="current-cal">0</span> / <span id="rec-cal-target">0</span> kcal</p>
+                <div class="progress-bar">
+                    <div id="progress-fill" style="width: 0%"></div>
                 </div>
+            </div>
 
-                <div class="category-buttons">
-                    <button onclick="recommendFood('korean')">한식</button>
-                    <button onclick="recommendFood('chinese')">중식</button>
-                    <button onclick="recommendFood('western')">양식</button>
-                    <button onclick="recommendFood('snack')">분식</button>
-                    <button onclick="recommendFood('cook')">직접 요리</button>
+            <div style="margin-top: 30px;">
+                <button onclick="showScreen('screen-recommendation')" class="btn-large">
+                    🍽️ 오늘 뭐 먹지? (메뉴 추천 받기)
+                </button>
+            </div>
+        </section>
+
+        <section id="screen-recommendation" style="display: none;">
+            <button onclick="showScreen('screen-dashboard')" class="btn-back">← 내 상태 확인하러 가기</button>
+            
+            <h2>옵션 선택 및 추천</h2>
+            
+            <div class="price-filter">
+                <h4>💰 가격대 선택</h4>
+                <div class="radio-group">
+                    <label><input type="radio" name="price" value="0" checked> 상관없음</label>
+                    <label><input type="radio" name="price" value="1"> 1만원 미만</label>
+                    <label><input type="radio" name="price" value="2"> 1만~1.2만원</label>
+                    <label><input type="radio" name="price" value="3"> 1.2만~1.5만원</label>
                 </div>
+            </div>
 
-                <div id="recommendation-area"></div>
+            <div class="category-buttons">
+                <button onclick="recommendFood('korean')">한식</button>
+                <button onclick="recommendFood('chinese')">중식</button>
+                <button onclick="recommendFood('western')">양식</button>
+                <button onclick="recommendFood('snack')">분식</button>
+                <button onclick="recommendFood('cook')">직접 요리</button>
+            </div>
 
-                <button id="retry-btn" onclick="retryRecommendation()" style="display:none; margin-top:15px; background-color:#555;">🔄 다른 메뉴 추천받기</button>
-            </section>
-        </div>
+            <div id="recommendation-area"></div>
+
+            <button id="retry-btn" onclick="retryRecommendation()" class="btn-retry" style="display:none;">
+                🔄 마음에 안 들어요! (다른 메뉴 추천)
+            </button>
+        </section>
     </div>
 
     <div id="recipe-modal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <h3 id="recipe-title">요리 이름</h3>
-            <div id="recipe-body">레시피 내용</div>
+            <div id="recipe-body"></div>
         </div>
     </div>
 

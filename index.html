@@ -16,20 +16,23 @@
         <section id="screen-login">
             <div class="auth-box">
                 <h2 id="auth-title">로그인</h2>
-                
                 <input type="text" id="username" placeholder="아이디">
                 <input type="password" id="password" placeholder="비밀번호">
                 
                 <div id="signup-fields" style="display: none;">
                     <hr>
                     <p class="signup-guide">👇 정확한 분석을 위해 정보를 입력해주세요</p>
-                    <input type="number" id="height" placeholder="키 (cm)">
-                    <input type="number" id="weight" placeholder="몸무게 (kg)">
-                    <input type="number" id="age" placeholder="나이 (세)">
-                    <select id="gender">
-                        <option value="male">남성</option>
-                        <option value="female">여성</option>
-                    </select>
+                    <div class="input-group">
+                        <input type="number" id="height" placeholder="키 (cm)">
+                        <input type="number" id="weight" placeholder="몸무게 (kg)">
+                    </div>
+                    <div class="input-group">
+                        <input type="number" id="age" placeholder="나이 (세)">
+                        <select id="gender">
+                            <option value="male">남성</option>
+                            <option value="female">여성</option>
+                        </select>
+                    </div>
                     <select id="goal">
                         <option value="maintain">체중 유지</option>
                         <option value="lose">체중 감량 (다이어트)</option>
@@ -38,7 +41,6 @@
                 </div>
 
                 <button onclick="handleAuthAction()" id="auth-action-btn" class="btn-primary">로그인</button>
-                
                 <p class="toggle-auth">
                     <span id="auth-msg">계정이 없으신가요?</span>
                     <a href="#" onclick="toggleAuthMode()" id="auth-toggle-btn">회원가입</a>
@@ -65,7 +67,14 @@
                 </div>
             </div>
 
-            <div style="margin-top: 30px;">
+            <div class="food-log-container">
+                <h4>📝 오늘의 식사 기록</h4>
+                <ul id="food-log-list">
+                    <li class="empty-log">아직 먹은 음식이 없습니다.</li>
+                </ul>
+            </div>
+
+            <div style="margin-top: 20px;">
                 <button onclick="showScreen('screen-recommendation')" class="btn-large">
                     🍽️ 오늘 뭐 먹지? (메뉴 추천 받기)
                 </button>
@@ -73,9 +82,9 @@
         </section>
 
         <section id="screen-recommendation" style="display: none;">
-            <button onclick="showScreen('screen-dashboard')" class="btn-back">← 내 상태 확인하러 가기</button>
+            <button onclick="showScreen('screen-dashboard')" class="btn-back">← 대시보드로 돌아가기</button>
             
-            <h2>옵션 선택 및 추천</h2>
+            <h2>메뉴 추천</h2>
             
             <div class="price-filter">
                 <h4>💰 가격대 선택</h4>
@@ -111,6 +120,6 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=final"></script>
 </body>
 </html>

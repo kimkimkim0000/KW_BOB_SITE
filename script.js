@@ -129,13 +129,12 @@ function showScreen(id, mode) {
     // 헤더 제어
     const header = document.getElementById('main-header');
     const hamburger = document.getElementById('hamburger-btn');
-    const backBtn = document.getElementById('global-back-btn');
+    // [수정] 뒤로가기 버튼 필요 없음 (각 화면에서 개별 관리)
 
     if (header) header.style.display = 'block';
 
     if (id === 'screen-login') {
         if(hamburger) hamburger.style.display = 'none';
-        if(backBtn) backBtn.style.display = 'block';
         
         if (mode === 'signup') {
             isSignupMode = false; 
@@ -146,23 +145,17 @@ function showScreen(id, mode) {
         }
     } else if (id === 'screen-dashboard') {
         if(hamburger) hamburger.style.display = 'block';
-        if(backBtn) backBtn.style.display = 'none';
     } else {
         if(hamburger) hamburger.style.display = 'block';
-        if(backBtn) backBtn.style.display = 'block';
     }
     
     const dropdown = document.getElementById('dropdown-menu');
     if(dropdown) dropdown.classList.remove('show');
 }
 
+// [수정] 메인화면 버튼 로직
 function handleBackBtn() {
-    const loginScreen = document.getElementById('screen-login');
-    if (loginScreen.style.display === 'block') {
-        showScreen('screen-intro'); 
-    } else {
-        showScreen('screen-dashboard'); 
-    }
+    showScreen('screen-intro');
 }
 
 function closeModal(id) { 

@@ -70,21 +70,36 @@ const foodDatabase = {
 };
 
 // 3. 화면 및 메뉴 제어
+function startApp() {
+    document.getElementById('screen-intro').style.display = 'none';
+    document.getElementById('screen-login').style.display = 'block';
+    document.getElementById('main-header').style.display = 'block';
+}
+
 function showScreen(id) {
-    ['screen-login','screen-dashboard','screen-recommendation', 'screen-edit-info'].forEach(s => {
-        document.getElementById(s).style.display = (s===id)?'block':'none';
+    // [NEW] 인트로 화면 처리
+    const screens = ['screen-intro', 'screen-login', 'screen-dashboard', 'screen-recommendation', 'screen-edit-info'];
+    screens.forEach(s => {
+        const el = document.getElementById(s);
+        if(el) el.style.display = (s===id) ? 'block' : 'none';
     });
     
     const hamburger = document.getElementById('hamburger-btn');
     const backBtn = document.getElementById('global-back-btn');
+    const header = document.getElementById('main-header');
 
-    if (id === 'screen-login') {
+    if (id === 'screen-intro') {
+        header.style.display = 'none';
+    } else if (id === 'screen-login') {
+        header.style.display = 'block';
         hamburger.style.display = 'none';
         backBtn.style.display = 'none';
     } else if (id === 'screen-dashboard') {
+        header.style.display = 'block';
         hamburger.style.display = 'block';
         backBtn.style.display = 'none'; 
     } else {
+        header.style.display = 'block';
         hamburger.style.display = 'block';
         backBtn.style.display = 'block'; 
     }
@@ -124,13 +139,12 @@ function toggleDarkMode() {
     toggleMenu(); 
 }
 
-// [수정 1] 초기화 시 영수증 한줄평(receiptComment)도 삭제
 function resetDailyData() {
     if(confirm("오늘의 식사 기록, 섭취 칼로리, 지출 내역을 모두 초기화하시겠습니까?")) {
         userState.currentCalories = 0;
         userState.currentSpend = 0;
         userState.eatenLogs = [];
-        userState.receiptComment = ""; // 한줄평 초기화
+        userState.receiptComment = ""; 
         saveUserData();
         updateDashboardUI();
         alert("초기화되었습니다.");
@@ -162,9 +176,23 @@ function handleAuthAction() {
     if(!id || !pw) return alert("정보를 입력하세요.");
 
     if (isSignupMode) {
-        const h=document.getElementById('height').value, w=document.getElementById('weight').value;
-        const a=document.getElementById('age').value, g=document.getElementById('gender').value;
-        const goal=document.getElementById('goal').value;
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(id)) {
+            alert("아이디는 이메일 형식이어야 합니다. (예: user@kw.ac.kr)");
+            return;
+        }
+        const pwPattern = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,}$/;
+        if (!pwPattern.test(pw)) {
+            alert("비밀번호는 영문, 숫자, 특수문자(!@#$%^&*?_)를 포함하여 8자 이상이어야 합니다.");
+            return;
+        }
+
+        const nick = document.getElementById('nickname').value;
+        const h = document.getElementById('height').value;
+        const w = document.getElementById('weight').value;
+        const a = document.getElementById('age').value;
+        const g = document.getElementById('gender').value;
+        const goal = document.getElementById('goal').value;
         
         const noBudget = document.getElementById('no-budget').checked;
         let budgetVal = 0;
@@ -172,12 +200,13 @@ function handleAuthAction() {
             budgetVal = 100000000;
         } else {
             budgetVal = document.getElementById('budget').value;
-            if(!h || !w || !a || !budgetVal) return alert("모든 정보를 입력해주세요.");
+            if(!h || !w || !a || !budgetVal || !nick) return alert("모든 정보를 입력해주세요.");
             budgetVal = parseInt(budgetVal) * 10000;
         }
 
         const userData = {
-            password: pw, height: h, weight: w, age: a, gender: g, goal: goal,
+            password: pw, nickname: nick,
+            height: h, weight: w, age: a, gender: g, goal: goal,
             monthlyBudget: parseInt(budgetVal), currentSpend: 0,
             currentCalories: 0, eatenLogs: [], lastDate: "", receiptComment: ""
         };
@@ -190,7 +219,13 @@ function handleAuthAction() {
         const data = JSON.parse(dataStr);
         if(data.password === pw) {
             const today = new Date().toLocaleDateString();
-            userState = { ...userState, isLoggedIn:true, username:id, ...data, height:+data.height, weight:+data.weight, age:+data.age };
+            userState = { 
+                ...userState, 
+                isLoggedIn:true, 
+                username:id, 
+                ...data, 
+                height:+data.height, weight:+data.weight, age:+data.age 
+            };
             
             if (userState.lastDate !== today) {
                 userState.currentCalories = 0;
@@ -203,7 +238,7 @@ function handleAuthAction() {
             calculateMetrics();
             updateDashboardUI();
             showScreen('screen-dashboard');
-            document.getElementById('user-name-display').innerText = id;
+            document.getElementById('user-name-display').innerText = userState.nickname;
         } else {
             alert("비밀번호가 틀렸습니다.");
         }
@@ -212,6 +247,7 @@ function handleAuthAction() {
 
 function openEditInfo() {
     toggleMenu(); 
+    document.getElementById('edit-nickname').value = userState.nickname;
     document.getElementById('edit-height').value = userState.height;
     document.getElementById('edit-weight').value = userState.weight;
     document.getElementById('edit-age').value = userState.age;
@@ -231,6 +267,7 @@ function openEditInfo() {
 }
 
 function saveEditInfo() {
+    const nick = document.getElementById('edit-nickname').value;
     const h = document.getElementById('edit-height').value;
     const w = document.getElementById('edit-weight').value;
     const a = document.getElementById('edit-age').value;
@@ -243,10 +280,11 @@ function saveEditInfo() {
         budgetVal = 100000000;
     } else {
         budgetVal = document.getElementById('edit-budget').value;
-        if(!h || !w || !a || !budgetVal) return alert("모든 정보를 입력해주세요.");
+        if(!h || !w || !a || !budgetVal || !nick) return alert("모든 정보를 입력해주세요.");
         budgetVal = parseInt(budgetVal) * 10000;
     }
 
+    userState.nickname = nick;
     userState.height = parseFloat(h);
     userState.weight = parseFloat(w);
     userState.age = parseFloat(a);
@@ -257,6 +295,8 @@ function saveEditInfo() {
     calculateMetrics(); 
     updateDashboardUI(); 
     
+    document.getElementById('user-name-display').innerText = userState.nickname;
+
     alert("정보가 수정되었습니다!");
     showScreen('screen-dashboard');
 }
@@ -468,7 +508,7 @@ function openReceipt() {
             <p>${message}</p>
         </div>
         <input type="text" class="receipt-comment" 
-               placeholder="오늘 음식 나이스 초이스 👍" 
+               placeholder="한 줄 문구 (예: 오늘 음식 나이스 초이스)" 
                value="${userState.receiptComment || ''}" 
                oninput="saveReceiptComment(this.value)">
     `;

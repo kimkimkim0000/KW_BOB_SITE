@@ -18,21 +18,20 @@ body.dark-mode #hamburger-btn, body.dark-mode #global-back-btn { color: #fff; }
 body.dark-mode .modal-content { background-color: #2d2d2d; color: #eee; border: 1px solid #444; }
 body.dark-mode .receipt-paper { background-color: #fff; color: #000; } 
 
-/* [수정됨] 헤더 & 버튼 */
+/* 헤더 & 버튼 */
 header { margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 10px; position: relative; }
 body.dark-mode header { border-bottom: 1px solid #444; }
 .header-content { display: flex; justify-content: center; align-items: center; position: relative; height: 40px; }
 header h1 { color: #8a0e26; margin: 0; font-size: 24px; line-height: 40px; }
 body.dark-mode header h1 { color: #ff6b6b; } 
 
-/* [NEW] 좌측 상단 뒤로가기 버튼 */
+/* [수정됨] 홈 아이콘 버튼 */
 #global-back-btn {
     position: absolute; left: 0; top: 50%; transform: translateY(-50%);
-    background: none; border: none; font-size: 16px; cursor: pointer; color: #333; padding: 5px;
-    font-weight: bold;
+    background: none; border: none; font-size: 24px; /* 아이콘 크기 키움 */
+    cursor: pointer; color: #333; padding: 5px;
 }
 
-/* 우측 상단 햄버거 버튼 */
 #hamburger-btn {
     position: absolute; right: 0; top: 50%; transform: translateY(-50%);
     background: none; border: none; font-size: 24px; cursor: pointer; color: #333; padding: 5px;
@@ -47,10 +46,9 @@ body.dark-mode header h1 { color: #ff6b6b; }
 .dropdown-content a:hover { background-color: #f1f1f1; border-radius: 8px; }
 .show { display: block; }
 
-/* [수정됨] 제목 여백 축소 */
 h2 { margin-top: 0; margin-bottom: 15px; font-size: 20px; }
 
-/* 버튼 */
+/* 버튼 공통 */
 button { cursor: pointer; border: none; border-radius: 8px; font-weight: bold; transition: 0.2s; }
 .btn-primary { background-color: #8a0e26; color: white; padding: 12px; width: 100%; font-size: 16px; margin-top: 10px; }
 .btn-primary:hover { background-color: #6d0b1e; }
@@ -94,10 +92,13 @@ body.dark-mode .progress-bar { background: #555; }
 #food-log-list li:last-child { border-bottom: none; }
 .empty-log { color: #999; text-align: center; display: block; margin-top: 10px; }
 
-/* 추천 */
+/* 추천 - [수정 4] 라디오 버튼 수직 정렬 */
 .price-filter { background: #fff0f3; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
 body.dark-mode .price-filter { background: #2a1a1a; }
 .radio-group { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px; font-size: 14px; }
+.radio-group label { display: flex; align-items: center; cursor: pointer; }
+.radio-group input { width: auto; margin-right: 5px; margin-bottom: 0; }
+
 .category-buttons { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 20px; }
 .category-buttons button { background-color: #555; color: white; padding: 10px 0; font-size: 14px; }
 .food-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; animation: fadeIn 0.3s; }
@@ -130,7 +131,6 @@ body.dark-mode .price-filter { background: #2a1a1a; }
 .receipt-grade { text-align: center; margin-top: 20px; border: 2px solid #000; padding: 10px; border-radius: 5px; color: #000 !important; }
 .receipt-grade span { font-size: 40px; color: #d32f2f !important; font-weight: bold; display: block; margin: 5px 0; }
 .receipt-footer { color: #666 !important; text-align: center; margin-top: 20px; font-size: 12px; }
-
 .receipt-comment { 
     width: 100%; padding: 10px; margin-top: 15px; 
     border: none; border-bottom: 1px dashed #333; background: #f9f9f9; 

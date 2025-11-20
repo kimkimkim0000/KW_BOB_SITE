@@ -15,8 +15,8 @@
             <a href="#" onclick="showScreen('screen-help')">도움말</a>
             <a href="#" onclick="showScreen('screen-creators')">만든 사람들</a>
             <div class="nav-divider">|</div>
-            <a href="#" onclick="showScreen('screen-login', 'login')">로그인</a>
-            <a href="#" onclick="showScreen('screen-login', 'signup')">회원가입</a>
+            <a href="#" onclick="startApp()">로그인</a>
+            <a href="#" onclick="startApp()">회원가입</a>
         </nav>
     </header>
 
@@ -204,45 +204,57 @@
             
             <h2>메뉴 추천</h2>
             
-            <div id="wallet-guard-msg" style="display:none; background:#ffebee; color:#c62828; padding:10px; border-radius:8px; margin-bottom:10px; font-size:14px;">🚨 <strong>식비 방어 모드 발동!</strong><br>남은 돈이 별로 없어요. 가성비 메뉴만 추천합니다!</div>
-            
+            <div id="wallet-guard-msg" style="display:none; background:#ffebee; color:#c62828; padding:10px; border-radius:8px; margin-bottom:10px; font-size:14px;">
+                🚨 <strong>식비 방어 모드 발동!</strong><br>남은 돈이 별로 없어요. 가성비 메뉴만 추천합니다!
+            </div>
+
             <div class="price-filter">
                 <h4>💰 가격대 선택</h4>
-                <div class="radio-group vertical-align">
-                    <label>
-                        <input type="radio" name="price" value="0" checked>
-                        <span>상관없음</span>
-                    </label>
-                    <label>
-                        <input type="radio" name="price" value="1">
-                        <span>1만원 미만</span>
-                    </label>
-                    <label>
-                        <input type="radio" name="price" value="2">
-                        <span>1만~1.2만원</span>
-                    </label>
-                    <label>
-                        <input type="radio" name="price" value="3">
-                        <span>1.2만~1.5만원</span>
-                    </label>
+                <div class="radio-group">
+                    <label><input type="radio" name="price" value="0" checked> 상관없음</label>
+                    <label><input type="radio" name="price" value="1"> 1만원 미만</label>
+                    <label><input type="radio" name="price" value="2"> 1만~1.2만원</label>
+                    <label><input type="radio" name="price" value="3"> 1.2만~1.5만원</label>
                 </div>
             </div>
-            
+
             <div class="category-buttons">
-                <button onclick="recommendFood('korean')">한식</button><button onclick="recommendFood('chinese')">중식</button><button onclick="recommendFood('western')">양식</button><button onclick="recommendFood('snack')">분식</button><button onclick="recommendFood('cook')">직접 요리</button>
+                <button onclick="recommendFood('korean')">한식</button>
+                <button onclick="recommendFood('chinese')">중식</button>
+                <button onclick="recommendFood('western')">양식</button>
+                <button onclick="recommendFood('japanese')">일식</button>
+                <button onclick="recommendFood('snack')">분식</button>
+                <button onclick="recommendFood('cook')">직접 요리</button>
             </div>
-            
+
             <div id="recommendation-area" class="recommendation-grid"></div>
-            
+
             <div style="text-align: center; margin-top: 20px;">
-                <button id="retry-btn" onclick="retryRecommendation()" class="btn-retry" style="display:none;">🔄 마음에 안 들어요! (다른 메뉴 추천)</button>
+                <button id="retry-btn" onclick="retryRecommendation()" class="btn-retry" style="display:none;">
+                    🔄 마음에 안 들어요! (다른 메뉴 추천)
+                </button>
             </div>
         </section>
     </div>
 
-    <div id="receipt-modal" class="modal"><div class="modal-content receipt-paper"><span class="close" onclick="closeModal('receipt-modal')">&times;</span><div id="receipt-content"></div><div class="receipt-footer"><button onclick="closeModal('receipt-modal')" class="btn-primary">닫기</button></div></div></div>
-    <div id="recipe-modal" class="modal"><div class="modal-content"><span class="close" onclick="closeModal('recipe-modal')">&times;</span><h3 id="recipe-title">요리 이름</h3><div id="recipe-body"></div></div></div>
+    <div id="receipt-modal" class="modal">
+        <div class="modal-content receipt-paper">
+            <span class="close" onclick="closeModal('receipt-modal')">&times;</span>
+            <div id="receipt-content"></div>
+            <div class="receipt-footer">
+                <button onclick="closeModal('receipt-modal')" class="btn-primary">닫기</button>
+            </div>
+        </div>
+    </div>
 
-    <script src="script.js?v=final_v23"></script>
+    <div id="recipe-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('recipe-modal')">&times;</span>
+            <h3 id="recipe-title">요리 이름</h3>
+            <div id="recipe-body"></div>
+        </div>
+    </div>
+
+    <script src="script.js?v=final_real_data_v1"></script>
 </body>
 </html>

@@ -150,7 +150,7 @@ function toggleBudgetInput(inputId, checkboxId) {
     const chk = document.getElementById(checkboxId).checked;
     const input = document.getElementById(inputId);
     input.disabled = chk;
-    input.placeholder = chk ? "예산 무제한" : "한 달 식비 예산 (만원)";
+    input.placeholder = chk ? "예산 상관없음" : "한 달 식비 예산 (만원)";
     if(chk) input.value = "";
 }
 
@@ -442,7 +442,7 @@ function openReceipt() {
         message = "오늘은 좀 과식을 한 것 같아요 🐷";
     } else if (diff < -500) {
         grade = "C"; // 너무 적게 먹어도 좋지 않음
-        message = "오늘은 당신은 소식좌인가요? 🐜";
+        message = "오늘의 당신은 소식좌인가요? 🐜";
     } else {
         // 적정 범위 내 (±500)
         const percentDiff = Math.abs(diff) / userState.recCalories * 100;
@@ -470,7 +470,7 @@ function openReceipt() {
             <p>${message}</p>
         </div>
         <input type="text" class="receipt-comment" 
-               placeholder="한줄평을 입력하세요 (예: 디저트 배는 따로!)" 
+               placeholder="한줄평을 입력하세요 (예: 오늘은 나이스 초이스였다!)" 
                value="${userState.receiptComment || ''}" 
                oninput="saveReceiptComment(this.value)">
     `;

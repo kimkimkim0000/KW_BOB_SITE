@@ -47,7 +47,7 @@
                         </select>
                     </div>
                     <div class="budget-group">
-                        <input type="number" id="budget" placeholder="한 달 식비 예산 (원)">
+                        <input type="number" id="budget" placeholder="한 달 식비 예산 (만원)">
                         <label class="checkbox-label">
                             <input type="checkbox" id="no-budget" onchange="toggleBudgetInput('budget', 'no-budget')"> 예산 상관없음 (무제한)
                         </label>
@@ -116,31 +116,38 @@
             <h2>내 정보 수정</h2>
             <div class="auth-box">
                 <p class="signup-guide">변경할 정보를 입력해주세요.</p>
+                
                 <div class="input-group">
-                    <label style="width:50px; padding-top:10px;">키</label>
+                    <label>키</label>
                     <input type="number" id="edit-height" placeholder="키 (cm)">
                 </div>
                 <div class="input-group">
-                    <label style="width:50px; padding-top:10px;">몸무게</label>
+                    <label>몸무게</label>
                     <input type="number" id="edit-weight" placeholder="몸무게 (kg)">
                 </div>
                 <div class="input-group">
-                    <label style="width:50px; padding-top:10px;">나이</label>
+                    <label>나이</label>
                     <input type="number" id="edit-age" placeholder="나이 (세)">
                 </div>
                 
-                <div class="budget-group">
-                    <input type="number" id="edit-budget" placeholder="한 달 식비 예산 (원)">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="edit-no-budget" onchange="toggleBudgetInput('edit-budget', 'edit-no-budget')"> 예산 상관없음
-                    </label>
+                <div class="input-group" style="align-items: flex-start;">
+                    <label style="margin-top: 12px;">식비</label>
+                    <div style="width: 100%;">
+                        <input type="number" id="edit-budget" placeholder="한 달 식비 예산 (만원)">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="edit-no-budget" onchange="toggleBudgetInput('edit-budget', 'edit-no-budget')"> 예산 상관없음
+                        </label>
+                    </div>
                 </div>
 
-                <select id="edit-goal">
-                    <option value="maintain">체중 유지</option>
-                    <option value="lose">체중 감량 (다이어트)</option>
-                    <option value="gain">체중 증가 (벌크업)</option>
-                </select>
+                <div class="input-group">
+                    <label>목표</label>
+                    <select id="edit-goal">
+                        <option value="maintain">체중 유지</option>
+                        <option value="lose">체중 감량 (다이어트)</option>
+                        <option value="gain">체중 증가 (벌크업)</option>
+                    </select>
+                </div>
 
                 <button onclick="saveEditInfo()" class="btn-primary">수정 완료</button>
             </div>
@@ -206,16 +213,13 @@
             <div style="text-align: left; padding: 10px; line-height: 1.6; font-size: 14px;">
                 <p><strong>1. 서비스 목적</strong><br>
                 광운대생들의 건강하고 경제적인 식생활을 위해 만든 맞춤형 식단 추천 서비스입니다.</p>
-                
                 <p><strong>2. 추천 알고리즘</strong><br>
                 사용자의 정보를 바탕으로 <strong>Mifflin-St Jeor 공식</strong>을 사용하여 기초대사량을 계산합니다.<br>
                 - <strong>감량:</strong> 유지 칼로리 - 500kcal<br>
                 - <strong>증량:</strong> 유지 칼로리 + 500kcal</p>
-                
                 <p><strong>3. 개발팀 (광운대학교)</strong><br>
                 💻 <strong>Backend & 기획:</strong> 김승일 (2025403042)<br>
                 🎨 <strong>Frontend & Design:</strong> 임세헌 (2025403043)</p>
-                
                 <p style="margin-top:10px; color:#888; font-size:12px; text-align:center;">
                     Ver 1.0.0 | © 2025 KW BOB Team
                 </p>
@@ -223,6 +227,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=final_complete"></script>
+    <script src="script.js?v=final_v6"></script>
 </body>
 </html>

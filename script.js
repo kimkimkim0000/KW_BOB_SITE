@@ -3,73 +3,131 @@ let userState = {
     isLoggedIn: false, username: "",
     height: 0, weight: 0, age: 0, gender: "", bmi: 0, goal: "",
     recCalories: 0, currentCalories: 0,
-    eatenLogs: [], // [NEW] 섭취 기록 리스트
-    lastDate: ""   // [NEW] 마지막 접속 날짜 (자동 초기화용)
+    monthlyBudget: 0, currentSpend: 0,
+    eatenLogs: [], lastDate: ""
 };
 
 let lastSelectedCategory = ''; 
 let shownFoodNames = [];
 
-// 2. 데이터베이스
+// 2. 음식 데이터베이스 (학교 앞 실제 메뉴)
 const foodDatabase = {
     'korean': [
-        { name: "비빔밥", restaurant: "한울관 식당", kcal: 550, price: 5500 },
-        { name: "김치찌개", restaurant: "광운분식", kcal: 600, price: 8000 },
-        { name: "제육덮밥", restaurant: "밥은화", kcal: 750, price: 6500 },
-        { name: "갈비탕", restaurant: "선비촌", kcal: 700, price: 14000 },
-        { name: "불고기 백반", restaurant: "기사식당", kcal: 800, price: 11000 },
-        { name: "순두부찌개", restaurant: "맛있는 밥집", kcal: 500, price: 7500 },
-        { name: "부대찌개", restaurant: "킹콩부대찌개", kcal: 700, price: 9000 },
-        { name: "돌솥비빔밥", restaurant: "본죽", kcal: 650, price: 9500 },
-        { name: "참치마요", restaurant: "한솥", kcal: 600, price: 4500 },
-        { name: "육회비빔밥", restaurant: "육회지존", kcal: 650, price: 11000 }
+        { name: "야채김밥", restaurant: "김밥천국", kcal: 320, price: 3000 },
+        { name: "참치김밥", restaurant: "김밥천국", kcal: 450, price: 4500 },
+        { name: "김치찌개", restaurant: "김밥천국", kcal: 420, price: 6500 },
+        { name: "제육덮밥", restaurant: "김밥천국", kcal: 650, price: 7000 },
+        { name: "갈비탕", restaurant: "김밥천국", kcal: 550, price: 7500 },
+        { name: "직화간장제육", restaurant: "밥은화", kcal: 850, price: 7000 },
+        { name: "스팸마요", restaurant: "밥은화", kcal: 700, price: 5500 },
+        { name: "참치마요", restaurant: "밥은화", kcal: 650, price: 5500 },
+        { name: "제육컵밥(기본)", restaurant: "경대컵밥", kcal: 850, price: 6200 },
+        { name: "삼겹살 컵밥", restaurant: "경대컵밥", kcal: 900, price: 8000 },
+        { name: "일심텐동", restaurant: "일심텐동", kcal: 600, price: 11900 },
+        { name: "육회덮밥", restaurant: "육회바른연어", kcal: 650, price: 7900 },
+        { name: "닭도리탕(1인)", restaurant: "오감", kcal: 900, price: 13500 } 
     ],
     'chinese': [
-        { name: "짜장면", restaurant: "홍콩반점", kcal: 700, price: 7000 },
-        { name: "짬뽕", restaurant: "수라청", kcal: 600, price: 9000 },
-        { name: "볶음밥", restaurant: "동해루", kcal: 850, price: 8000 },
-        { name: "마라탕", restaurant: "탕화쿵푸", kcal: 900, price: 13000 },
-        { name: "탕수육(소)", restaurant: "차이웍", kcal: 400, price: 14000 },
-        { name: "잡채밥", restaurant: "북경", kcal: 750, price: 8500 },
-        { name: "군만두", restaurant: "서비스", kcal: 300, price: 0 },
-        { name: "깐풍기", restaurant: "아서원", kcal: 800, price: 18000 }
+        { name: "짜장면", restaurant: "진짜루", kcal: 700, price: 5000 },
+        { name: "짬뽕", restaurant: "진짜루", kcal: 850, price: 6000 },
+        { name: "간짜장", restaurant: "진짜루", kcal: 800, price: 6000 },
+        { name: "볶음밥", restaurant: "진짜루", kcal: 750, price: 6000 },
+        { name: "탕수육(소)", restaurant: "진짜루", kcal: 450, price: 12000 },
+        { name: "탕볶밥", restaurant: "진짜루", kcal: 950, price: 9000 },
+        { name: "탕짜면", restaurant: "진짜루", kcal: 900, price: 8500 }
     ],
     'western': [
-        { name: "치즈버거", restaurant: "맥도날드", kcal: 900, price: 9500 },
-        { name: "파스타", restaurant: "파스타부오노", kcal: 600, price: 10000 },
-        { name: "돈까스", restaurant: "비슐랭", kcal: 800, price: 11000 },
-        { name: "샌드위치", restaurant: "써브웨이", kcal: 450, price: 7500 },
-        { name: "피자", restaurant: "피자스쿨", kcal: 500, price: 5000 },
-        { name: "스테이크", restaurant: "빕스", kcal: 900, price: 25000 },
-        { name: "샐러드", restaurant: "샐러디", kcal: 350, price: 8500 },
-        { name: "리조또", restaurant: "롤링파스타", kcal: 650, price: 9000 }
+        { name: "싸이버거 세트", restaurant: "맘스터치", kcal: 978, price: 6900 },
+        { name: "불고기버거", restaurant: "맘스터치", kcal: 403, price: 3900 },
+        { name: "프랭크버거(R)", restaurant: "프랭크버거", kcal: 494, price: 4600 },
+        { name: "치즈버거", restaurant: "프랭크버거", kcal: 242, price: 5500 },
+        { name: "더블비프치즈버거", restaurant: "프랭크버거", kcal: 723, price: 7900 },
+        { name: "슈퍼파파스(R,2조각)", restaurant: "파파존스", kcal: 700, price: 10000 },
+        { name: "등심가츠", restaurant: "카츠백", kcal: 850, price: 11000 },
+        { name: "통치즈가츠", restaurant: "카츠백", kcal: 950, price: 11800 }
     ],
     'snack': [
-        { name: "떡볶이", restaurant: "엽기떡볶이", kcal: 350, price: 14000 },
-        { name: "순대", restaurant: "죠스떡볶이", kcal: 400, price: 5000 },
-        { name: "라면", restaurant: "김밥천국", kcal: 500, price: 4500 },
-        { name: "닭강정", restaurant: "가마로강정", kcal: 600, price: 8000 },
-        { name: "토스트", restaurant: "이삭토스트", kcal: 400, price: 4500 },
-        { name: "오뎅 2개", restaurant: "길거리", kcal: 150, price: 2000 },
-        { name: "핫도그", restaurant: "명랑핫도그", kcal: 300, price: 2500 }
+        { name: "엽기떡볶이(1인)", restaurant: "엽기떡볶이", kcal: 900, price: 14000 },
+        { name: "로제떡볶이(1인)", restaurant: "엽기떡볶이", kcal: 1100, price: 16000 },
+        { name: "신전떡볶이", restaurant: "신전떡볶이", kcal: 550, price: 4500 },
+        { name: "신전치즈김밥", restaurant: "신전떡볶이", kcal: 600, price: 5200 },
+        { name: "햄스페셜 토스트", restaurant: "이삭토스트", kcal: 450, price: 3800 },
+        { name: "베이컨 베스트", restaurant: "이삭토스트", kcal: 470, price: 4300 },
+        { name: "퓨전라볶이", restaurant: "디델리", kcal: 700, price: 5000 },
+        { name: "참치김밥", restaurant: "디델리", kcal: 400, price: 3000 }
     ],
     'cook': [
-        { name: "닭가슴살 샐러드", restaurant: "자취방", kcal: 200, price: 5000, recipe: "1. 닭가슴살 삶기<br>2. 야채 씻기<br>3. 드레싱" },
-        { name: "간장계란밥", restaurant: "자취방", kcal: 450, price: 2000, recipe: "1. 밥+계란후라이<br>2. 간장,참기름" },
-        { name: "김치볶음밥", restaurant: "자취방", kcal: 600, price: 3000, recipe: "1. 김치 볶기<br>2. 밥 볶기" },
-        { name: "오트밀 죽", restaurant: "기숙사", kcal: 300, price: 1500, recipe: "1. 오트밀+우유<br>2. 전자레인지 2분" },
-        { name: "라면", restaurant: "기숙사", kcal: 500, price: 1000, recipe: "1. 물 끓이기<br>2. 면,스프 넣기" }
+        { name: "간장계란밥", restaurant: "집밥", kcal: 400, price: 2000, recipe: "따뜻한 밥 + 반숙후라이 + 간장/참기름/깨" },
+        { name: "김치볶음밥", restaurant: "집밥", kcal: 500, price: 3000, recipe: "파기름 + 김치/햄 볶기 + 밥 + 고춧가루" },
+        { name: "참치마요덮밥", restaurant: "집밥", kcal: 550, price: 4000, recipe: "밥 + 기름 뺀 참치 + 스크램블 + 마요네즈" },
+        { name: "제육덮밥", restaurant: "집밥", kcal: 700, price: 5000, recipe: "돼지고기/야채 + 고추장 양념 볶기" },
+        { name: "짜장라면", restaurant: "집밥", kcal: 550, price: 1000, recipe: "면 삶기 + 물 8스푼 남기고 스프 볶기" },
+        { name: "떡볶이", restaurant: "집밥", kcal: 500, price: 3000, recipe: "물 + 고추장/설탕 + 떡/어묵 졸이기" },
+        { name: "계란말이", restaurant: "집밥", kcal: 200, price: 1500, recipe: "계란물 + 다진야채 + 말아가며 굽기" },
+        { name: "오트밀 죽", restaurant: "집밥", kcal: 300, price: 1500, recipe: "오트밀 + 우유 + 전자레인지 2분" }
     ]
 };
 
-// 3. 화면 전환
+// 3. 화면 및 메뉴 제어
 function showScreen(id) {
-    ['screen-login','screen-dashboard','screen-recommendation'].forEach(s => {
+    ['screen-login','screen-dashboard','screen-recommendation', 'screen-edit-info'].forEach(s => {
         document.getElementById(s).style.display = (s===id)?'block':'none';
     });
+    
+    const hamburger = document.getElementById('hamburger-btn');
+    if (id === 'screen-login') {
+        hamburger.style.display = 'none';
+    } else {
+        hamburger.style.display = 'block';
+    }
+    document.getElementById('dropdown-menu').classList.remove('show');
+}
+function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+function toggleMenu() {
+    document.getElementById('dropdown-menu').classList.toggle('show');
 }
 
-// 4. 인증 (로그인/회원가입)
+window.onclick = function(event) {
+    if (!event.target.matches('#hamburger-btn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        for (var i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+        }
+    }
+    const modal1 = document.getElementById('receipt-modal');
+    const modal2 = document.getElementById('recipe-modal');
+    const modal3 = document.getElementById('about-modal');
+    if (event.target == modal1) modal1.style.display = 'none';
+    if (event.target == modal2) modal2.style.display = 'none';
+    if (event.target == modal3) modal3.style.display = 'none';
+}
+
+function openAbout() {
+    toggleMenu();
+    document.getElementById('about-modal').style.display = 'block';
+}
+
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    toggleMenu(); 
+}
+
+function resetDailyData() {
+    if(confirm("오늘의 식사 기록과 섭취 칼로리를 모두 초기화하시겠습니까?\n(지출 내역은 유지됩니다.)")) {
+        userState.currentCalories = 0;
+        userState.eatenLogs = [];
+        saveUserData();
+        updateDashboardUI();
+        alert("초기화되었습니다.");
+        toggleMenu();
+    }
+}
+
+// 4. 인증 및 회원관리
 let isSignupMode = false;
 function toggleAuthMode() {
     isSignupMode = !isSignupMode;
@@ -77,6 +135,14 @@ function toggleAuthMode() {
     document.getElementById('auth-action-btn').innerText = isSignupMode ? "가입하기" : "로그인";
     document.getElementById('auth-toggle-btn').innerText = isSignupMode ? "로그인" : "회원가입";
     document.getElementById('signup-fields').style.display = isSignupMode ? "block" : "none";
+}
+
+function toggleBudgetInput(inputId, checkboxId) {
+    const chk = document.getElementById(checkboxId).checked;
+    const input = document.getElementById(inputId);
+    input.disabled = chk;
+    input.placeholder = chk ? "예산 무제한" : "한 달 식비 예산 (원)";
+    if(chk) input.value = "";
 }
 
 function handleAuthAction() {
@@ -88,11 +154,20 @@ function handleAuthAction() {
         const h=document.getElementById('height').value, w=document.getElementById('weight').value;
         const a=document.getElementById('age').value, g=document.getElementById('gender').value;
         const goal=document.getElementById('goal').value;
-        if(!h || !w || !a) return alert("모든 정보를 입력해주세요.");
         
+        const noBudget = document.getElementById('no-budget').checked;
+        let budgetVal = 0;
+        if (noBudget) {
+            budgetVal = 100000000;
+        } else {
+            budgetVal = document.getElementById('budget').value;
+            if(!h || !w || !a || !budgetVal) return alert("모든 정보를 입력해주세요.");
+        }
+
         const userData = {
             password: pw, height: h, weight: w, age: a, gender: g, goal: goal,
-            currentCalories: 0, eatenLogs: [], lastDate: "" // 초기 데이터 구조
+            monthlyBudget: parseInt(budgetVal), currentSpend: 0,
+            currentCalories: 0, eatenLogs: [], lastDate: ""
         };
         localStorage.setItem(id, JSON.stringify(userData));
         alert("가입 완료!"); toggleAuthMode();
@@ -105,9 +180,7 @@ function handleAuthAction() {
             const today = new Date().toLocaleDateString();
             userState = { ...userState, isLoggedIn:true, username:id, ...data, height:+data.height, weight:+data.weight, age:+data.age };
             
-            // [1. 날짜 확인 및 데이터 불러오기]
             if (userState.lastDate !== today) {
-                // 날짜가 다르면 초기화
                 userState.currentCalories = 0;
                 userState.eatenLogs = [];
                 userState.lastDate = today;
@@ -115,23 +188,72 @@ function handleAuthAction() {
             }
 
             calculateMetrics();
-            updateDashboardUI(); // UI 갱신
+            updateDashboardUI();
             showScreen('screen-dashboard');
             document.getElementById('user-name-display').innerText = id;
         } else {
-            alert("정보가 틀렸습니다.");
+            alert("비밀번호가 틀렸습니다.");
         }
     }
 }
 
+function openEditInfo() {
+    toggleMenu(); 
+    document.getElementById('edit-height').value = userState.height;
+    document.getElementById('edit-weight').value = userState.weight;
+    document.getElementById('edit-age').value = userState.age;
+    document.getElementById('edit-goal').value = userState.goal;
+    
+    if (userState.monthlyBudget >= 100000000) {
+        document.getElementById('edit-no-budget').checked = true;
+        document.getElementById('edit-budget').disabled = true;
+        document.getElementById('edit-budget').value = "";
+    } else {
+        document.getElementById('edit-no-budget').checked = false;
+        document.getElementById('edit-budget').disabled = false;
+        document.getElementById('edit-budget').value = userState.monthlyBudget;
+    }
+    
+    showScreen('screen-edit-info');
+}
+
+function saveEditInfo() {
+    const h = document.getElementById('edit-height').value;
+    const w = document.getElementById('edit-weight').value;
+    const a = document.getElementById('edit-age').value;
+    const goal = document.getElementById('edit-goal').value;
+    
+    const noBudget = document.getElementById('edit-no-budget').checked;
+    let budgetVal = 0;
+
+    if (noBudget) {
+        budgetVal = 100000000;
+    } else {
+        budgetVal = document.getElementById('edit-budget').value;
+        if(!h || !w || !a || !budgetVal) return alert("모든 정보를 입력해주세요.");
+    }
+
+    userState.height = parseFloat(h);
+    userState.weight = parseFloat(w);
+    userState.age = parseFloat(a);
+    userState.goal = goal;
+    userState.monthlyBudget = parseInt(budgetVal);
+
+    saveUserData(); 
+    calculateMetrics(); 
+    updateDashboardUI(); 
+    
+    alert("정보가 수정되었습니다!");
+    showScreen('screen-dashboard');
+}
+
 function logout() { location.reload(); }
 
-// 5. 계산 (BMR)
+// 5. 계산
 function calculateMetrics() {
     userState.bmi = (userState.weight / ((userState.height/100)**2)).toFixed(1);
     document.getElementById('bmi-display').innerText = userState.bmi;
     document.getElementById('bmi-status').innerText = userState.bmi<18.5?"저체중":(userState.bmi<23?"정상":(userState.bmi<25?"과체중":"비만"));
-    
     document.getElementById('goal-display').innerText = userState.goal==='lose'?"감량":(userState.goal==='gain'?"증량":"유지");
     
     let bmr = (10*userState.weight) + (6.25*userState.height) - (5*userState.age) + (userState.gender==='male'?5:-161);
@@ -145,30 +267,37 @@ function calculateMetrics() {
     document.getElementById('rec-cal-target').innerText = userState.recCalories;
 }
 
-// 6. UI 업데이트 (대시보드 & 리스트)
+// 6. UI 갱신
 function updateDashboardUI() {
-    // 프로그레스바
     document.getElementById('current-cal').innerText = userState.currentCalories;
     const pct = Math.min((userState.currentCalories / userState.recCalories)*100, 100);
     document.getElementById('progress-fill').style.width = pct + "%";
     document.getElementById('progress-fill').style.backgroundColor = userState.currentCalories > userState.recCalories ? "red" : "#4CAF50";
 
-    // [2. 식사 기록 리스트 렌더링]
+    const budgetEl = document.getElementById('budget-display');
+    if (userState.monthlyBudget >= 100000000) {
+        budgetEl.innerText = "무제한 ♾️";
+        budgetEl.style.color = "#4CAF50";
+    } else {
+        const remain = userState.monthlyBudget - userState.currentSpend;
+        budgetEl.innerText = remain.toLocaleString() + "원";
+        budgetEl.style.color = remain < 30000 ? "red" : "#333";
+    }
+
     const list = document.getElementById('food-log-list');
-    list.innerHTML = ""; // 초기화
-    
+    list.innerHTML = "";
     if (userState.eatenLogs.length === 0) {
         list.innerHTML = '<li class="empty-log">아직 먹은 음식이 없습니다.</li>';
     } else {
         userState.eatenLogs.forEach(log => {
             const li = document.createElement('li');
-            li.innerHTML = `<span>${log.name}</span> <span>${log.kcal} kcal</span>`;
+            li.innerHTML = `<span>${log.name}</span> <span>${log.kcal} kcal / ${log.price.toLocaleString()}원</span>`;
             list.appendChild(li);
         });
     }
 }
 
-// 7. 추천 (3개씩 + 중복방지)
+// 7. 추천
 function recommendFood(category) {
     if(category !== lastSelectedCategory) { lastSelectedCategory = category; shownFoodNames = []; }
     
@@ -181,6 +310,13 @@ function recommendFood(category) {
             return f.price >= 12000;
         });
     }
+
+    const remain = userState.monthlyBudget - userState.currentSpend;
+    const isLowBudget = (userState.monthlyBudget < 100000000) && (remain < 30000);
+    const walletMsg = document.getElementById('wallet-guard-msg');
+    walletMsg.style.display = isLowBudget ? 'block' : 'none';
+
+    if (isLowBudget) list = list.filter(f => f.price <= 8000);
 
     const target = Math.round(userState.recCalories/3);
     if(userState.goal==='lose') list = list.filter(f => f.kcal <= target);
@@ -210,17 +346,15 @@ function recommendFood(category) {
         const div = document.createElement('div');
         div.className = 'food-item';
         let color = (userState.goal!=='maintain' && ((userState.goal==='lose'&&food.kcal<=target)||(userState.goal==='gain'&&food.kcal>=target))) ? '#4CAF50' : '#666';
-        
         let recipeBtn = (category==='cook'&&food.recipe) ? `<button class="recipe-btn" onclick="showRecipe('${food.name}', '${food.recipe}')">레시피</button>` : '';
 
-        // [중요] addFood에 이름과 칼로리 모두 전달
         div.innerHTML = `
             <div class="food-info">
                 <strong>[${food.restaurant}] ${food.name}</strong>
                 <span style="color:${color};font-weight:bold">(${food.kcal} kcal)</span>
                 <span class="food-meta">${food.price.toLocaleString()}원</span>
             </div>
-            <div>${recipeBtn}<button class="eat-btn" onclick="addFood(${food.kcal}, '${food.name}')">먹기</button></div>
+            <div>${recipeBtn}<button class="eat-btn" onclick="addFood(${food.kcal}, '${food.name}', ${food.price})">먹기</button></div>
         `;
         container.appendChild(div);
     });
@@ -229,25 +363,83 @@ function recommendFood(category) {
 
 function retryRecommendation() { if(lastSelectedCategory) recommendFood(lastSelectedCategory); }
 
-// 8. 먹기 기능 (데이터 저장 포함)
-function addFood(kcal, name) {
-    if(confirm(`${name} (${kcal}kcal) 섭취!\n기록하시겠습니까?`)) {
+// 8. 먹기
+function addFood(kcal, name, price) {
+    if(confirm(`${name} (${kcal}kcal, ${price}원)\n섭취 기록하시겠습니까?`)) {
         userState.currentCalories += kcal;
-        userState.eatenLogs.push({ name: name, kcal: kcal }); // 기록 추가
+        userState.currentSpend += price;
+        userState.eatenLogs.push({ name: name, kcal: kcal, price: price });
         
-        saveUserData(); // 로컬 스토리지 저장
-        updateDashboardUI(); // 화면 갱신
+        saveUserData();
+        updateDashboardUI();
         showScreen('screen-dashboard');
     }
 }
 
-// 데이터 저장 헬퍼 함수
 function saveUserData() {
     const dataToSave = {
         ...userState,
-        password: JSON.parse(localStorage.getItem(userState.username)).password // 비밀번호 유지
+        password: JSON.parse(localStorage.getItem(userState.username)).password
     };
     localStorage.setItem(userState.username, JSON.stringify(dataToSave));
+}
+
+function openReceipt() {
+    const modal = document.getElementById('receipt-modal');
+    const content = document.getElementById('receipt-content');
+    const today = new Date().toLocaleDateString();
+    
+    let html = `
+        <div class="receipt-header">
+            <h2>KW BOB RECEIPT</h2>
+            <p>광운대학교 학생식당 외</p>
+            <p>Date: ${today}</p>
+        </div>
+        <div class="receipt-body">
+    `;
+    
+    if (userState.eatenLogs.length === 0) {
+        html += `<p style="text-align:center;">기록된 식사가 없습니다.</p>`;
+    } else {
+        userState.eatenLogs.forEach(log => {
+            html += `
+                <div class="receipt-item">
+                    <span>${log.name}</span>
+                    <span>${log.kcal}kcal / ${log.price.toLocaleString()}</span>
+                </div>
+            `;
+        });
+    }
+
+    const diff = Math.abs(userState.currentCalories - userState.recCalories);
+    const percent = (diff / userState.recCalories) * 100;
+    let grade = "A+";
+    if (percent > 10) grade = "B";
+    if (percent > 20) grade = "C";
+    if (percent > 30) grade = "F";
+    if (userState.currentCalories === 0) grade = "NONE";
+
+    html += `
+        </div>
+        <div class="receipt-divider"></div>
+        <div class="receipt-total">
+            <span>Total Kcal</span>
+            <span>${userState.currentCalories}</span>
+        </div>
+        <div class="receipt-total">
+            <span>Total Price</span>
+            <span>${userState.currentSpend.toLocaleString()} 원</span>
+        </div>
+        <div class="receipt-grade">
+            <h3>오늘의 성적표</h3>
+            <span>${grade}</span>
+            <p>${grade === 'A+' ? '완벽해요! 👍' : (grade === 'F' ? '분발하세요 😱' : '나쁘지 않아요 👌')}</p>
+        </div>
+        <div class="coupon">🎉 디저트 배 속은 따로 있다!</div>
+    `;
+    
+    content.innerHTML = html;
+    modal.style.display = 'block';
 }
 
 function showRecipe(t, c) {
@@ -255,4 +447,3 @@ function showRecipe(t, c) {
     document.getElementById('recipe-body').innerHTML = c;
     document.getElementById('recipe-modal').style.display = 'block';
 }
-function closeModal() { document.getElementById('recipe-modal').style.display = 'none'; }

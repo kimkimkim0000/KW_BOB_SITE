@@ -4,7 +4,8 @@ let userState = {
     height: 0, weight: 0, age: 0, gender: "", bmi: 0, goal: "",
     recCalories: 0, currentCalories: 0,
     monthlyBudget: 0, currentSpend: 0,
-    eatenLogs: [], lastDate: ""
+    eatenLogs: [], lastDate: "",
+    receiptComment: "" // [NEW] 영수증 한줄평 저장
 };
 
 let lastSelectedCategory = ''; 
@@ -116,12 +117,13 @@ function toggleDarkMode() {
     toggleMenu(); 
 }
 
-// [수정됨] 초기화 버튼: 예산(currentSpend)도 0으로 초기화
+// [수정됨] 초기화: 예산과 영수증 한줄평도 초기화
 function resetDailyData() {
     if(confirm("오늘의 식사 기록, 섭취 칼로리, 지출 내역을 모두 초기화하시겠습니까?")) {
         userState.currentCalories = 0;
         userState.currentSpend = 0;
         userState.eatenLogs = [];
+        userState.receiptComment = ""; // 한줄평 초기화
         saveUserData();
         updateDashboardUI();
         alert("초기화되었습니다.");
@@ -170,7 +172,7 @@ function handleAuthAction() {
         const userData = {
             password: pw, height: h, weight: w, age: a, gender: g, goal: goal,
             monthlyBudget: parseInt(budgetVal), currentSpend: 0,
-            currentCalories: 0, eatenLogs: [], lastDate: ""
+            currentCalories: 0, eatenLogs: [], lastDate: "", receiptComment: ""
         };
         localStorage.setItem(id, JSON.stringify(userData));
         alert("가입 완료!"); toggleAuthMode();
@@ -186,6 +188,7 @@ function handleAuthAction() {
             if (userState.lastDate !== today) {
                 userState.currentCalories = 0;
                 userState.eatenLogs = [];
+                userState.receiptComment = ""; // 새 날이 밝으면 초기화
                 userState.lastDate = today;
                 saveUserData();
             }
@@ -388,7 +391,12 @@ function saveUserData() {
     localStorage.setItem(userState.username, JSON.stringify(dataToSave));
 }
 
-// [수정됨] 영수증 발급 (문구 삭제 + 입력창 적용)
+// [NEW] 영수증 한줄평 저장 기능
+function saveReceiptComment(val) {
+    userState.receiptComment = val;
+    saveUserData(); // 입력할 때마다 저장
+}
+
 function openReceipt() {
     const modal = document.getElementById('receipt-modal');
     const content = document.getElementById('receipt-content');
@@ -423,6 +431,7 @@ function openReceipt() {
     if (percent > 30) grade = "F";
     if (userState.currentCalories === 0) grade = "NONE";
 
+    // [수정됨] 저장된 코멘트 불러오기 & 입력 시 자동 저장
     html += `
         </div>
         <div class="receipt-divider"></div>
@@ -439,7 +448,10 @@ function openReceipt() {
             <span>${grade}</span>
             <p>${grade === 'A+' ? '완벽해요! 👍' : (grade === 'F' ? '분발하세요 😱' : '나쁘지 않아요 👌')}</p>
         </div>
-        <input type="text" class="receipt-comment" placeholder="한줄평을 입력하세요 (예: 디저트 배는 따로!)">
+        <input type="text" class="receipt-comment" 
+               placeholder="한줄평을 입력하세요 (예: 디저트 배는 따로!)" 
+               value="${userState.receiptComment || ''}" 
+               oninput="saveReceiptComment(this.value)">
     `;
     
     content.innerHTML = html;

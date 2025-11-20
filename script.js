@@ -10,7 +10,7 @@ let userState = {
 let lastSelectedCategory = ''; 
 let shownFoodNames = [];
 
-// 2. 음식 데이터베이스 (학교 앞 실제 메뉴)
+// 2. 음식 데이터베이스 (생략없이 그대로 사용)
 const foodDatabase = {
     'korean': [
         { name: "야채김밥", restaurant: "김밥천국", kcal: 320, price: 3000 },
@@ -116,9 +116,11 @@ function toggleDarkMode() {
     toggleMenu(); 
 }
 
+// [수정됨] 초기화 버튼: 예산(currentSpend)도 0으로 초기화
 function resetDailyData() {
-    if(confirm("오늘의 식사 기록과 섭취 칼로리를 모두 초기화하시겠습니까?\n(지출 내역은 유지됩니다.)")) {
+    if(confirm("오늘의 식사 기록, 섭취 칼로리, 지출 내역을 모두 초기화하시겠습니까?")) {
         userState.currentCalories = 0;
+        userState.currentSpend = 0;
         userState.eatenLogs = [];
         saveUserData();
         updateDashboardUI();
@@ -141,7 +143,7 @@ function toggleBudgetInput(inputId, checkboxId) {
     const chk = document.getElementById(checkboxId).checked;
     const input = document.getElementById(inputId);
     input.disabled = chk;
-    input.placeholder = chk ? "예산 무제한" : "한 달 식비 예산 (원)";
+    input.placeholder = chk ? "예산 무제한" : "한 달 식비 예산 (만원)";
     if(chk) input.value = "";
 }
 
@@ -162,6 +164,7 @@ function handleAuthAction() {
         } else {
             budgetVal = document.getElementById('budget').value;
             if(!h || !w || !a || !budgetVal) return alert("모든 정보를 입력해주세요.");
+            budgetVal = parseInt(budgetVal) * 10000;
         }
 
         const userData = {
@@ -211,7 +214,7 @@ function openEditInfo() {
     } else {
         document.getElementById('edit-no-budget').checked = false;
         document.getElementById('edit-budget').disabled = false;
-        document.getElementById('edit-budget').value = userState.monthlyBudget;
+        document.getElementById('edit-budget').value = userState.monthlyBudget / 10000;
     }
     
     showScreen('screen-edit-info');
@@ -231,6 +234,7 @@ function saveEditInfo() {
     } else {
         budgetVal = document.getElementById('edit-budget').value;
         if(!h || !w || !a || !budgetVal) return alert("모든 정보를 입력해주세요.");
+        budgetVal = parseInt(budgetVal) * 10000;
     }
 
     userState.height = parseFloat(h);
@@ -384,6 +388,7 @@ function saveUserData() {
     localStorage.setItem(userState.username, JSON.stringify(dataToSave));
 }
 
+// [수정됨] 영수증 발급 (문구 삭제 + 입력창 적용)
 function openReceipt() {
     const modal = document.getElementById('receipt-modal');
     const content = document.getElementById('receipt-content');
@@ -392,7 +397,6 @@ function openReceipt() {
     let html = `
         <div class="receipt-header">
             <h2>KW BOB RECEIPT</h2>
-            <p>광운대학교 학생식당 외</p>
             <p>Date: ${today}</p>
         </div>
         <div class="receipt-body">
@@ -435,7 +439,7 @@ function openReceipt() {
             <span>${grade}</span>
             <p>${grade === 'A+' ? '완벽해요! 👍' : (grade === 'F' ? '분발하세요 😱' : '나쁘지 않아요 👌')}</p>
         </div>
-        <div class="coupon">🎉 디저트 배 속은 따로 있다!</div>
+        <input type="text" class="receipt-comment" placeholder="한줄평을 입력하세요 (예: 디저트 배는 따로!)">
     `;
     
     content.innerHTML = html;

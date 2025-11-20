@@ -64,12 +64,12 @@ const foodDatabase = {
         { name: "제육덮밥", restaurant: "집밥", kcal: 700, price: 5000, recipe: "돼지고기/야채 + 고추장 양념 볶기" },
         { name: "짜장라면", restaurant: "집밥", kcal: 550, price: 1000, recipe: "면 삶기 + 물 8스푼 남기고 스프 볶기" },
         { name: "떡볶이", restaurant: "집밥", kcal: 500, price: 3000, recipe: "물 + 고추장/설탕 + 떡/어묵 졸이기" },
-        { name: "계란말이", restaurant: "집밥", kcal: 200, price: 1500, recipe: "계란을 풀고 다진 당근, 파를 섞은 뒤 팬에 얇게 부어가며 돌돌 만다." },
+        { name: "계란말이", restaurant: "집밥", kcal: 200, price: 1500, recipe: "계란물 + 다진야채 + 말아가며 굽기" },
         { name: "오트밀 죽", restaurant: "집밥", kcal: 300, price: 1500, recipe: "오트밀 + 우유 + 전자레인지 2분" }
     ]
 };
 
-// 3. 화면 및 메뉴 제어 (안전장치 적용)
+// 3. 화면 및 메뉴 제어
 function setDisplay(id, value) {
     const el = document.getElementById(id);
     if (el) el.style.display = value;
@@ -121,7 +121,6 @@ function showScreen(id, mode) {
     
     ['screen-features', 'screen-help', 'screen-creators'].forEach(s => setDisplay(s, 'none'));
 
-    // 앱 섹션 토글
     ['screen-login','screen-dashboard','screen-recommendation', 'screen-edit-info'].forEach(s => {
         setDisplay(s, s === id ? 'block' : 'none');
     });
@@ -137,12 +136,13 @@ function showScreen(id, mode) {
         if(hamburger) hamburger.style.display = 'none';
         if(backBtn) backBtn.style.display = 'block';
         
+        // [수정] 회원가입 모드 처리
         if (mode === 'signup') {
             isSignupMode = false; 
-            toggleAuthMode(); 
+            toggleAuthMode(); // toggleAuthMode가 상태를 반전시키므로 false에서 호출해야 true(회원가입)가 됨
         } else {
             isSignupMode = true;
-            toggleAuthMode(); 
+            toggleAuthMode(); // true에서 호출하면 false(로그인)가 됨
         }
     } else if (id === 'screen-dashboard') {
         if(hamburger) hamburger.style.display = 'block';
@@ -156,13 +156,9 @@ function showScreen(id, mode) {
     if(dropdown) dropdown.classList.remove('show');
 }
 
+// [수정] 홈 버튼은 무조건 인트로로
 function handleBackBtn() {
-    const loginScreen = document.getElementById('screen-login');
-    if (loginScreen && loginScreen.style.display === 'block') {
-        showScreen('screen-intro'); 
-    } else {
-        showScreen('screen-dashboard'); 
-    }
+    showScreen('screen-intro');
 }
 
 function closeModal(id) { 
@@ -193,7 +189,7 @@ window.onclick = function(event) {
 
 function openAbout() {
     toggleMenu();
-    showScreen('screen-creators'); // 이제 모달이 아니라 전체화면으로 이동
+    showScreen('screen-creators');
 }
 
 function toggleDarkMode() {
@@ -420,7 +416,7 @@ function recommendFood(category) {
     const remain = userState.monthlyBudget - userState.currentSpend;
     const isLowBudget = (userState.monthlyBudget < 100000000) && (remain < 30000);
     const walletMsg = document.getElementById('wallet-guard-msg');
-    if(walletMsg) walletMsg.style.display = isLowBudget ? 'block' : 'none';
+    walletMsg.style.display = isLowBudget ? 'block' : 'none';
 
     if (isLowBudget) list = list.filter(f => f.price <= 8000);
 

@@ -80,7 +80,6 @@ function startApp() {
     setDisplay('intro-header', 'none');
     setDisplay('app-container', 'block'); 
     
-    // [수정] 로그인 상태면 대시보드, 아니면 로그인
     if (userState.isLoggedIn) {
         showScreen('screen-dashboard');
     } else {
@@ -130,14 +129,14 @@ function showScreen(id, mode) {
     // 헤더 제어
     const header = document.getElementById('main-header');
     const hamburger = document.getElementById('hamburger-btn');
-    const backBtn = document.getElementById('global-back-btn'); // 이 버튼 삭제되었지만 안전을 위해 둠
+    const backBtn = document.getElementById('global-back-btn');
 
     if (header) header.style.display = 'block';
 
     if (id === 'screen-login') {
         if(hamburger) hamburger.style.display = 'none';
+        if(backBtn) backBtn.style.display = 'block';
         
-        // [수정] 회원가입 모드 처리
         if (mode === 'signup') {
             isSignupMode = false; 
             toggleAuthMode(); 
@@ -147,15 +146,16 @@ function showScreen(id, mode) {
         }
     } else if (id === 'screen-dashboard') {
         if(hamburger) hamburger.style.display = 'block';
+        if(backBtn) backBtn.style.display = 'none';
     } else {
         if(hamburger) hamburger.style.display = 'block';
+        if(backBtn) backBtn.style.display = 'block';
     }
     
     const dropdown = document.getElementById('dropdown-menu');
     if(dropdown) dropdown.classList.remove('show');
 }
 
-// [수정] 홈 버튼 등 뒤로가기 기능 필요없음 (인트로 이동은 햄버거 메뉴가 함)
 function handleBackBtn() {
     showScreen('screen-intro');
 }
@@ -166,8 +166,7 @@ function closeModal(id) {
 }
 
 function toggleMenu() {
-    const el = document.getElementById('dropdown-menu');
-    if(el) el.classList.toggle('show');
+    document.getElementById('dropdown-menu').classList.toggle('show');
 }
 
 window.onclick = function(event) {
@@ -272,13 +271,7 @@ function handleAuthAction() {
         const data = JSON.parse(dataStr);
         if(data.password === pw) {
             const today = new Date().toLocaleDateString();
-            userState = { 
-                ...userState, 
-                isLoggedIn:true, 
-                username:id, 
-                ...data, 
-                height:+data.height, weight:+data.weight, age:+data.age 
-            };
+            userState = { ...userState, isLoggedIn:true, username:id, ...data, height:+data.height, weight:+data.weight, age:+data.age };
             
             if (userState.lastDate !== today) {
                 userState.currentCalories = 0;

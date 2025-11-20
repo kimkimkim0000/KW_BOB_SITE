@@ -1,6 +1,6 @@
 /* 기본 설정 */
-body { font-family: 'Noto Sans KR', sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; color: #333; transition: 0.3s; }
-.container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: relative; transition: 0.3s; min-height: 80vh; }
+body { font-family: 'Noto Sans KR', sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; color: #333; transition: 0.3s; overflow-x: hidden; } /* padding: 0, overflow-x: hidden 추가 */
+.container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: relative; transition: 0.3s; min-height: 100vh; display: flex; flex-direction: column; } /* padding: 0, min-height: 100vh로 변경, flex 추가 */
 
 /* 다크 모드 */
 body.dark-mode { background-color: #121212; color: #eee; }
@@ -18,18 +18,29 @@ body.dark-mode #hamburger-btn, body.dark-mode #global-back-btn { color: #fff; }
 body.dark-mode .modal-content { background-color: #2d2d2d; color: #eee; border: 1px solid #444; }
 body.dark-mode .receipt-paper { background-color: #fff; color: #000; } 
 
-/* [NEW] 인트로 화면 스타일 */
+/* 인트로 화면 스타일 */
 #screen-intro {
+    position: absolute; /* 절대 위치 */
+    top: 0; left: 0;
+    width: 100%; height: 100vh; /* 전체 화면 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     text-align: center;
-    padding: 40px 20px;
-    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-    background-size: cover; background-position: center;
-    color: white; border-radius: 10px; height: 400px;
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    z-index: 100; /* 다른 요소 위에 표시 */
 }
-.hero-content h1 { font-size: 42px; margin-bottom: 10px; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
-.hero-subtitle { font-size: 20px; font-weight: bold; margin-bottom: 20px; }
-.hero-desc { font-size: 14px; line-height: 1.6; margin-bottom: 30px; opacity: 0.9; }
+.hero-content {
+    padding: 20px;
+    max-width: 90%;
+}
+.hero-content h1 { font-size: 48px; margin-bottom: 10px; color: white; text-shadow: 2px 2px 8px rgba(0,0,0,0.7); }
+.hero-subtitle { font-size: 24px; font-weight: bold; margin-bottom: 20px; text-shadow: 1px 1px 4px rgba(0,0,0,0.5); }
+.hero-desc { font-size: 16px; line-height: 1.6; margin-bottom: 30px; opacity: 0.9; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
 .btn-hero { 
     background-color: #8a0e26; color: white; padding: 15px 40px; font-size: 18px; 
     border: none; border-radius: 30px; cursor: pointer; font-weight: bold; 
@@ -37,13 +48,52 @@ body.dark-mode .receipt-paper { background-color: #fff; color: #000; }
 }
 .btn-hero:hover { transform: scale(1.05); background-color: #a0122e; }
 
-/* 헤더 & 버튼 */
-/* [수정 3] 헤더 여백 늘림 */
-header { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; position: relative; }
-body.dark-mode header { border-bottom: 1px solid #444; }
+/* [NEW] 인트로 화면 전용 헤더 */
+#intro-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 40px; /* 좌우 여백 추가 */
+    box-sizing: border-box;
+    z-index: 200; /* 인트로 콘텐츠 위에 표시 */
+}
+.intro-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px; /* 데스크탑에서 너무 넓어지지 않도록 */
+    margin: 0 auto;
+}
+.intro-logo {
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+.intro-nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    margin-left: 30px; /* 메뉴 간 간격 */
+    padding: 5px 0;
+    transition: 0.2s;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+.intro-nav a:hover {
+    color: #ffcc00; /* 호버 색상 변경 */
+}
+
+
+/* 일반 화면용 헤더 & 버튼 */
+main-header { 
+    margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; position: relative; 
+    padding-top: 10px; /* 헤더 위쪽 여백 */
+}
+body.dark-mode main-header { border-bottom: 1px solid #444; }
 .header-content { display: flex; justify-content: center; align-items: center; position: relative; height: 40px; }
-header h1 { color: #8a0e26; margin: 0; font-size: 24px; line-height: 40px; }
-body.dark-mode header h1 { color: #ff6b6b; } 
+main-header h1 { color: #8a0e26; margin: 0; font-size: 24px; line-height: 40px; }
+body.dark-mode main-header h1 { color: #ff6b6b; } 
 
 #global-back-btn {
     position: absolute; left: 0; top: 50%; transform: translateY(-50%);
@@ -71,8 +121,7 @@ button { cursor: pointer; border: none; border-radius: 8px; font-weight: bold; t
 .btn-primary { background-color: #8a0e26; color: white; padding: 12px; width: 100%; font-size: 16px; margin-top: 10px; }
 .btn-primary:hover { background-color: #6d0b1e; }
 .btn-large { background-color: #8a0e26; color: white; padding: 15px; width: 100%; font-size: 18px; margin-top: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-/* [수정 3] 뒤로가기 버튼 여백 추가 (위아래 20px) */
-.btn-back { background-color: white; color: #555; border: 1px solid #ccc; padding: 8px 12px; margin-top: 10px; margin-bottom: 25px; display: inline-block;}
+.btn-back { background-color: white; color: #555; border: 1px solid #ccc; padding: 8px 12px; margin-top: 25px; margin-bottom: 25px; display: inline-block;} /* 위아래 여백을 25px로 조정 */
 .btn-retry { background-color: #34495e; color: white; padding: 12px; width: 100%; margin-top: 20px; font-size: 16px; }
 .eat-btn { background-color: #4CAF50; color: white; padding: 6px 12px; font-size: 13px; margin-left: 5px; }
 .recipe-btn { background-color: #FF9800; color: white; padding: 6px 12px; font-size: 13px; }
@@ -80,7 +129,7 @@ button { cursor: pointer; border: none; border-radius: 8px; font-weight: bold; t
 .btn-small { background-color: #666; color: white; padding: 5px 10px; font-size: 12px; }
 
 /* 입력 폼 */
-.auth-box { max-width: 320px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; }
+.auth-box { max-width: 320px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; padding: 20px; } /* padding 추가 */
 .input-group { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
 .input-group label { width: 65px; text-align: left; font-weight: bold; font-size: 14px; flex-shrink: 0; }
 input, select { padding: 12px; border-radius: 8px; border: 1px solid #ddd; font-size: 15px; width: 100%; box-sizing: border-box; margin-bottom: 0; }
@@ -141,23 +190,4 @@ body.dark-mode .price-filter { background: #2a1a1a; }
     border: 1px solid #ddd; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     background-image: repeating-linear-gradient(135deg, #fff 0px, #fff 10px, #f8f8f8 10px, #f8f8f8 11px);
 }
-.receipt-header { text-align: center; border-bottom: 2px dashed #333; padding-bottom: 15px; margin-bottom: 15px; }
-.receipt-header h2 { margin: 0; font-size: 24px; color: #000 !important; }
-.receipt-header p { color: #333 !important; }
-.receipt-item { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; color: #000 !important; }
-.receipt-divider { border-bottom: 1px dashed #aaa; margin: 10px 0; }
-.receipt-total { display: flex; justify-content: space-between; font-weight: bold; font-size: 16px; margin-top: 10px; color: #000 !important; }
-.receipt-grade { text-align: center; margin-top: 20px; border: 2px solid #000; padding: 10px; border-radius: 5px; color: #000 !important; }
-.receipt-grade span { font-size: 40px; color: #d32f2f !important; font-weight: bold; display: block; margin: 5px 0; }
-.receipt-footer { color: #666 !important; text-align: center; margin-top: 20px; font-size: 12px; }
-
-.receipt-comment { 
-    width: 100%; padding: 10px; margin-top: 15px; 
-    border: none; border-bottom: 1px dashed #333; background: #f9f9f9; 
-    font-family: 'Courier New', Courier, monospace; font-size: 14px; text-align: center; outline: none;
-    color: #8a0e26; font-weight: bold; 
-}
-.receipt-comment::placeholder { color: #b78484; }
-
-@keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+.receipt-header { text-align: center;

@@ -1,6 +1,6 @@
 /* 기본 설정 */
 body { font-family: 'Noto Sans KR', sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; color: #333; transition: 0.3s; }
-.container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: relative; transition: 0.3s; }
+.container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: relative; transition: 0.3s; min-height: 80vh; }
 
 /* 다크 모드 */
 body.dark-mode { background-color: #121212; color: #eee; }
@@ -18,18 +18,41 @@ body.dark-mode #hamburger-btn, body.dark-mode #global-back-btn { color: #fff; }
 body.dark-mode .modal-content { background-color: #2d2d2d; color: #eee; border: 1px solid #444; }
 body.dark-mode .receipt-paper { background-color: #fff; color: #000; } 
 
-/* 헤더 & 버튼 */
+/* [NEW] 인트로 화면 스타일 */
+#screen-intro {
+    text-align: center;
+    padding: 40px 20px;
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'); /* 맛있는 음식 배경 */
+    background-size: cover;
+    background-position: center;
+    color: white;
+    border-radius: 10px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.hero-content h1 { font-size: 42px; margin-bottom: 10px; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+.hero-subtitle { font-size: 20px; font-weight: bold; margin-bottom: 20px; }
+.hero-desc { font-size: 14px; line-height: 1.6; margin-bottom: 30px; opacity: 0.9; }
+.btn-hero { 
+    background-color: #8a0e26; color: white; padding: 15px 40px; font-size: 18px; 
+    border: none; border-radius: 30px; cursor: pointer; font-weight: bold; 
+    box-shadow: 0 4px 15px rgba(138, 14, 38, 0.4); transition: 0.3s; 
+}
+.btn-hero:hover { transform: scale(1.05); background-color: #a0122e; }
+
+/* 헤더 & 햄버거 */
 header { margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 10px; position: relative; }
 body.dark-mode header { border-bottom: 1px solid #444; }
 .header-content { display: flex; justify-content: center; align-items: center; position: relative; height: 40px; }
 header h1 { color: #8a0e26; margin: 0; font-size: 24px; line-height: 40px; }
 body.dark-mode header h1 { color: #ff6b6b; } 
 
-/* [수정됨] 홈 아이콘 버튼 */
 #global-back-btn {
     position: absolute; left: 0; top: 50%; transform: translateY(-50%);
-    background: none; border: none; font-size: 24px; /* 아이콘 크기 키움 */
-    cursor: pointer; color: #333; padding: 5px;
+    background: none; border: none; font-size: 24px; cursor: pointer; color: #333; padding: 5px;
 }
 
 #hamburger-btn {
@@ -92,13 +115,12 @@ body.dark-mode .progress-bar { background: #555; }
 #food-log-list li:last-child { border-bottom: none; }
 .empty-log { color: #999; text-align: center; display: block; margin-top: 10px; }
 
-/* 추천 - [수정 4] 라디오 버튼 수직 정렬 */
+/* 추천 */
 .price-filter { background: #fff0f3; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
 body.dark-mode .price-filter { background: #2a1a1a; }
 .radio-group { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px; font-size: 14px; }
 .radio-group label { display: flex; align-items: center; cursor: pointer; }
 .radio-group input { width: auto; margin-right: 5px; margin-bottom: 0; }
-
 .category-buttons { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 20px; }
 .category-buttons button { background-color: #555; color: white; padding: 10px 0; font-size: 14px; }
 .food-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; animation: fadeIn 0.3s; }

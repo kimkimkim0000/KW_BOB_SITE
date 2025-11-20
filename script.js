@@ -11,7 +11,7 @@ let userState = {
 let lastSelectedCategory = ''; 
 let shownFoodNames = [];
 
-// 2. 음식 데이터베이스 (동일)
+// 2. 음식 데이터베이스
 const foodDatabase = {
     'korean': [
         { name: "야채김밥", restaurant: "김밥천국", kcal: 320, price: 3000 },
@@ -71,11 +71,10 @@ const foodDatabase = {
 
 // 3. 화면 및 메뉴 제어
 function startApp() {
+    // 인트로 숨기고 앱 컨테이너 보이기 (중요!)
     document.getElementById('screen-intro').style.display = 'none';
     document.getElementById('intro-header').style.display = 'none';
-    document.getElementById('app-container').style.display = 'block'; // 앱 컨테이너 보이기
-    
-    // 기본적으로 로그인 화면으로 시작
+    document.getElementById('app-container').style.display = 'block'; 
     showScreen('screen-login');
 }
 
@@ -94,14 +93,13 @@ function showScreen(id, mode) {
         document.getElementById('intro-header').style.display = 'flex';
         document.getElementById('app-container').style.display = 'none';
         
-        // 전체화면 섹션들 숨김
         document.getElementById('screen-features').style.display = 'none';
         document.getElementById('screen-help').style.display = 'none';
         document.getElementById('screen-creators').style.display = 'none';
         return;
     }
 
-    // 전체화면 섹션(기능소개, 도움말, 만든사람들) 처리
+    // 전체화면 섹션 처리
     if (['screen-features', 'screen-help', 'screen-creators'].includes(id)) {
         document.getElementById('screen-intro').style.display = 'none';
         document.getElementById('intro-header').style.display = 'none';
@@ -113,12 +111,11 @@ function showScreen(id, mode) {
         return;
     }
 
-    // 앱 내부 화면 처리 (컨테이너 안)
-    document.getElementById('app-container').style.display = 'block';
+    // 앱 내부 화면 처리 (컨테이너 사용)
+    document.getElementById('app-container').style.display = 'block'; // 컨테이너 보이기
     document.getElementById('screen-intro').style.display = 'none';
     document.getElementById('intro-header').style.display = 'none';
     
-    // 전체화면 섹션 숨김
     ['screen-features', 'screen-help', 'screen-creators'].forEach(s => {
         document.getElementById(s).style.display = 'none';
     });
@@ -127,7 +124,6 @@ function showScreen(id, mode) {
         document.getElementById(s).style.display = (s===id)?'block':'none';
     });
     
-    // 헤더 및 버튼 제어
     const hamburger = document.getElementById('hamburger-btn');
     const backBtn = document.getElementById('global-back-btn');
     const header = document.getElementById('main-header');
@@ -135,88 +131,60 @@ function showScreen(id, mode) {
     if (id === 'screen-login') {
         header.style.display = 'block';
         hamburger.style.display = 'none';
-        backBtn.style.display = 'block'; // [수정] 로그인 화면에서도 인트로로 가는 홈 버튼 표시
+        backBtn.style.display = 'block'; // 로그인 화면에서도 인트로로 가는 버튼 표시
         
-        // 로그인/회원가입 모드 전환
         if (mode === 'signup') {
             isSignupMode = false; 
-            toggleAuthMode(); // 회원가입 모드로 전환
+            toggleAuthMode(); 
         } else {
             isSignupMode = true;
-            toggleAuthMode(); // 로그인 모드로 전환
+            toggleAuthMode(); 
         }
     } else if (id === 'screen-dashboard') {
         header.style.display = 'block';
         hamburger.style.display = 'block';
-        backBtn.style.display = 'none'; // 대시보드에선 홈 버튼 숨김
+        backBtn.style.display = 'none'; 
     } else {
         header.style.display = 'block';
         hamburger.style.display = 'block';
-        backBtn.style.display = 'block'; // 그 외 화면에선 홈 버튼 표시
+        backBtn.style.display = 'block'; 
     }
     document.getElementById('dropdown-menu').classList.remove('show');
 }
 
-// [NEW] 홈 버튼 클릭 핸들러
 function handleBackBtn() {
     const loginScreen = document.getElementById('screen-login');
     if (loginScreen.style.display === 'block') {
-        showScreen('screen-intro'); // 로그인 화면이면 인트로로
+        showScreen('screen-intro'); 
     } else {
-        showScreen('screen-dashboard'); // 그 외(추천, 수정 등)면 대시보드로
+        showScreen('screen-dashboard'); 
     }
 }
 
-// ... (이하 기존 로직 동일: 모달, 인증, 계산 등) ...
+// ... (이하 기존 로직들 동일) ...
 
 function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-function toggleMenu() {
-    document.getElementById('dropdown-menu').classList.toggle('show');
-}
-
+function toggleMenu() { document.getElementById('dropdown-menu').classList.toggle('show'); }
 window.onclick = function(event) {
     if (!event.target.matches('#hamburger-btn')) {
         var dropdowns = document.getElementsByClassName("dropdown-content");
         for (var i = 0; i < dropdowns.length; i++) {
             var openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('show')) {
-                openDropdown.classList.remove('show');
-            }
+            if (openDropdown.classList.contains('show')) openDropdown.classList.remove('show');
         }
     }
-    const modal1 = document.getElementById('receipt-modal');
-    const modal2 = document.getElementById('recipe-modal');
-    if (event.target == modal1) modal1.style.display = 'none';
-    if (event.target == modal2) modal2.style.display = 'none';
+    const m1=document.getElementById('receipt-modal'), m2=document.getElementById('recipe-modal');
+    if(event.target==m1) m1.style.display='none';
+    if(event.target==m2) m2.style.display='none';
 }
-
-function openAbout() {
-    // 햄버거 메뉴에서 호출 시
-    // 기존에는 모달이었으나, 이제 전체 화면으로 이동
-    toggleMenu();
-    showScreen('screen-creators');
-}
-
-function toggleDarkMode() {
-    document.body.classList.toggle('dark-mode');
-    toggleMenu(); 
-}
-
+function openAbout() { toggleMenu(); document.getElementById('about-modal').style.display = 'block'; } // 모달 유지? 아니면 화면으로? 화면이 나음
+function toggleDarkMode() { document.body.classList.toggle('dark-mode'); toggleMenu(); }
 function resetDailyData() {
     if(confirm("오늘의 식사 기록, 섭취 칼로리, 지출 내역을 모두 초기화하시겠습니까?")) {
-        userState.currentCalories = 0;
-        userState.currentSpend = 0;
-        userState.eatenLogs = [];
-        userState.receiptComment = ""; 
-        saveUserData();
-        updateDashboardUI();
-        alert("초기화되었습니다.");
-        toggleMenu();
+        userState.currentCalories = 0; userState.currentSpend = 0; userState.eatenLogs = []; userState.receiptComment = ""; 
+        saveUserData(); updateDashboardUI(); alert("초기화되었습니다."); toggleMenu();
     }
 }
-
-// 4. 인증 및 회원관리
 let isSignupMode = false;
 function toggleAuthMode() {
     isSignupMode = !isSignupMode;
@@ -225,93 +193,43 @@ function toggleAuthMode() {
     document.getElementById('auth-toggle-btn').innerText = isSignupMode ? "로그인" : "회원가입";
     document.getElementById('signup-fields').style.display = isSignupMode ? "block" : "none";
 }
-
 function toggleBudgetInput(inputId, checkboxId) {
     const chk = document.getElementById(checkboxId).checked;
     const input = document.getElementById(inputId);
-    input.disabled = chk;
-    input.placeholder = chk ? "예산 무제한" : "한 달 식비 예산 (만원)";
+    input.disabled = chk; input.placeholder = chk ? "예산 무제한" : "한 달 식비 예산 (만원)";
     if(chk) input.value = "";
 }
-
 function handleAuthAction() {
     const id = document.getElementById('username').value;
     const pw = document.getElementById('password').value;
     if(!id || !pw) return alert("정보를 입력하세요.");
-
     if (isSignupMode) {
-        // 유효성 검사
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(id)) {
-            alert("아이디는 이메일 형식이어야 합니다. (예: user@kw.ac.kr)");
-            return;
-        }
+        if (!emailPattern.test(id)) return alert("아이디는 이메일 형식이어야 합니다. (예: user@kw.ac.kr)");
         const pwPattern = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,}$/;
-        if (!pwPattern.test(pw)) {
-            alert("비밀번호는 영문, 숫자, 특수문자(!@#$%^&*?_)를 포함하여 8자 이상이어야 합니다.");
-            return;
-        }
-
-        const nick = document.getElementById('nickname').value;
-        const h = document.getElementById('height').value;
-        const w = document.getElementById('weight').value;
-        const a = document.getElementById('age').value;
-        const g = document.getElementById('gender').value;
-        const goal = document.getElementById('goal').value;
-        
+        if (!pwPattern.test(pw)) return alert("비밀번호는 영문, 숫자, 특수문자(!@#$%^&*?_)를 포함하여 8자 이상이어야 합니다.");
+        const nick=document.getElementById('nickname').value;
+        const h=document.getElementById('height').value, w=document.getElementById('weight').value;
+        const a=document.getElementById('age').value, g=document.getElementById('gender').value, goal=document.getElementById('goal').value;
         const noBudget = document.getElementById('no-budget').checked;
-        let budgetVal = 0;
-        if (noBudget) {
-            budgetVal = 100000000;
-        } else {
-            budgetVal = document.getElementById('budget').value;
-            if(!h || !w || !a || !budgetVal || !nick) return alert("모든 정보를 입력해주세요.");
-            budgetVal = parseInt(budgetVal) * 10000;
-        }
-
-        const userData = {
-            password: pw, nickname: nick,
-            height: h, weight: w, age: a, gender: g, goal: goal,
-            monthlyBudget: parseInt(budgetVal), currentSpend: 0,
-            currentCalories: 0, eatenLogs: [], lastDate: "", receiptComment: ""
-        };
+        let budgetVal = noBudget ? 100000000 : document.getElementById('budget').value;
+        if(!h || !w || !a || !budgetVal || !nick) return alert("모든 정보를 입력해주세요.");
+        if(!noBudget) budgetVal = parseInt(budgetVal) * 10000;
+        const userData = { password: pw, nickname: nick, height: h, weight: w, age: a, gender: g, goal: goal, monthlyBudget: parseInt(budgetVal), currentSpend: 0, currentCalories: 0, eatenLogs: [], lastDate: "", receiptComment: "" };
         localStorage.setItem(id, JSON.stringify(userData));
-        alert("가입 완료!"); 
-        isSignupMode = true; // 로그인 모드로 변경하기 위해 true로 설정 후 토글
-        toggleAuthMode();
+        alert("가입 완료!"); isSignupMode=true; toggleAuthMode();
     } else {
         const dataStr = localStorage.getItem(id);
         if(!dataStr) return alert("존재하지 않는 아이디입니다.");
-        
         const data = JSON.parse(dataStr);
         if(data.password === pw) {
             const today = new Date().toLocaleDateString();
-            userState = { 
-                ...userState, 
-                isLoggedIn:true, 
-                username:id, 
-                ...data, 
-                height:+data.height, weight:+data.weight, age:+data.age 
-            };
-            
-            if (userState.lastDate !== today) {
-                userState.currentCalories = 0;
-                userState.eatenLogs = [];
-                userState.receiptComment = ""; 
-                userState.lastDate = today;
-                saveUserData();
-            }
-
-            calculateMetrics();
-            updateDashboardUI();
-            showScreen('screen-dashboard');
-            document.getElementById('user-name-display').innerText = userState.nickname;
-        } else {
-            alert("비밀번호가 틀렸습니다.");
-        }
+            userState = { ...userState, isLoggedIn:true, username:id, ...data, height:+data.height, weight:+data.weight, age:+data.age };
+            if (userState.lastDate !== today) { userState.currentCalories=0; userState.eatenLogs=[]; userState.receiptComment=""; userState.lastDate=today; saveUserData(); }
+            calculateMetrics(); updateDashboardUI(); showScreen('screen-dashboard'); document.getElementById('user-name-display').innerText = userState.nickname;
+        } else { alert("비밀번호가 틀렸습니다."); }
     }
 }
-
 function openEditInfo() {
     toggleMenu(); 
     document.getElementById('edit-nickname').value = userState.nickname;
@@ -319,273 +237,105 @@ function openEditInfo() {
     document.getElementById('edit-weight').value = userState.weight;
     document.getElementById('edit-age').value = userState.age;
     document.getElementById('edit-goal').value = userState.goal;
-    
-    if (userState.monthlyBudget >= 100000000) {
-        document.getElementById('edit-no-budget').checked = true;
-        document.getElementById('edit-budget').disabled = true;
-        document.getElementById('edit-budget').value = "";
-    } else {
-        document.getElementById('edit-no-budget').checked = false;
-        document.getElementById('edit-budget').disabled = false;
-        document.getElementById('edit-budget').value = userState.monthlyBudget / 10000;
-    }
-    
+    if (userState.monthlyBudget >= 100000000) { document.getElementById('edit-no-budget').checked = true; document.getElementById('edit-budget').disabled = true; document.getElementById('edit-budget').value = ""; }
+    else { document.getElementById('edit-no-budget').checked = false; document.getElementById('edit-budget').disabled = false; document.getElementById('edit-budget').value = userState.monthlyBudget / 10000; }
     showScreen('screen-edit-info');
 }
-
 function saveEditInfo() {
     const nick = document.getElementById('edit-nickname').value;
-    const h = document.getElementById('edit-height').value;
-    const w = document.getElementById('edit-weight').value;
-    const a = document.getElementById('edit-age').value;
-    const goal = document.getElementById('edit-goal').value;
-    
+    const h=document.getElementById('edit-height').value, w=document.getElementById('edit-weight').value;
+    const a=document.getElementById('edit-age').value, goal=document.getElementById('edit-goal').value;
     const noBudget = document.getElementById('edit-no-budget').checked;
-    let budgetVal = 0;
-
-    if (noBudget) {
-        budgetVal = 100000000;
-    } else {
-        budgetVal = document.getElementById('edit-budget').value;
-        if(!h || !w || !a || !budgetVal || !nick) return alert("모든 정보를 입력해주세요.");
-        budgetVal = parseInt(budgetVal) * 10000;
-    }
-
-    userState.nickname = nick;
-    userState.height = parseFloat(h);
-    userState.weight = parseFloat(w);
-    userState.age = parseFloat(a);
-    userState.goal = goal;
-    userState.monthlyBudget = parseInt(budgetVal);
-
-    saveUserData(); 
-    calculateMetrics(); 
-    updateDashboardUI(); 
-    
+    let budgetVal = noBudget ? 100000000 : document.getElementById('edit-budget').value;
+    if(!h || !w || !a || !budgetVal || !nick) return alert("모든 정보를 입력해주세요.");
+    if(!noBudget) budgetVal = parseInt(budgetVal) * 10000;
+    userState.nickname = nick; userState.height = parseFloat(h); userState.weight = parseFloat(w); userState.age = parseFloat(a); userState.goal = goal; userState.monthlyBudget = parseInt(budgetVal);
+    saveUserData(); calculateMetrics(); updateDashboardUI(); 
     document.getElementById('user-name-display').innerText = userState.nickname;
-
-    alert("정보가 수정되었습니다!");
-    showScreen('screen-dashboard');
+    alert("정보가 수정되었습니다!"); showScreen('screen-dashboard');
 }
-
-function logout() { location.reload(); }
-
-// 5. 계산
 function calculateMetrics() {
     userState.bmi = (userState.weight / ((userState.height/100)**2)).toFixed(1);
     document.getElementById('bmi-display').innerText = userState.bmi;
     document.getElementById('bmi-status').innerText = userState.bmi<18.5?"저체중":(userState.bmi<23?"정상":(userState.bmi<25?"과체중":"비만"));
     document.getElementById('goal-display').innerText = userState.goal==='lose'?"감량":(userState.goal==='gain'?"증량":"유지");
-    
     let bmr = (10*userState.weight) + (6.25*userState.height) - (5*userState.age) + (userState.gender==='male'?5:-161);
     let tdee = Math.round(bmr * 1.375);
-    
     if(userState.goal==='lose') userState.recCalories = Math.max(1200, tdee-500);
     else if(userState.goal==='gain') userState.recCalories = tdee+500;
     else userState.recCalories = tdee;
-    
     document.getElementById('rec-cal').innerText = userState.recCalories;
     document.getElementById('rec-cal-target').innerText = userState.recCalories;
 }
-
-// 6. UI 갱신
 function updateDashboardUI() {
     document.getElementById('current-cal').innerText = userState.currentCalories;
     const pct = Math.min((userState.currentCalories / userState.recCalories)*100, 100);
     document.getElementById('progress-fill').style.width = pct + "%";
     document.getElementById('progress-fill').style.backgroundColor = userState.currentCalories > userState.recCalories ? "red" : "#4CAF50";
-
     const budgetEl = document.getElementById('budget-display');
-    if (userState.monthlyBudget >= 100000000) {
-        budgetEl.innerText = "무제한 ♾️";
-        budgetEl.style.color = "#4CAF50";
-    } else {
-        const remain = userState.monthlyBudget - userState.currentSpend;
-        budgetEl.innerText = remain.toLocaleString() + "원";
-        budgetEl.style.color = remain < 30000 ? "red" : "#333";
-    }
-
+    if (userState.monthlyBudget >= 100000000) { budgetEl.innerText = "무제한 ♾️"; budgetEl.style.color = "#4CAF50"; }
+    else { const remain = userState.monthlyBudget - userState.currentSpend; budgetEl.innerText = remain.toLocaleString() + "원"; budgetEl.style.color = remain < 30000 ? "red" : "#333"; }
     const list = document.getElementById('food-log-list');
     list.innerHTML = "";
-    if (userState.eatenLogs.length === 0) {
-        list.innerHTML = '<li class="empty-log">아직 먹은 음식이 없습니다.</li>';
-    } else {
-        userState.eatenLogs.forEach(log => {
-            const li = document.createElement('li');
-            li.innerHTML = `<span>${log.name}</span> <span>${log.kcal} kcal / ${log.price.toLocaleString()}원</span>`;
-            list.appendChild(li);
-        });
-    }
+    if (userState.eatenLogs.length === 0) list.innerHTML = '<li class="empty-log">아직 먹은 음식이 없습니다.</li>';
+    else { userState.eatenLogs.forEach(log => { const li = document.createElement('li'); li.innerHTML = `<span>${log.name}</span> <span>${log.kcal} kcal / ${log.price.toLocaleString()}원</span>`; list.appendChild(li); }); }
 }
-
-// 7. 추천
 function recommendFood(category) {
     if(category !== lastSelectedCategory) { lastSelectedCategory = category; shownFoodNames = []; }
-    
     let list = foodDatabase[category];
     const pPrice = document.querySelector('input[name="price"]:checked').value;
-    if(pPrice !== "0") {
-        list = list.filter(f => {
-            if(pPrice==="1") return f.price < 10000;
-            if(pPrice==="2") return f.price >= 10000 && f.price < 12000;
-            return f.price >= 12000;
-        });
-    }
-
+    if(pPrice !== "0") { list = list.filter(f => { if(pPrice==="1") return f.price < 10000; if(pPrice==="2") return f.price >= 10000 && f.price < 12000; return f.price >= 12000; }); }
     const remain = userState.monthlyBudget - userState.currentSpend;
     const isLowBudget = (userState.monthlyBudget < 100000000) && (remain < 30000);
-    const walletMsg = document.getElementById('wallet-guard-msg');
-    walletMsg.style.display = isLowBudget ? 'block' : 'none';
-
+    document.getElementById('wallet-guard-msg').style.display = isLowBudget ? 'block' : 'none';
     if (isLowBudget) list = list.filter(f => f.price <= 8000);
-
     const target = Math.round(userState.recCalories/3);
     if(userState.goal==='lose') list = list.filter(f => f.kcal <= target);
     else if(userState.goal==='gain') list = list.filter(f => f.kcal >= target);
-
     let available = list.filter(f => !shownFoodNames.includes(f.name));
     const container = document.getElementById('recommendation-area');
-    
     let msg = userState.goal==='lose' ? `(목표: ${target}kcal ↓)` : (userState.goal==='gain' ? `(목표: ${target}kcal ↑)` : "(균형)");
     container.innerHTML = `<h3>'${category}' 결과 <span style="font-size:14px;color:#666">${msg}</span></h3>`;
-
     if(available.length === 0) {
-        if(list.length === 0) {
-            container.innerHTML += `<p>조건에 맞는 음식이 없습니다.</p>`;
-            document.getElementById('retry-btn').style.display = 'none';
-        } else {
-            alert("모든 메뉴를 다 보셨습니다! 다시 처음부터 추천합니다.");
-            shownFoodNames = []; recommendFood(category);
-        }
+        if(list.length === 0) { container.innerHTML += `<p>조건에 맞는 음식이 없습니다.</p>`; document.getElementById('retry-btn').style.display = 'none'; }
+        else { alert("모든 메뉴를 다 보셨습니다! 다시 처음부터 추천합니다."); shownFoodNames = []; recommendFood(category); }
         return;
     }
-
     const selected = [...available].sort(()=>0.5-Math.random()).slice(0, 3);
     selected.forEach(f => shownFoodNames.push(f.name));
-
     selected.forEach(food => {
         const div = document.createElement('div');
         div.className = 'food-item';
         let color = (userState.goal!=='maintain' && ((userState.goal==='lose'&&food.kcal<=target)||(userState.goal==='gain'&&food.kcal>=target))) ? '#4CAF50' : '#666';
         let recipeBtn = (category==='cook'&&food.recipe) ? `<button class="recipe-btn" onclick="showRecipe('${food.name}', '${food.recipe}')">레시피</button>` : '';
-
-        div.innerHTML = `
-            <div class="food-info">
-                <strong>[${food.restaurant}] ${food.name}</strong>
-                <span style="color:${color};font-weight:bold">(${food.kcal} kcal)</span>
-                <span class="food-meta">${food.price.toLocaleString()}원</span>
-            </div>
-            <div>${recipeBtn}<button class="eat-btn" onclick="addFood(${food.kcal}, '${food.name}', ${food.price})">먹기</button></div>
-        `;
+        div.innerHTML = `<div class="food-info"><strong>[${food.restaurant}] ${food.name}</strong><span style="color:${color};font-weight:bold">(${food.kcal} kcal)</span><span class="food-meta">${food.price.toLocaleString()}원</span></div><div>${recipeBtn}<button class="eat-btn" onclick="addFood(${food.kcal}, '${food.name}', ${food.price})">먹기</button></div>`;
         container.appendChild(div);
     });
     document.getElementById('retry-btn').style.display = 'block';
 }
-
 function retryRecommendation() { if(lastSelectedCategory) recommendFood(lastSelectedCategory); }
-
-// 8. 먹기
 function addFood(kcal, name, price) {
     if(confirm(`${name} (${kcal}kcal, ${price}원)\n섭취 기록하시겠습니까?`)) {
-        userState.currentCalories += kcal;
-        userState.currentSpend += price;
-        userState.eatenLogs.push({ name: name, kcal: kcal, price: price });
-        
-        saveUserData();
-        updateDashboardUI();
-        showScreen('screen-dashboard');
+        userState.currentCalories += kcal; userState.currentSpend += price; userState.eatenLogs.push({ name: name, kcal: kcal, price: price });
+        saveUserData(); updateDashboardUI(); showScreen('screen-dashboard');
     }
 }
-
-function saveUserData() {
-    const dataToSave = {
-        ...userState,
-        password: JSON.parse(localStorage.getItem(userState.username)).password
-    };
-    localStorage.setItem(userState.username, JSON.stringify(dataToSave));
-}
-
-function saveReceiptComment(val) {
-    userState.receiptComment = val;
-    saveUserData(); 
-}
-
+function saveUserData() { const dataToSave = { ...userState, password: JSON.parse(localStorage.getItem(userState.username)).password }; localStorage.setItem(userState.username, JSON.stringify(dataToSave)); }
+function saveReceiptComment(val) { userState.receiptComment = val; saveUserData(); }
 function openReceipt() {
     const modal = document.getElementById('receipt-modal');
     const content = document.getElementById('receipt-content');
     const today = new Date().toLocaleDateString();
-    
-    let html = `
-        <div class="receipt-header">
-            <h2>KW BOB RECEIPT</h2>
-            <p>Date: ${today}</p>
-        </div>
-        <div class="receipt-body">
-    `;
-    
-    if (userState.eatenLogs.length === 0) {
-        html += `<p style="text-align:center;">기록된 식사가 없습니다.</p>`;
-    } else {
-        userState.eatenLogs.forEach(log => {
-            html += `
-                <div class="receipt-item">
-                    <span>${log.name}</span>
-                    <span>${log.kcal}kcal / ${log.price.toLocaleString()}</span>
-                </div>
-            `;
-        });
-    }
-
+    let html = `<div class="receipt-header"><h2>KW BOB RECEIPT</h2><p>Date: ${today}</p></div><div class="receipt-body">`;
+    if (userState.eatenLogs.length === 0) html += `<p style="text-align:center;">기록된 식사가 없습니다.</p>`;
+    else { userState.eatenLogs.forEach(log => { html += `<div class="receipt-item"><span>${log.name}</span><span>${log.kcal}kcal / ${log.price.toLocaleString()}</span></div>`; }); }
     const diff = userState.currentCalories - userState.recCalories;
-    let grade = "A+";
-    let message = "완벽해요! 👍";
-
-    if (userState.currentCalories === 0) {
-        grade = "NONE";
-        message = "아직 식사 전이군요?";
-    } else if (diff > 500) {
-        grade = "F";
-        message = "오늘은 좀 과식을 한 것 같아요 🐷";
-    } else if (diff < -500) {
-        grade = "C"; 
-        message = "오늘은 당신은 소식좌인가요? 🐜";
-    } else {
-        const percentDiff = Math.abs(diff) / userState.recCalories * 100;
-        if (percentDiff < 10) {
-            grade = "A+"; message = "완벽해요! 👍";
-        } else {
-            grade = "B"; message = "나쁘지 않아요 👌";
-        }
-    }
-
-    html += `
-        </div>
-        <div class="receipt-divider"></div>
-        <div class="receipt-total">
-            <span>Total Kcal</span>
-            <span>${userState.currentCalories}</span>
-        </div>
-        <div class="receipt-total">
-            <span>Total Price</span>
-            <span>${userState.currentSpend.toLocaleString()} 원</span>
-        </div>
-        <div class="receipt-grade">
-            <h3>오늘의 성적표</h3>
-            <span style="color:${grade==='F'?'red':(grade==='A+'?'#4CAF50':'#333')}">${grade}</span>
-            <p>${message}</p>
-        </div>
-        <input type="text" class="receipt-comment" 
-               placeholder="한 줄 문구 (예: 오늘 음식 나이스 초이스)" 
-               value="${userState.receiptComment || ''}" 
-               oninput="saveReceiptComment(this.value)">
-    `;
-    
-    content.innerHTML = html;
-    modal.style.display = 'block';
+    let grade = "A+", message = "완벽해요! 👍";
+    if (userState.currentCalories === 0) { grade = "NONE"; message = "아직 식사 전이군요?"; }
+    else if (diff > 500) { grade = "F"; message = "오늘은 좀 과식을 한 것 같아요 🐷"; }
+    else if (diff < -500) { grade = "C"; message = "오늘은 당신은 소식좌인가요? 🐜"; }
+    else { const percentDiff = Math.abs(diff) / userState.recCalories * 100; if (percentDiff < 10) { grade = "A+"; message = "완벽해요! 👍"; } else { grade = "B"; message = "나쁘지 않아요 👌"; } }
+    html += `</div><div class="receipt-divider"></div><div class="receipt-total"><span>Total Kcal</span><span>${userState.currentCalories}</span></div><div class="receipt-total"><span>Total Price</span><span>${userState.currentSpend.toLocaleString()} 원</span></div><div class="receipt-grade"><h3>오늘의 성적표</h3><span style="color:${grade==='F'?'red':(grade==='A+'?'#4CAF50':'#333')}">${grade}</span><p>${message}</p></div><input type="text" class="receipt-comment" placeholder="한 줄 문구 (예: 오늘 음식 나이스 초이스)" value="${userState.receiptComment || ''}" oninput="saveReceiptComment(this.value)">`;
+    content.innerHTML = html; modal.style.display = 'block';
 }
-
-function showRecipe(t, c) {
-    document.getElementById('recipe-title').innerText = t;
-    document.getElementById('recipe-body').innerHTML = c;
-    document.getElementById('recipe-modal').style.display = 'block';
-}
+function showRecipe(t, c) { document.getElementById('recipe-title').innerText = t; document.getElementById('recipe-body').innerHTML = c; document.getElementById('recipe-modal').style.display = 'block'; }

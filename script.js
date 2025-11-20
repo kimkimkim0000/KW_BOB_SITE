@@ -64,7 +64,7 @@ const foodDatabase = {
         { name: "제육덮밥", restaurant: "집밥", kcal: 700, price: 5000, recipe: "돼지고기/야채 + 고추장 양념 볶기" },
         { name: "짜장라면", restaurant: "집밥", kcal: 550, price: 1000, recipe: "면 삶기 + 물 8스푼 남기고 스프 볶기" },
         { name: "떡볶이", restaurant: "집밥", kcal: 500, price: 3000, recipe: "물 + 고추장/설탕 + 떡/어묵 졸이기" },
-        { name: "계란말이", restaurant: "집밥", kcal: 200, price: 1500, recipe: "계란물 + 다진야채 + 말아가며 굽기" },
+        { name: "계란말이", restaurant: "집밥", kcal: 200, price: 1500, recipe: "계란을 풀고 다진 당근, 파를 섞은 뒤 팬에 얇게 부어가며 돌돌 만다." },
         { name: "오트밀 죽", restaurant: "집밥", kcal: 300, price: 1500, recipe: "오트밀 + 우유 + 전자레인지 2분" }
     ]
 };
@@ -129,12 +129,13 @@ function showScreen(id, mode) {
     // 헤더 제어
     const header = document.getElementById('main-header');
     const hamburger = document.getElementById('hamburger-btn');
-    // [수정] 뒤로가기 버튼 필요 없음 (각 화면에서 개별 관리)
+    const backBtn = document.getElementById('global-back-btn');
 
     if (header) header.style.display = 'block';
 
     if (id === 'screen-login') {
         if(hamburger) hamburger.style.display = 'none';
+        if(backBtn) backBtn.style.display = 'block';
         
         if (mode === 'signup') {
             isSignupMode = false; 
@@ -145,17 +146,23 @@ function showScreen(id, mode) {
         }
     } else if (id === 'screen-dashboard') {
         if(hamburger) hamburger.style.display = 'block';
+        if(backBtn) backBtn.style.display = 'none';
     } else {
         if(hamburger) hamburger.style.display = 'block';
+        if(backBtn) backBtn.style.display = 'block';
     }
     
     const dropdown = document.getElementById('dropdown-menu');
     if(dropdown) dropdown.classList.remove('show');
 }
 
-// [수정] 메인화면 버튼 로직
 function handleBackBtn() {
-    showScreen('screen-intro');
+    const loginScreen = document.getElementById('screen-login');
+    if (loginScreen.style.display === 'block') {
+        showScreen('screen-intro'); 
+    } else {
+        showScreen('screen-dashboard'); 
+    }
 }
 
 function closeModal(id) { 
@@ -269,13 +276,7 @@ function handleAuthAction() {
         const data = JSON.parse(dataStr);
         if(data.password === pw) {
             const today = new Date().toLocaleDateString();
-            userState = { 
-                ...userState, 
-                isLoggedIn:true, 
-                username:id, 
-                ...data, 
-                height:+data.height, weight:+data.weight, age:+data.age 
-            };
+            userState = { ...userState, isLoggedIn:true, username:id, ...data, height:+data.height, weight:+data.weight, age:+data.age };
             
             if (userState.lastDate !== today) {
                 userState.currentCalories = 0;

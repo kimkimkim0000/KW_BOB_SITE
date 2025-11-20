@@ -11,61 +11,192 @@ let userState = {
 let lastSelectedCategory = ''; 
 let shownFoodNames = [];
 
-// 2. 음식 데이터베이스 (동일)
+// 2. 음식 데이터베이스 (보내주신 PDF 전체 데이터 반영)
 const foodDatabase = {
     'korean': [
-        { name: "야채김밥", restaurant: "김밥천국", kcal: 320, price: 3000 },
-        { name: "참치김밥", restaurant: "김밥천국", kcal: 450, price: 4500 },
-        { name: "김치찌개", restaurant: "김밥천국", kcal: 420, price: 6500 },
-        { name: "제육덮밥", restaurant: "김밥천국", kcal: 650, price: 7000 },
-        { name: "갈비탕", restaurant: "김밥천국", kcal: 550, price: 7500 },
-        { name: "직화간장제육", restaurant: "밥은화", kcal: 850, price: 7000 },
-        { name: "스팸마요", restaurant: "밥은화", kcal: 700, price: 5500 },
-        { name: "참치마요", restaurant: "밥은화", kcal: 650, price: 5500 },
-        { name: "제육컵밥(기본)", restaurant: "경대컵밥", kcal: 850, price: 6200 },
-        { name: "삼겹살 컵밥", restaurant: "경대컵밥", kcal: 900, price: 8000 },
-        { name: "일심텐동", restaurant: "일심텐동", kcal: 600, price: 11900 },
-        { name: "육회덮밥", restaurant: "육회바른연어", kcal: 650, price: 7900 },
-        { name: "닭도리탕(1인)", restaurant: "오감", kcal: 900, price: 13500 } 
+        { restaurant: "김밥천국", name: "순두부백반", price: 6500, kcal: 430 },
+        { restaurant: "김밥천국", name: "된장찌개", price: 6500, kcal: 400 },
+        { restaurant: "김밥천국", name: "김치찌개", price: 6500, kcal: 420 },
+        { restaurant: "김밥천국", name: "참치찌개", price: 7500, kcal: 500 },
+        { restaurant: "김밥천국", name: "부대찌개", price: 7500, kcal: 700 },
+        { restaurant: "김밥천국", name: "제육덮밥", price: 7000, kcal: 650 },
+        { restaurant: "김밥천국", name: "오징어덮밥", price: 7000, kcal: 600 },
+        { restaurant: "김밥천국", name: "참치덮밥", price: 7000, kcal: 550 },
+        { restaurant: "김밥천국", name: "김치덮밥", price: 7000, kcal: 600 },
+        { restaurant: "디델리", name: "불갈비덮밥", price: 6000, kcal: 850 },
+        { restaurant: "진짜루", name: "송이덮밥", price: 10000, kcal: 900 },
+        { restaurant: "진짜루", name: "고추덮밥", price: 10000, kcal: 800 },
+        { restaurant: "쉐프밥버거", name: "제육덮밥", price: 7000, kcal: 900 },
+        { restaurant: "쉐프밥버거", name: "치킨가라아게 덮밥", price: 7000, kcal: 850 },
+        { restaurant: "쉐프밥버거", name: "베이컨덮밥", price: 7000, kcal: 900 },
+        { restaurant: "쉐프밥버거", name: "치즈불고기덮밥", price: 7000, kcal: 950 },
+        { restaurant: "쉐프밥버거", name: "김치불고기덮밥", price: 7000, kcal: 950 },
+        { restaurant: "쉐프밥버거", name: "베이컨마요덮밥", price: 7000, kcal: 900 },
+        { restaurant: "엄마마늘보쌈", name: "보쌈(중)", price: 32000, kcal: 900 },
+        { restaurant: "엄마마늘보쌈", name: "마늘보쌈(중)", price: 35000, kcal: 950 },
+        { restaurant: "두찜", name: "까만찜닭(반마리)", price: 19800, kcal: 1100 },
+        { restaurant: "두찜", name: "로제찜닭(반마리)", price: 21800, kcal: 1300 },
+        { restaurant: "두찜", name: "묵은지김치찜닭", price: 30800, kcal: 1900 },
+        { restaurant: "밥은화", name: "부추삼겹덮밥", price: 9000, kcal: 900 },
+        { restaurant: "밥은화", name: "돼지숙주", price: 7000, kcal: 750 },
+        { restaurant: "밥은화", name: "쭈꾸미숙주", price: 8000, kcal: 800 },
+        { restaurant: "밥은화", name: "스팸마요", price: 5500, kcal: 700 },
+        { restaurant: "밥은화", name: "참치마요", price: 5500, kcal: 650 },
+        { restaurant: "밥은화", name: "치킨마요", price: 7000, kcal: 800 },
+        { restaurant: "밥은화", name: "직화간장제육", price: 7000, kcal: 850 },
+        { restaurant: "맛불", name: "돼지불백", price: 8000, kcal: 850 },
+        { restaurant: "맛불", name: "고추장불백", price: 8000, kcal: 900 },
+        { restaurant: "맛불", name: "제육볶음", price: 8000, kcal: 900 },
+        { restaurant: "오감", name: "닭도리탕(1인분)", price: 9000, kcal: 900 },
+        { restaurant: "경대컵밥", name: "제육컵밥", price: 6200, kcal: 850 },
+        { restaurant: "경대컵밥", name: "삼겹살컵밥", price: 8000, kcal: 900 },
+        { restaurant: "양평가", name: "황태해장국", price: 10000, kcal: 600 },
+        { restaurant: "양평가", name: "뼈해장국", price: 12000, kcal: 800 }
     ],
     'chinese': [
-        { name: "짜장면", restaurant: "진짜루", kcal: 700, price: 5000 },
-        { name: "짬뽕", restaurant: "진짜루", kcal: 850, price: 6000 },
-        { name: "간짜장", restaurant: "진짜루", kcal: 800, price: 6000 },
-        { name: "볶음밥", restaurant: "진짜루", kcal: 750, price: 6000 },
-        { name: "탕수육(소)", restaurant: "진짜루", kcal: 450, price: 12000 },
-        { name: "탕볶밥", restaurant: "진짜루", kcal: 950, price: 9000 },
-        { name: "탕짜면", restaurant: "진짜루", kcal: 900, price: 8500 }
+        { restaurant: "진짜루", name: "짜장면", price: 5000, kcal: 700 },
+        { restaurant: "진짜루", name: "짬뽕", price: 6000, kcal: 850 },
+        { restaurant: "진짜루", name: "우동", price: 6000, kcal: 750 },
+        { restaurant: "진짜루", name: "간짜장", price: 6000, kcal: 800 },
+        { restaurant: "진짜루", name: "울면", price: 6500, kcal: 750 },
+        { restaurant: "진짜루", name: "매운짬뽕", price: 6000, kcal: 900 },
+        { restaurant: "진짜루", name: "쟁반짜장", price: 7000, kcal: 950 },
+        { restaurant: "진짜루", name: "볶음짬뽕", price: 7000, kcal: 900 },
+        { restaurant: "진짜루", name: "삼선간짜장", price: 9000, kcal: 1000 },
+        { restaurant: "진짜루", name: "삼선짬뽕", price: 10000, kcal: 1050 },
+        { restaurant: "진짜루", name: "볶음밥", price: 6000, kcal: 750 },
+        { restaurant: "진짜루", name: "짜장밥", price: 6500, kcal: 700 },
+        { restaurant: "진짜루", name: "짬뽕밥", price: 7000, kcal: 850 },
+        { restaurant: "진짜루", name: "오므라이스", price: 7000, kcal: 800 },
+        { restaurant: "진짜루", name: "사천볶음밥", price: 6500, kcal: 800 },
+        { restaurant: "진짜루", name: "김치볶음밥", price: 7000, kcal: 850 },
+        { restaurant: "진짜루", name: "잡채밥", price: 8000, kcal: 900 },
+        { restaurant: "진짜루", name: "마파밥", price: 7000, kcal: 850 },
+        { restaurant: "진짜루", name: "탕수육(소)", price: 12000, kcal: 450 },
+        { restaurant: "진짜루", name: "탕볶밥", price: 9000, kcal: 950 },
+        { restaurant: "진짜루", name: "탕짜면", price: 8500, kcal: 900 },
+        { restaurant: "진짜루", name: "탕짬면", price: 8500, kcal: 950 }
+    ],
+    'japanese': [
+        { restaurant: "일심텐동", name: "일심텐동", price: 11900, kcal: 600 },
+        { restaurant: "일심텐동", name: "에비텐동", price: 13500, kcal: 565 },
+        { restaurant: "일심텐동", name: "가이바시 텐동", price: 12900, kcal: 675 },
+        { restaurant: "일심텐동", name: "이카텐동", price: 12500, kcal: 510 },
+        { restaurant: "푸른스시", name: "광어초밥 10pcs", price: 18000, kcal: 450 },
+        { restaurant: "푸른스시", name: "연어초밥 10pcs", price: 18000, kcal: 480 },
+        { restaurant: "푸른스시", name: "모듬 사시미(1인)", price: 20000, kcal: 300 },
+        { restaurant: "푸른스시", name: "회덮밥", price: 12000, kcal: 550 },
+        { restaurant: "푸른스시", name: "냉모밀", price: 8000, kcal: 400 },
+        { restaurant: "진심카츠", name: "진심카츠", price: 7500, kcal: 850 },
+        { restaurant: "진심카츠", name: "치즈카츠", price: 9900, kcal: 1000 },
+        { restaurant: "진심카츠", name: "돈코츠라멘", price: 8800, kcal: 750 },
+        { restaurant: "카츠백", name: "등심가츠", price: 11000, kcal: 850 },
+        { restaurant: "카츠백", name: "안심가츠", price: 11500, kcal: 800 },
+        { restaurant: "카츠백", name: "통치즈가츠", price: 11800, kcal: 950 },
+        { restaurant: "육회바른연어", name: "육회덮밥", price: 7900, kcal: 650 },
+        { restaurant: "육회바른연어", name: "연어덮밥", price: 8900, kcal: 620 },
+        { restaurant: "하이레", name: "로스카츠", price: 12500, kcal: 850 },
+        { restaurant: "하이레", name: "히레카츠", price: 13500, kcal: 780 }
     ],
     'western': [
-        { name: "싸이버거 세트", restaurant: "맘스터치", kcal: 978, price: 6900 },
-        { name: "불고기버거", restaurant: "맘스터치", kcal: 403, price: 3900 },
-        { name: "프랭크버거(R)", restaurant: "프랭크버거", kcal: 494, price: 4600 },
-        { name: "치즈버거", restaurant: "프랭크버거", kcal: 242, price: 5500 },
-        { name: "더블비프치즈버거", restaurant: "프랭크버거", kcal: 723, price: 7900 },
-        { name: "슈퍼파파스(R,2조각)", restaurant: "파파존스", kcal: 700, price: 10000 },
-        { name: "등심가츠", restaurant: "카츠백", kcal: 850, price: 11000 },
-        { name: "통치즈가츠", restaurant: "카츠백", kcal: 950, price: 11800 }
+        { restaurant: "맘스터치", name: "싸이버거 세트", price: 6900, kcal: 978 },
+        { restaurant: "맘스터치", name: "싸이버거 단품", price: 4600, kcal: 594 },
+        { restaurant: "맘스터치", name: "불고기버거 세트", price: 6200, kcal: 787 },
+        { restaurant: "맘스터치", name: "인크레더블버거 세트", price: 8000, kcal: 1132 },
+        { restaurant: "맘스터치", name: "딥치즈버거 세트", price: 7400, kcal: 927 },
+        { restaurant: "프랭크버거", name: "프랭크버거(R)", price: 4600, kcal: 494 },
+        { restaurant: "프랭크버거", name: "치즈버거", price: 5500, kcal: 242 },
+        { restaurant: "프랭크버거", name: "베이컨치즈버거", price: 6900, kcal: 508 },
+        { restaurant: "프랭크버거", name: "더블비프치즈버거", price: 7900, kcal: 723 },
+        { restaurant: "파파존스", name: "슈퍼파파스(R,2조각)", price: 10500, kcal: 700 },
+        { restaurant: "파파존스", name: "페퍼로니(R,2조각)", price: 9500, kcal: 750 },
+        { restaurant: "부리또잇", name: "소세지부리또", price: 5900, kcal: 650 },
+        { restaurant: "부리또잇", name: "새우부리또", price: 5900, kcal: 600 },
+        { restaurant: "부리또잇", name: "치킨텐더부리또", price: 5900, kcal: 700 },
+        { restaurant: "이삭토스트", name: "햄스페셜 토스트", price: 3800, kcal: 450 },
+        { restaurant: "이삭토스트", name: "베이컨 베스트", price: 4300, kcal: 470 },
+        { restaurant: "이삭토스트", name: "딥치즈 베이컨", price: 5300, kcal: 620 }
     ],
     'snack': [
-        { name: "엽기떡볶이(1인)", restaurant: "엽기떡볶이", kcal: 900, price: 14000 },
-        { name: "로제떡볶이(1인)", restaurant: "엽기떡볶이", kcal: 1100, price: 16000 },
-        { name: "신전떡볶이", restaurant: "신전떡볶이", kcal: 550, price: 4500 },
-        { name: "신전치즈김밥", restaurant: "신전떡볶이", kcal: 600, price: 5200 },
-        { name: "햄스페셜 토스트", restaurant: "이삭토스트", kcal: 450, price: 3800 },
-        { name: "베이컨 베스트", restaurant: "이삭토스트", kcal: 470, price: 4300 },
-        { name: "퓨전라볶이", restaurant: "디델리", kcal: 700, price: 5000 },
-        { name: "참치김밥", restaurant: "디델리", kcal: 400, price: 3000 }
+        { restaurant: "김밥천국", name: "야채김밥", price: 3000, kcal: 320 },
+        { restaurant: "김밥천국", name: "참치김밥", price: 4500, kcal: 450 },
+        { restaurant: "김밥천국", name: "치즈김밥", price: 3500, kcal: 400 },
+        { restaurant: "김밥천국", name: "라볶이", price: 5500, kcal: 500 },
+        { restaurant: "김밥천국", name: "떡볶이", price: 5500, kcal: 450 },
+        { restaurant: "김밥천국", name: "쫄면", price: 6500, kcal: 480 },
+        { restaurant: "김밥천국", name: "돈까스", price: 7500, kcal: 700 },
+        { restaurant: "엽기떡볶이", name: "엽기떡볶이(2인)", price: 9000, kcal: 900 },
+        { restaurant: "엽기떡볶이", name: "로제떡볶이(1인)", price: 16000, kcal: 1100 },
+        { restaurant: "신전떡볶이", name: "신전떡볶이", price: 4500, kcal: 550 },
+        { restaurant: "신전떡볶이", name: "치즈떡볶이", price: 6500, kcal: 700 },
+        { restaurant: "신전떡볶이", name: "신전치즈김밥", price: 5200, kcal: 600 },
+        { restaurant: "디델리", name: "퓨전라볶이", price: 5000, kcal: 700 },
+        { restaurant: "디델리", name: "참치김밥", price: 3000, kcal: 400 },
+        { restaurant: "쉐프밥버거", name: "쉐프밥버거", price: 3500, kcal: 700 },
+        { restaurant: "쉐프밥버거", name: "제육밥버거", price: 4500, kcal: 900 },
+        { restaurant: "장수국수", name: "멸치국수", price: 4000, kcal: 450 },
+        { restaurant: "지지고", name: "나이스라이스", price: 5000, kcal: 650 }
     ],
     'cook': [
-        { name: "간장계란밥", restaurant: "집밥", kcal: 400, price: 2000, recipe: "따뜻한 밥 + 반숙후라이 + 간장/참기름/깨" },
-        { name: "김치볶음밥", restaurant: "집밥", kcal: 500, price: 3000, recipe: "파기름 + 김치/햄 볶기 + 밥 + 고춧가루" },
-        { name: "참치마요덮밥", restaurant: "집밥", kcal: 550, price: 4000, recipe: "밥 + 기름 뺀 참치 + 스크램블 + 마요네즈" },
-        { name: "제육덮밥", restaurant: "집밥", kcal: 700, price: 5000, recipe: "돼지고기/야채 + 고추장 양념 볶기" },
-        { name: "짜장라면", restaurant: "집밥", kcal: 550, price: 1000, recipe: "면 삶기 + 물 8스푼 남기고 스프 볶기" },
-        { name: "떡볶이", restaurant: "집밥", kcal: 500, price: 3000, recipe: "물 + 고추장/설탕 + 떡/어묵 졸이기" },
-        { name: "계란말이", restaurant: "집밥", kcal: 200, price: 1500, recipe: "계란을 풀고 다진 당근, 파를 섞은 뒤 팬에 얇게 부어가며 돌돌 만다." },
-        { name: "오트밀 죽", restaurant: "집밥", kcal: 300, price: 1500, recipe: "오트밀 + 우유 + 전자레인지 2분" }
+        { name: "라면", restaurant: "집밥", kcal: 510, price: 1000, recipe: "냄비에 물 550ml 끓여 라면 1개 3분 삶음 / 대파 10g 넣고 2분 더 끓임 / 계란 1개 올려 마무리" },
+        { name: "사리곰탕면", restaurant: "집밥", kcal: 682, price: 1000, recipe: "냄비에 물 550ml 끓여 라면 1개 4분 삶음 / 대파 10g 넣고 1분 더 끓임 / 계란 1개 올려 마무리" },
+        { name: "된장라면", restaurant: "집밥", kcal: 791, price: 1200, recipe: "냄비에 물 550ml 끓여 라면 1개 4분 삶음 / 대파 10g 넣고 1분 더 끓임 / 계란 1개 올려 마무리" },
+        { name: "참치라면", restaurant: "집밥", kcal: 686, price: 2000, recipe: "냄비에 물 550ml 끓여 라면 1개 4분 삶음 / 대파 10g 넣고 1분 더 끓임 / 계란 1개 올려 마무리" },
+        { name: "치즈라면", restaurant: "집밥", kcal: 586, price: 1500, recipe: "냄비에 물 550ml 끓여 라면 1개 3분 삶음 / 대파 10g 넣고 2분 더 끓임 / 계란 1개 올려 마무리" },
+        { name: "순두부라면", restaurant: "집밥", kcal: 467, price: 2000, recipe: "냄비에 물 550ml 끓여 라면 1개 3분 삶음 / 대파 20g 넣고 5분 더 조리 / 계란 1개 올려 마무리" },
+        { name: "짜파게티", restaurant: "집밥", kcal: 556, price: 1200, recipe: "양파 40g을 센불에서 2분 볶아 수분 날림 / 대파 20g 넣고 양념과 5분 더 조리 / 마늘 1t 넣고 약불 2분 조리" },
+        { name: "비빔면", restaurant: "집밥", kcal: 620, price: 1000, recipe: "냄비에 물 550ml 끓여 라면 1개 4분 삶음 / 대파 10g 넣고 1분 더 끓임 / 계란 1개 올려 마무리" },
+        { name: "우동", restaurant: "집밥", kcal: 485, price: 1500, recipe: "냄비에 물 550ml 끓여 라면 1개 4분 삶음 / 대파 10g 넣고 1분 더 끓임 / 계란 1개 올려 마무리" },
+        { name: "잔치국수", restaurant: "집밥", kcal: 453, price: 1500, recipe: "냄비에 물 550ml 끓여 라면 1개 4분 삶음 / 대파 10g 넣고 1분 더 끓임 / 계란 1개 올려 마무리" },
+        { name: "볶음우동면", restaurant: "집밥", kcal: 466, price: 2000, recipe: "냄비에 물 550ml 끓여 라면 1개 4분 삶음 / 대파 20g 넣고 2분 더 끓임 / 계란 1개 올려 마무리" },
+        { name: "떡볶이", restaurant: "집밥", kcal: 747, price: 3000, recipe: "양파 40g을 센불에서 1분 볶아 수분 날림 / 대파 20g 넣고 양념과 5분 더 조리 / 마늘 1t 넣고 약불 2분 완성" },
+        { name: "라볶이", restaurant: "집밥", kcal: 495, price: 3500, recipe: "양파 40g을 센불에서 3분 볶아 수분 날림 / 대파 20g 넣고 양념과 5분 더 조리 / 마늘 1t 넣고 약불 2분 완성" },
+        { name: "치즈떡볶이", restaurant: "집밥", kcal: 677, price: 4000, recipe: "양파 40g을 센불에서 1분 볶아 수분 날림 / 대파 20g 넣고 양념과 4분 더 조리 / 마늘 1t 넣고 약불 2분 완성" },
+        { name: "마라떡볶이", restaurant: "집밥", kcal: 545, price: 4500, recipe: "양파 40g을 센불에서 2분 볶아 수분 날림 / 대파 20g 넣고 양념과 4분 더 조리 / 마늘 1t 넣고 약불 2분 완성" },
+        { name: "김치찌개", restaurant: "집밥", kcal: 334, price: 3000, recipe: "신김치 150g을 냄비에 넣고 4분 볶아 기본 향냄/돼지고기 80g과 물 400ml 넣고 12분 끓임 / 두부 100g 넣고 약불 4분 끓여 완성" },
+        { name: "삼겹살김치찌개", restaurant: "집밥", kcal: 451, price: 5000, recipe: "신김치 150g을 냄비에 넣고 3분 볶아 기본 향 냄 / 돼지고기 80g과 물 400ml 넣고 9분 끓임 / 두부 100g 넣고 약불 4분 끓여 완성" },
+        { name: "스팸김치찌개", restaurant: "집밥", kcal: 777, price: 4000, recipe: "신김치 150g을 냄비에 넣고 7분 볶아 기본 향냄 / 돼지고기 80g과 물 400ml 넣고 11분 끓임 / 두부 100g 넣고 약불 4분 끓여 완성" },
+        { name: "참치김치찌개", restaurant: "집밥", kcal: 584, price: 3500, recipe: "참치 1캔을 냄비에 넣고 2분 볶아 기본 향냄 / 물 400ml 붓고 간장 등으로 9분 끓임 / 애호박 60g 넣고 약불 5분 더 끓임" },
+        { name: "순두부찌개", restaurant: "집밥", kcal: 457, price: 2500, recipe: "순두부 1봉을 냄비에 넣고 4분 볶아 기본 향냄/계란 1개와 물 400ml 넣고 7분 끓임 / 두부 20g 넣고 약불 3분 더 끓임" },
+        { name: "부대찌개", restaurant: "집밥", kcal: 667, price: 5000, recipe: "소시지 120g을 냄비에 넣고 2분 볶아 기본 향냄/햄 80g과 물 400ml 넣고 12분 끓임 / 두부 60g 넣고 약불 5분 더 끓임" },
+        { name: "고추장찌개", restaurant: "집밥", kcal: 588, price: 4000, recipe: "감자 2개를 냄비에 넣고 4분 볶아 기본 향냄 / 돼지고기 80g과 물 400ml 넣고 11분 끓임 / 대파 10g 넣고 약불 4분 더 끓임" },
+        { name: "계란국", restaurant: "집밥", kcal: 300, price: 1000, recipe: "계란 2개를 물 500ml와 함께 강불에서 끓임 / 끓기 시작하면 대파 10g 넣고 중불 6분 끓임 / 소금 1g 넣고 약불 4분 더 끓임" },
+        { name: "미역국", restaurant: "집밥", kcal: 787, price: 2000, recipe: "미역 10g을 물 500ml와 함께 강불에서 끓임 / 끓기 시작하면 소고기 40g 넣고 중불 8분 끓임 / 대파 10g 넣고 약불 4분 더 끓임" },
+        { name: "어묵국", restaurant: "집밥", kcal: 605, price: 2000, recipe: "어묵 120g을 물 500ml와 함께 강불에서 끓임 / 끓기 시작하면 대파 20g 넣고 중불 10분 끓임 / 양파 40g 넣고 약불 3분 더 끓임" },
+        { name: "소고기무국", restaurant: "집밥", kcal: 493, price: 4000, recipe: "계란 2개를 물 500ml와 함께 강불에서 끓임 / 끓기 시작하면 대파 10g 넣고 중불 7분 끓임 / 소금 1g 넣고 약불 4분 더 끓임" },
+        { name: "감자국", restaurant: "집밥", kcal: 547, price: 2000, recipe: "계란 2개를 물 500ml와 함께 강불에서 끓임 / 끓기 시작하면 대파 10g 넣고 중불 6분 끓임 / 소금 1g 넣고 약불 4분 더 끓임" },
+        { name: "달걀국", restaurant: "집밥", kcal: 597, price: 1500, recipe: "계란 2개를 물 500ml와 함께 강불에서 끓임 / 끓기 시작하면 대파 10g 넣고 중불 7분 끓임 / 소금 1g 넣고 약불 4분 더 끓임" },
+        { name: "김치수제비", restaurant: "집밥", kcal: 541, price: 3000, recipe: "양파 40g을 센불에서 3분 볶아 수분 날림 / 대파 20g 넣고 양념과 함께 4분 더 조리 / 대파 20g 넣고 중불 2분 조리" },
+        { name: "감자수제비", restaurant: "집밥", kcal: 452, price: 3000, recipe: "양파 40g을 센불에서 4분 볶아 수분 날림 / 대파 20g 넣고 양념과 함께 5분 더 조리/마늘 1t을(를) 약불에서 2분 졸여 완성" },
+        { name: "김치전", restaurant: "집밥", kcal: 514, price: 2000, recipe: "부침가루 80g을 잘게 썰어 반죽에 섞음 / 중불 팬에 기름을 두르고 앞뒤로 3분씩 굽음 / 물 60ml 넣고 1분 더 익힘" },
+        { name: "부추전", restaurant: "집밥", kcal: 615, price: 2500, recipe: "부침가루 80g을 잘게 썰어 반죽에 섞음 / 중불 팬에 기름을 두르고 앞뒤로 3분씩 굽음 / 물 60ml 넣고 2분 더 익힘" },
+        { name: "감자전", restaurant: "집밥", kcal: 636, price: 2000, recipe: "부침가루 80g을 잘게 썰어 반죽에 섞음 / 중불 팬에 기름을 두르고 앞뒤로 3분씩 굽음 / 물 60ml 넣고 1분 더 익힘" },
+        { name: "참치전", restaurant: "집밥", kcal: 566, price: 3000, recipe: "부침가루 80g을 잘게 썰어 반죽에 섞음 / 중불 팬에 기름을 두르고 앞뒤로 3분씩 굽음 / 물 60ml 넣고 1분 더 익힘" },
+        { name: "두부김치", restaurant: "집밥", kcal: 626, price: 4000, recipe: "양파 40g을 센불에서 2분 볶아 수분 날림 / 대파 20g 넣고 양념과 함께 5분 더 조리 / 마늘 1t 넣고 약불 1분 조리" },
+        { name: "어묵볶음", restaurant: "집밥", kcal: 836, price: 2000, recipe: "양파 40g을 센불에서 1분 볶아 수분 날림 / 대파 20g 넣고 양념과 함께 1분 더 조리 / 마늘 1t 넣고 약불 1분 완성" },
+        { name: "버섯볶음", restaurant: "집밥", kcal: 530, price: 3000, recipe: "양파 40g을 센불에서 2분 볶아 수분 날림 / 대파 20g 넣고 양념과 함께 4분 더 조리 / 마늘 1t 넣고 약불 2분 완성" },
+        { name: "양배추볶음", restaurant: "집밥", kcal: 521, price: 2000, recipe: "양파 40g을 센불에서 2분 볶아 수분 날림 / 대파 20g 넣고 양념과 함께 3분 더 조리 / 마늘 1t 넣고 약불 1분 완성" },
+        { name: "감자조림", restaurant: "집밥", kcal: 794, price: 2500, recipe: "감자 200g을 간장, 설탕, 물과 함께 냄비에 넣어 중불 8분/ 간장 2T 추가해 양념 배도록 3분 더 조리 / 설탕 1T 넣고 윤기 생길 때까지 조리" },
+        { name: "계란장", restaurant: "집밥", kcal: 546, price: 2000, recipe: "양파 40g을 센불에서 1분 볶아 수분 날림 / 대파 20g 넣고 양념과 함께 4분 더 조리 / 마늘 1t 넣고 약불 1분 완성" },
+        { name: "계란장조림", restaurant: "집밥", kcal: 489, price: 2500, recipe: "감자 200g을 간장, 설탕, 물과 함께 냄비에 넣어 중불 8분 / 간장 2T 추가해 양념 배도록 4분 더 조리 / 설탕 1T 넣고 윤기 생길 때까지 조리" },
+        { name: "스팸조림", restaurant: "집밥", kcal: 772, price: 4000, recipe: "감자 200g을 간장, 설탕, 물과 함께 냄비에 넣어 중불 6분/ 간장 2T 추가해 양념 배도록 4분 더 조리 / 설탕 1T 넣고 윤기 생길 때까지 조리" },
+        { name: "진미채볶음", restaurant: "집밥", kcal: 690, price: 5000, recipe: "양파 40g을 센불에서 3분 볶아 수분 날림 / 대파 20g 넣고 양념과 함께 3분 더 조리 / 마늘 1t 넣고 약불 1분 완성" },
+        { name: "고추장돼지볶음", restaurant: "집밥", kcal: 462, price: 6000, recipe: "양파 40g을 센불에서 2분 볶아 수분 날림 / 대파 20g 넣고 양념과 함께 3분 더 조리 / 마늘 1t 넣고 약불 2분 완성" },
+        { name: "소시지볶음", restaurant: "집밥", kcal: 834, price: 3000, recipe: "양파 40g을 센불에서 3분 볶아 수분 날림 / 대파 20g 넣고 양념과 함께 5분 더 조리 / 마늘 1t 넣고 약불 1분 완성" },
+        { name: "간장감자조림", restaurant: "집밥", kcal: 697, price: 2500, recipe: "감자 200g을 간장, 설탕, 물과 함께 냄비에 넣어 중불 7분 / 간장 2T 추가해 양념 배도록 4분 더 조리 / 설탕 1T 넣고 윤기 생길 때까지 조리" },
+        { name: "비더리간장우동", restaurant: "집밥", kcal: 624, price: 2000, recipe: "냄비에 물 550ml 끓여 라면 1개 4분 삶음 / 대파 10g 넣고 1분 더 끓여 양념이 배도록 함 / 계란 1개 올려 마무리" },
+        { name: "참치볶음우동", restaurant: "집밥", kcal: 613, price: 3000, recipe: "냄비에 물 550ml 끓여 라면 1개 3분 삶음 / 대파 10g 넣고 2분 더 끓여 양념이 배도록 함 / 계란 1개 올려 마무리" },
+        { name: "치킨스테이크", restaurant: "집밥", kcal: 504, price: 5000, recipe: "고기 150g에 소금, 후추 뿌리고 실온에 5분 둠 / 센불 팬에서 한 면당 4분씩 굽음 / 후추 1g을 더해 약불 2분 레스팅" },
+        { name: "목살스테이크", restaurant: "집밥", kcal: 636, price: 6000, recipe: "고기 150g에 소금, 후추 뿌리고 실온에 7분 둠 / 센불 팬에서 한 면당 4분씩 굽음 / 후추 1g을 더해 약불 2분 레스팅" },
+        { name: "에어프라이어 닭봉", restaurant: "집밥", kcal: 479, price: 5000, recipe: "재료 150g에 간단히 양념하고 에어프라이어 180도 넣음 / 올리브유 1T를 함께 넣고 12분 조리 / 뒤집어서 8분 더 돌려 완성" },
+        { name: "에어프라이어 감자", restaurant: "집밥", kcal: 711, price: 2000, recipe: "재료 150g에 간단히 양념하고 에어프라이어 180도 넣음 / 올리브유 1T를 함께 넣고 10분 조리 / 뒤집어서 5분 더 돌려 완성" },
+        { name: "핫도그롤", restaurant: "집밥", kcal: 692, price: 3000, recipe: "식빵 2장을 버터로 구워 바삭하게 만듦 / 계란 1개를 별도로 2분 익힘 / 버터 10g 넣어 조립해 완성" },
+        { name: "계란토스트", restaurant: "집밥", kcal: 699, price: 2500, recipe: "식빵 2장을 버터로 구워 바삭하게 만듦 / 계란 1개를 별도로 2분 익힘 / 버터 10g 넣어 조립해 완성" },
+        { name: "햄치즈토스트", restaurant: "집밥", kcal: 532, price: 3000, recipe: "식빵 2장을 버터로 구워 바삭하게 만듦 / 계란 1개를 별도로 3분 익힘 / 버터 10g 넣어 조립해 완성" },
+        { name: "감자수프", restaurant: "집밥", kcal: 500, price: 2000, recipe: "계란 2개를 물 500ml와 함께 강불에서 끓임 / 끓기 시작하면 대파 10g을 넣고 중불 7분 / 소금 1g 넣고 약불 3분 더 끓여 완성" },
+        { name: "콘치즈", restaurant: "집밥", kcal: 489, price: 3000, recipe: "양파 40g을 센불에서 2분 볶아 수분 날림 / 대파 20g 넣고 양념과 함께 4분 더 조리 / 마늘 1t 넣고 약불 2분 섞어 완성" },
+        { name: "계란스크램블", restaurant: "집밥", kcal: 698, price: 1500, recipe: "양파 40g을 센불에서 3분 볶아 수분 날림 / 대파 20g 넣고 양념과 함께 3분 더 조리 / 마늘 1t 넣고 약불 2분 섞어 완성" },
+        { name: "감바스", restaurant: "집밥", kcal: 763, price: 8000, recipe: "새우 100g을 올리브유에 약불로 2분 익혀 마늘향 입힘 / 올리브유 80ml 넣고 중불에서 4분 조리 / 마늘 10쪽 추가해 향 내며 마무리" }
     ]
 };
 
@@ -92,7 +223,6 @@ function goBackFromCreators() {
 }
 
 function showScreen(id, mode) {
-    // 1. 인트로 화면 처리
     if (id === 'screen-intro') {
         setDisplay('screen-intro', 'flex');
         setDisplay('intro-header', 'flex');
@@ -103,7 +233,6 @@ function showScreen(id, mode) {
         return;
     }
 
-    // 2. 정보 화면 처리 (전체화면)
     if (['screen-features', 'screen-help', 'screen-creators'].includes(id)) {
         setDisplay('screen-intro', 'none');
         setDisplay('intro-header', 'none');
@@ -115,7 +244,6 @@ function showScreen(id, mode) {
         return;
     }
 
-    // 3. 앱 내부 화면 처리
     setDisplay('screen-intro', 'none');
     setDisplay('intro-header', 'none');
     setDisplay('app-container', 'block');
@@ -126,16 +254,15 @@ function showScreen(id, mode) {
         setDisplay(s, s === id ? 'block' : 'none');
     });
     
-    // 헤더 제어
     const header = document.getElementById('main-header');
     const hamburger = document.getElementById('hamburger-btn');
-    const backBtn = document.getElementById('global-back-btn');
+    const kwuLogo = document.querySelector('.app-kwu-logo');
 
     if (header) header.style.display = 'block';
 
     if (id === 'screen-login') {
         if(hamburger) hamburger.style.display = 'none';
-        if(backBtn) backBtn.style.display = 'block';
+        if(kwuLogo) kwuLogo.style.display = 'block';
         
         if (mode === 'signup') {
             isSignupMode = false; 
@@ -146,23 +273,12 @@ function showScreen(id, mode) {
         }
     } else if (id === 'screen-dashboard') {
         if(hamburger) hamburger.style.display = 'block';
-        if(backBtn) backBtn.style.display = 'none';
     } else {
         if(hamburger) hamburger.style.display = 'block';
-        if(backBtn) backBtn.style.display = 'block';
     }
     
     const dropdown = document.getElementById('dropdown-menu');
     if(dropdown) dropdown.classList.remove('show');
-}
-
-function handleBackBtn() {
-    const loginScreen = document.getElementById('screen-login');
-    if (loginScreen.style.display === 'block') {
-        showScreen('screen-intro'); 
-    } else {
-        showScreen('screen-dashboard'); 
-    }
 }
 
 function closeModal(id) { 
@@ -213,7 +329,6 @@ function resetDailyData() {
     }
 }
 
-// 4. 인증 및 회원관리
 let isSignupMode = false;
 function toggleAuthMode() {
     isSignupMode = !isSignupMode;
@@ -354,7 +469,6 @@ function saveEditInfo() {
 
 function logout() { location.reload(); }
 
-// 5. 계산
 function calculateMetrics() {
     userState.bmi = (userState.weight / ((userState.height/100)**2)).toFixed(1);
     document.getElementById('bmi-display').innerText = userState.bmi;
@@ -372,7 +486,6 @@ function calculateMetrics() {
     document.getElementById('rec-cal-target').innerText = userState.recCalories;
 }
 
-// 6. UI 갱신
 function updateDashboardUI() {
     document.getElementById('current-cal').innerText = userState.currentCalories;
     const pct = Math.min((userState.currentCalories / userState.recCalories)*100, 100);
@@ -402,7 +515,6 @@ function updateDashboardUI() {
     }
 }
 
-// 7. 추천
 function recommendFood(category) {
     if(category !== lastSelectedCategory) { lastSelectedCategory = category; shownFoodNames = []; }
     
@@ -468,7 +580,6 @@ function recommendFood(category) {
 
 function retryRecommendation() { if(lastSelectedCategory) recommendFood(lastSelectedCategory); }
 
-// 8. 먹기
 function addFood(kcal, name, price) {
     if(confirm(`${name} (${kcal}kcal, ${price}원)\n섭취 기록하시겠습니까?`)) {
         userState.currentCalories += kcal;

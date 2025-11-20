@@ -62,8 +62,14 @@
                 <h3>Team KW BOB</h3>
                 <p class="team-name">광운대학교 소프트웨어학부</p>
                 <ul class="member-list">
-                    <li><strong>김승일 (2025403042)</strong><span>Backend & Planning</span></li>
-                    <li><strong>임세헌 (2025403043)</strong><span>Frontend & Design</span></li>
+                    <li>
+                        <strong>김승일 (2025403042)</strong>
+                        <span>Backend, Frontend & Planning</span>
+                    </li>
+                    <li>
+                        <strong>임세헌 (2025403043)</strong>
+                        <span>UI/UX Design</span>
+                    </li>
                 </ul>
                 <p class="version-info">Ver 1.0.0 | © 2025</p>
             </div>
@@ -79,6 +85,7 @@
                 <h1>🍚 KW BOB 🍚</h1>
                 <button id="hamburger-btn" onclick="toggleMenu()">☰</button>
             </div>
+            
             <div id="dropdown-menu" class="dropdown-content">
                 <a href="#" onclick="showScreen('screen-intro')">🏠 첫 화면으로</a>
                 <a href="#" onclick="openEditInfo()">⚙️ 회원정보 수정</a>
@@ -98,14 +105,25 @@
                 <div id="signup-fields" style="display: none;">
                     <hr>
                     <p class="signup-guide">👇 정확한 분석을 위해 정보를 입력해주세요</p>
-                    <div class="input-group"><label>닉네임</label><input type="text" id="nickname" placeholder="닉네임"></div>
-                    <div class="input-group"><label>키</label><input type="number" id="height" placeholder="cm"></div>
-                    <div class="input-group"><label>몸무게</label><input type="number" id="weight" placeholder="kg"></div>
-                    <div class="input-group"><label>나이</label><input type="number" id="age" placeholder="세"></div>
-                    <div class="input-group"><label>성별</label><select id="gender"><option value="male">남성</option><option value="female">여성</option></select></div>
+                    
+                    <input type="text" id="nickname" placeholder="닉네임 (예: 광운대호랑이)">
+
+                    <div class="input-group">
+                        <input type="number" id="height" placeholder="키 (cm)">
+                        <input type="number" id="weight" placeholder="몸무게 (kg)">
+                    </div>
+                    <div class="input-group">
+                        <input type="number" id="age" placeholder="나이 (세)">
+                        <select id="gender">
+                            <option value="male">남성</option>
+                            <option value="female">여성</option>
+                        </select>
+                    </div>
                     <div class="budget-group">
                         <input type="number" id="budget" placeholder="한 달 식비 예산 (만원)">
-                        <label class="checkbox-label"><input type="checkbox" id="no-budget" onchange="toggleBudgetInput('budget', 'no-budget')"> 예산 상관없음 (무제한)</label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="no-budget" onchange="toggleBudgetInput('budget', 'no-budget')"> 예산 상관없음 (무제한)
+                        </label>
                     </div>
                     <select id="goal">
                         <option value="maintain">체중 유지</option>
@@ -113,8 +131,12 @@
                         <option value="gain">체중 증가 (벌크업)</option>
                     </select>
                 </div>
+
                 <button onclick="handleAuthAction()" id="auth-action-btn" class="btn-primary">로그인</button>
-                <p class="toggle-auth"><span id="auth-msg">계정이 없으신가요?</span><a href="#" onclick="toggleAuthMode()" id="auth-toggle-btn">회원가입</a></p>
+                <p class="toggle-auth">
+                    <span id="auth-msg">계정이 없으신가요?</span>
+                    <a href="#" onclick="toggleAuthMode()" id="auth-toggle-btn">회원가입</a>
+                </p>
             </div>
         </section>
 
@@ -122,6 +144,7 @@
             <div class="header-row">
                 <h3>반갑습니다, <span id="user-name-display">사용자</span>님!</h3>
             </div>
+
             <div class="status-grid">
                 <div class="status-card">
                     <p>목표: <span id="goal-display" style="font-weight:bold; color:#8a0e26;">-</span></p>
@@ -132,8 +155,18 @@
                     <p id="budget-display" style="font-size: 18px; font-weight: bold;">0원</p>
                 </div>
             </div>
-            <div class="status-card"><p>일일 권장 섭취량: <span id="rec-cal">0</span> kcal</p></div>
-            <div class="status-card highlight"><p>오늘의 섭취량: <span id="current-cal">0</span> / <span id="rec-cal-target">0</span> kcal</p><div class="progress-bar"><div id="progress-fill" style="width: 0%"></div></div></div>
+            
+            <div class="status-card">
+                <p>일일 권장 섭취량: <span id="rec-cal">0</span> kcal</p>
+            </div>
+
+            <div class="status-card highlight">
+                <p>오늘의 섭취량: <span id="current-cal">0</span> / <span id="rec-cal-target">0</span> kcal</p>
+                <div class="progress-bar">
+                    <div id="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+
             <div class="food-log-container">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <h4>📝 오늘의 식사 기록</h4>
@@ -143,6 +176,7 @@
                     <li class="empty-log">아직 먹은 음식이 없습니다.</li>
                 </ul>
             </div>
+
             <div style="margin-top: 20px;">
                 <button onclick="showScreen('screen-recommendation')" class="btn-large">
                     🍽️ 오늘 뭐 먹지? (메뉴 추천 받기)
@@ -151,59 +185,56 @@
         </section>
 
         <section id="screen-edit-info" style="display: none;">
-            <div class="content-wrapper">
-                <button onclick="showScreen('screen-dashboard')" class="btn-back">← 돌아가기</button>
-                <h2 style="text-align:center; margin-bottom:20px;">내 정보 수정</h2>
-                <div class="auth-box">
-                    <div class="input-group"><label>닉네임</label><input type="text" id="edit-nickname"></div>
-                    <div class="input-group"><label>키</label><input type="number" id="edit-height"></div>
-                    <div class="input-group"><label>몸무게</label><input type="number" id="edit-weight"></div>
-                    <div class="input-group"><label>나이</label><input type="number" id="edit-age"></div>
-                    <div class="budget-group">
-                        <div class="input-group"><label>식비</label><input type="number" id="edit-budget"></div>
-                        <label class="checkbox-label"><input type="checkbox" id="edit-no-budget" onchange="toggleBudgetInput('edit-budget', 'edit-no-budget')"> 예산 상관없음</label>
-                    </div>
-                    <div class="input-group"><label>목표</label><select id="edit-goal"><option value="maintain">체중 유지</option><option value="lose">체중 감량</option><option value="gain">체중 증가</option></select></div>
-                    <button onclick="saveEditInfo()" class="btn-primary">수정 완료</button>
+            <button onclick="showScreen('screen-dashboard')" class="btn-back">← 돌아가기</button>
+            <h2>내 정보 수정</h2>
+            <div class="auth-box">
+                <div class="input-group"><label>닉네임</label><input type="text" id="edit-nickname"></div>
+                <div class="input-group"><label>키</label><input type="number" id="edit-height"></div>
+                <div class="input-group"><label>몸무게</label><input type="number" id="edit-weight"></div>
+                <div class="input-group"><label>나이</label><input type="number" id="edit-age"></div>
+                <div class="budget-group">
+                    <div class="input-group"><label>식비</label><input type="number" id="edit-budget"></div>
+                    <label class="checkbox-label"><input type="checkbox" id="edit-no-budget" onchange="toggleBudgetInput('edit-budget', 'edit-no-budget')"> 예산 상관없음</label>
                 </div>
+                <div class="input-group"><label>목표</label><select id="edit-goal"><option value="maintain">체중 유지</option><option value="lose">체중 감량</option><option value="gain">체중 증가</option></select></div>
+                <button onclick="saveEditInfo()" class="btn-primary">수정 완료</button>
             </div>
         </section>
 
         <section id="screen-recommendation" style="display: none;">
-            <div class="content-wrapper">
-                <button onclick="showScreen('screen-dashboard')" class="btn-back">← 기록화면으로 돌아가기</button>
-                <h2 style="text-align: center; margin-bottom: 30px;">메뉴 추천</h2>
-                
-                <div id="wallet-guard-msg" style="display:none; background:#ffebee; color:#c62828; padding:10px; border-radius:8px; margin-bottom:10px; font-size:14px;">🚨 <strong>식비 방어 모드 발동!</strong><br>남은 돈이 별로 없어요. 가성비 메뉴만 추천합니다!</div>
-                
-                <div class="filter-container">
-                    <div class="price-filter">
-                        <h4>💰 가격대 선택</h4>
-                        <div class="radio-group">
-                            <label><input type="radio" name="price" value="0" checked> <span>상관없음</span></label>
-                            <label><input type="radio" name="price" value="1"> <span>~1만원</span></label>
-                            <label><input type="radio" name="price" value="2"> <span>1만~1.2만</span></label>
-                            <label><input type="radio" name="price" value="3"> <span>1.2만~1.5만</span></label>
-                            <label><input type="radio" name="price" value="4"> <span>1.5만원~</span></label>
-                        </div>
-                    </div>
-                    <div class="category-buttons">
-                        <button onclick="recommendFood('korean')">한식</button>
-                        <button onclick="recommendFood('chinese')">중식</button>
-                        <button onclick="recommendFood('western')">양식</button>
-                        <button onclick="recommendFood('japanese')">일식</button>
-                        <button onclick="recommendFood('snack')">분식</button>
-                        <button onclick="recommendFood('cook')">직접 요리</button>
+            <button onclick="showScreen('screen-dashboard')" class="btn-back">← 기록화면으로 돌아가기</button>
+            
+            <h2>메뉴 추천</h2>
+            
+            <div id="wallet-guard-msg" style="display:none; background:#ffebee; color:#c62828; padding:10px; border-radius:8px; margin-bottom:10px; font-size:14px;">🚨 <strong>식비 방어 모드 발동!</strong><br>남은 돈이 별로 없어요. 가성비 메뉴만 추천합니다!</div>
+            
+            <div class="filter-container">
+                <div class="price-filter">
+                    <h4>💰 가격대 선택</h4>
+                    <div class="radio-group">
+                        <label><input type="radio" name="price" value="0" checked> <span>상관없음</span></label>
+                        <label><input type="radio" name="price" value="1"> <span>1만원 미만</span></label>
+                        <label><input type="radio" name="price" value="2"> <span>1만~2만원</span></label>
+                        <label><input type="radio" name="price" value="3"> <span>2만~3만원</span></label>
+                        <label><input type="radio" name="price" value="4"> <span>3만원 초과</span></label>
                     </div>
                 </div>
-                
-                <div id="recommendation-area" class="recommendation-grid"></div>
-                
-                <div style="text-align: center; margin-top: 20px;">
-                    <button id="retry-btn" onclick="retryRecommendation()" class="btn-retry" style="display:none;">
-                        🔄 마음에 안 들어요! (다른 메뉴 추천)
-                    </button>
+                <div class="category-buttons">
+                    <button onclick="recommendFood('korean')">한식</button>
+                    <button onclick="recommendFood('chinese')">중식</button>
+                    <button onclick="recommendFood('western')">양식</button>
+                    <button onclick="recommendFood('japanese')">일식</button>
+                    <button onclick="recommendFood('snack')">분식</button>
+                    <button onclick="recommendFood('cook')">직접 요리</button>
                 </div>
+            </div>
+            
+            <div id="recommendation-area" class="recommendation-grid"></div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button id="retry-btn" onclick="retryRecommendation()" class="btn-retry" style="display:none;">
+                    🔄 마음에 안 들어요! (다른 메뉴 추천)
+                </button>
             </div>
         </section>
     </div>
@@ -211,6 +242,6 @@
     <div id="receipt-modal" class="modal"><div class="modal-content receipt-paper"><span class="close" onclick="closeModal('receipt-modal')">&times;</span><div id="receipt-content"></div><div class="receipt-footer"><button onclick="closeModal('receipt-modal')" class="btn-primary">닫기</button></div></div></div>
     <div id="recipe-modal" class="modal"><div class="modal-content"><span class="close" onclick="closeModal('recipe-modal')">&times;</span><h3 id="recipe-title">요리 이름</h3><div id="recipe-body"></div></div></div>
 
-    <script src="script.js?v=final_v27"></script>
+    <script src="script.js?v=final_v28"></script>
 </body>
 </html>

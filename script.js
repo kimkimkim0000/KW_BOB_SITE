@@ -535,19 +535,21 @@ function updateDashboardUI() {
     }
 }
 
-// [수정] 추천 로직: 4가지 가격 구간 적용
+// [수정] 추천 로직 개선: 'cook'은 가격 필터 무시
 function recommendFood(category) {
     if(category !== lastSelectedCategory) { lastSelectedCategory = category; shownFoodNames = []; }
     
     let list = foodDatabase[category];
     const pPrice = document.querySelector('input[name="price"]:checked').value;
     
-    if(pPrice !== "0") {
+    // cook이 아니고, 가격 필터가 0이 아닐 때만 필터링
+    if(category !== 'cook' && pPrice !== "0") {
         list = list.filter(f => {
-            if(pPrice==="1") return f.price < 10000;
-            if(pPrice==="2") return f.price >= 10000 && f.price < 20000; // 1~2만원
-            if(pPrice==="3") return f.price >= 20000 && f.price < 30000; // 2~3만원
-            return f.price >= 30000; // 3만원 초과
+            if(pPrice==="1") return f.price <= 10000; // 1만원 이하
+            if(pPrice==="2") return f.price > 10000 && f.price <= 20000; // 1만원대
+            if(pPrice==="3") return f.price > 20000 && f.price <= 30000; // 2만원대
+            if(pPrice==="4") return f.price > 30000 && f.price <= 40000; // 3만원대
+            return f.price > 40000; // 3만원 이상(사실상 4만원대 이상 포함)
         });
     }
 
@@ -556,7 +558,7 @@ function recommendFood(category) {
     const walletMsg = document.getElementById('wallet-guard-msg');
     walletMsg.style.display = isLowBudget ? 'block' : 'none';
 
-    if (isLowBudget) list = list.filter(f => f.price <= 8000);
+    if (isLowBudget && category !== 'cook') list = list.filter(f => f.price <= 8000);
 
     const target = Math.round(userState.recCalories/3);
     if(userState.goal==='lose') list = list.filter(f => f.kcal <= target);

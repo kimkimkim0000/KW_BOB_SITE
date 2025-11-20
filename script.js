@@ -5,13 +5,13 @@ let userState = {
     recCalories: 0, currentCalories: 0,
     monthlyBudget: 0, currentSpend: 0,
     eatenLogs: [], lastDate: "",
-    receiptComment: "" // [NEW] 영수증 한줄평 저장
+    receiptComment: ""
 };
 
 let lastSelectedCategory = ''; 
 let shownFoodNames = [];
 
-// 2. 음식 데이터베이스 (생략없이 그대로 사용)
+// 2. 음식 데이터베이스 (동일)
 const foodDatabase = {
     'korean': [
         { name: "야채김밥", restaurant: "김밥천국", kcal: 320, price: 3000 },
@@ -76,10 +76,17 @@ function showScreen(id) {
     });
     
     const hamburger = document.getElementById('hamburger-btn');
+    const backBtn = document.getElementById('global-back-btn');
+
     if (id === 'screen-login') {
         hamburger.style.display = 'none';
+        backBtn.style.display = 'none';
+    } else if (id === 'screen-dashboard') {
+        hamburger.style.display = 'block';
+        backBtn.style.display = 'none'; // 대시보드에서는 뒤로가기 안보임
     } else {
         hamburger.style.display = 'block';
+        backBtn.style.display = 'block'; // 그 외(추천/수정)에서는 보임
     }
     document.getElementById('dropdown-menu').classList.remove('show');
 }
@@ -117,13 +124,11 @@ function toggleDarkMode() {
     toggleMenu(); 
 }
 
-// [수정됨] 초기화: 예산과 영수증 한줄평도 초기화
 function resetDailyData() {
-    if(confirm("오늘의 식사 기록, 섭취 칼로리, 지출 내역을 모두 초기화하시겠습니까?")) {
+    if(confirm("오늘의 식사 기록과 섭취 칼로리를 모두 초기화하시겠습니까?\n(지출 내역은 유지됩니다.)")) {
         userState.currentCalories = 0;
-        userState.currentSpend = 0;
         userState.eatenLogs = [];
-        userState.receiptComment = ""; // 한줄평 초기화
+        userState.receiptComment = ""; 
         saveUserData();
         updateDashboardUI();
         alert("초기화되었습니다.");
@@ -188,7 +193,7 @@ function handleAuthAction() {
             if (userState.lastDate !== today) {
                 userState.currentCalories = 0;
                 userState.eatenLogs = [];
-                userState.receiptComment = ""; // 새 날이 밝으면 초기화
+                userState.receiptComment = ""; 
                 userState.lastDate = today;
                 saveUserData();
             }
@@ -397,6 +402,7 @@ function saveReceiptComment(val) {
     saveUserData(); // 입력할 때마다 저장
 }
 
+// [수정됨] 스마트한 성적표 멘트 로직 적용
 function openReceipt() {
     const modal = document.getElementById('receipt-modal');
     const content = document.getElementById('receipt-content');
@@ -423,15 +429,30 @@ function openReceipt() {
         });
     }
 
-    const diff = Math.abs(userState.currentCalories - userState.recCalories);
-    const percent = (diff / userState.recCalories) * 100;
+    // [NEW] 스마트 멘트 로직
+    const diff = userState.currentCalories - userState.recCalories;
     let grade = "A+";
-    if (percent > 10) grade = "B";
-    if (percent > 20) grade = "C";
-    if (percent > 30) grade = "F";
-    if (userState.currentCalories === 0) grade = "NONE";
+    let message = "완벽해요! 👍";
 
-    // [수정됨] 저장된 코멘트 불러오기 & 입력 시 자동 저장
+    if (userState.currentCalories === 0) {
+        grade = "NONE";
+        message = "아직 식사 전이군요?";
+    } else if (diff > 500) {
+        grade = "F";
+        message = "오늘은 좀 과식을 한 것 같아요 🐷";
+    } else if (diff < -500) {
+        grade = "C"; // 너무 적게 먹어도 좋지 않음
+        message = "오늘은 당신은 소식좌인가요? 🐜";
+    } else {
+        // 적정 범위 내 (±500)
+        const percentDiff = Math.abs(diff) / userState.recCalories * 100;
+        if (percentDiff < 10) {
+            grade = "A+"; message = "완벽해요! 👍";
+        } else {
+            grade = "B"; message = "나쁘지 않아요 👌";
+        }
+    }
+
     html += `
         </div>
         <div class="receipt-divider"></div>
@@ -445,8 +466,8 @@ function openReceipt() {
         </div>
         <div class="receipt-grade">
             <h3>오늘의 성적표</h3>
-            <span>${grade}</span>
-            <p>${grade === 'A+' ? '완벽해요! 👍' : (grade === 'F' ? '분발하세요 😱' : '나쁘지 않아요 👌')}</p>
+            <span style="color:${grade==='F'?'red':(grade==='A+'?'#4CAF50':'#333')}">${grade}</span>
+            <p>${message}</p>
         </div>
         <input type="text" class="receipt-comment" 
                placeholder="한줄평을 입력하세요 (예: 디저트 배는 따로!)" 

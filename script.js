@@ -535,21 +535,14 @@ function updateDashboardUI() {
     }
 }
 
-// [수정] 추천 로직 개선: 'cook'은 가격 필터 무시
-function recommendFood(category) {
-    if(category !== lastSelectedCategory) { lastSelectedCategory = category; shownFoodNames = []; }
-    
-    let list = foodDatabase[category];
-    const pPrice = document.querySelector('input[name="price"]:checked').value;
-    
-    // cook이 아니고, 가격 필터가 0이 아닐 때만 필터링
+// [수정] cook은 가격 필터 무시
     if(category !== 'cook' && pPrice !== "0") {
         list = list.filter(f => {
             if(pPrice==="1") return f.price <= 10000; // 1만원 이하
             if(pPrice==="2") return f.price > 10000 && f.price <= 20000; // 1만원대
             if(pPrice==="3") return f.price > 20000 && f.price <= 30000; // 2만원대
-            if(pPrice==="4") return f.price > 30000 && f.price <= 40000; // 3만원대
-            return f.price > 40000; // 3만원 이상(사실상 4만원대 이상 포함)
+            if(pPrice==="4") return f.price > 30000; // 3만원 초과
+            return true;
         });
     }
 

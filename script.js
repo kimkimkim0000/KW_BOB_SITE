@@ -535,17 +535,19 @@ function updateDashboardUI() {
     }
 }
 
+// [수정] 추천 로직: 4가지 가격 구간 적용
 function recommendFood(category) {
     if(category !== lastSelectedCategory) { lastSelectedCategory = category; shownFoodNames = []; }
     
     let list = foodDatabase[category];
     const pPrice = document.querySelector('input[name="price"]:checked').value;
+    
     if(pPrice !== "0") {
         list = list.filter(f => {
             if(pPrice==="1") return f.price < 10000;
-            if(pPrice==="2") return f.price >= 10000 && f.price < 12000;
-            if(pPrice==="3") return f.price >= 12000 && f.price < 15000;
-            return f.price >= 15000; 
+            if(pPrice==="2") return f.price >= 10000 && f.price < 20000; // 1~2만원
+            if(pPrice==="3") return f.price >= 20000 && f.price < 30000; // 2~3만원
+            return f.price >= 30000; // 3만원 초과
         });
     }
 

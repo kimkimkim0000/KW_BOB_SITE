@@ -72,38 +72,103 @@ const foodDatabase = {
 // 3. 화면 및 메뉴 제어
 function startApp() {
     document.getElementById('screen-intro').style.display = 'none';
-    document.getElementById('screen-login').style.display = 'block';
-    document.getElementById('main-header').style.display = 'block';
+    document.getElementById('intro-header').style.display = 'none';
+    document.getElementById('app-container').style.display = 'block'; // 앱 컨테이너 보이기
+    
+    // 기본적으로 로그인 화면으로 시작
+    showScreen('screen-login');
 }
 
-function showScreen(id) {
-    const screens = ['screen-intro', 'screen-login', 'screen-dashboard', 'screen-recommendation', 'screen-edit-info'];
-    screens.forEach(s => {
-        const el = document.getElementById(s);
-        if(el) el.style.display = (s===id) ? 'block' : 'none';
+function goBackFromCreators() {
+    if (userState.isLoggedIn) {
+        showScreen('screen-dashboard');
+    } else {
+        showScreen('screen-intro');
+    }
+}
+
+function showScreen(id, mode) {
+    // 인트로 화면 처리
+    if (id === 'screen-intro') {
+        document.getElementById('screen-intro').style.display = 'flex';
+        document.getElementById('intro-header').style.display = 'flex';
+        document.getElementById('app-container').style.display = 'none';
+        
+        // 전체화면 섹션들 숨김
+        document.getElementById('screen-features').style.display = 'none';
+        document.getElementById('screen-help').style.display = 'none';
+        document.getElementById('screen-creators').style.display = 'none';
+        return;
+    }
+
+    // 전체화면 섹션(기능소개, 도움말, 만든사람들) 처리
+    if (['screen-features', 'screen-help', 'screen-creators'].includes(id)) {
+        document.getElementById('screen-intro').style.display = 'none';
+        document.getElementById('intro-header').style.display = 'none';
+        document.getElementById('app-container').style.display = 'none';
+        
+        ['screen-features', 'screen-help', 'screen-creators'].forEach(s => {
+            document.getElementById(s).style.display = (s === id) ? 'flex' : 'none';
+        });
+        return;
+    }
+
+    // 앱 내부 화면 처리 (컨테이너 안)
+    document.getElementById('app-container').style.display = 'block';
+    document.getElementById('screen-intro').style.display = 'none';
+    document.getElementById('intro-header').style.display = 'none';
+    
+    // 전체화면 섹션 숨김
+    ['screen-features', 'screen-help', 'screen-creators'].forEach(s => {
+        document.getElementById(s).style.display = 'none';
+    });
+
+    ['screen-login','screen-dashboard','screen-recommendation', 'screen-edit-info'].forEach(s => {
+        document.getElementById(s).style.display = (s===id)?'block':'none';
     });
     
+    // 헤더 및 버튼 제어
     const hamburger = document.getElementById('hamburger-btn');
     const backBtn = document.getElementById('global-back-btn');
     const header = document.getElementById('main-header');
 
-    if (id === 'screen-intro') {
-        header.style.display = 'none';
-    } else if (id === 'screen-login') {
+    if (id === 'screen-login') {
         header.style.display = 'block';
         hamburger.style.display = 'none';
-        backBtn.style.display = 'none';
+        backBtn.style.display = 'block'; // [수정] 로그인 화면에서도 인트로로 가는 홈 버튼 표시
+        
+        // 로그인/회원가입 모드 전환
+        if (mode === 'signup') {
+            isSignupMode = false; 
+            toggleAuthMode(); // 회원가입 모드로 전환
+        } else {
+            isSignupMode = true;
+            toggleAuthMode(); // 로그인 모드로 전환
+        }
     } else if (id === 'screen-dashboard') {
         header.style.display = 'block';
         hamburger.style.display = 'block';
-        backBtn.style.display = 'none'; 
+        backBtn.style.display = 'none'; // 대시보드에선 홈 버튼 숨김
     } else {
         header.style.display = 'block';
         hamburger.style.display = 'block';
-        backBtn.style.display = 'block'; 
+        backBtn.style.display = 'block'; // 그 외 화면에선 홈 버튼 표시
     }
     document.getElementById('dropdown-menu').classList.remove('show');
 }
+
+// [NEW] 홈 버튼 클릭 핸들러
+function handleBackBtn() {
+    const loginScreen = document.getElementById('screen-login');
+    if (loginScreen.style.display === 'block') {
+        showScreen('screen-intro'); // 로그인 화면이면 인트로로
+    } else {
+        showScreen('screen-dashboard'); // 그 외(추천, 수정 등)면 대시보드로
+    }
+}
+
+// ... (이하 기존 로직 동일: 모달, 인증, 계산 등) ...
+
 function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
 function toggleMenu() {
@@ -122,15 +187,15 @@ window.onclick = function(event) {
     }
     const modal1 = document.getElementById('receipt-modal');
     const modal2 = document.getElementById('recipe-modal');
-    const modal3 = document.getElementById('about-modal');
     if (event.target == modal1) modal1.style.display = 'none';
     if (event.target == modal2) modal2.style.display = 'none';
-    if (event.target == modal3) modal3.style.display = 'none';
 }
 
 function openAbout() {
+    // 햄버거 메뉴에서 호출 시
+    // 기존에는 모달이었으나, 이제 전체 화면으로 이동
     toggleMenu();
-    document.getElementById('about-modal').style.display = 'block';
+    showScreen('screen-creators');
 }
 
 function toggleDarkMode() {
@@ -175,6 +240,7 @@ function handleAuthAction() {
     if(!id || !pw) return alert("정보를 입력하세요.");
 
     if (isSignupMode) {
+        // 유효성 검사
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailPattern.test(id)) {
             alert("아이디는 이메일 형식이어야 합니다. (예: user@kw.ac.kr)");
@@ -210,7 +276,9 @@ function handleAuthAction() {
             currentCalories: 0, eatenLogs: [], lastDate: "", receiptComment: ""
         };
         localStorage.setItem(id, JSON.stringify(userData));
-        alert("가입 완료!"); toggleAuthMode();
+        alert("가입 완료!"); 
+        isSignupMode = true; // 로그인 모드로 변경하기 위해 true로 설정 후 토글
+        toggleAuthMode();
     } else {
         const dataStr = localStorage.getItem(id);
         if(!dataStr) return alert("존재하지 않는 아이디입니다.");

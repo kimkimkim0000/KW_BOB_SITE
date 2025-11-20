@@ -1,105 +1,46 @@
 /* 기본 설정 */
 body { font-family: 'Noto Sans KR', sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; color: #333; transition: 0.3s; overflow-x: hidden; }
 
-/* [수정] 헤더 정렬 */
-.header-content { 
-    display: flex; justify-content: space-between; align-items: center; 
-    position: relative; height: 50px; padding: 0 20px; max-width: 1200px; margin: 0 auto;
+/* [NEW] 앱 내부 KWU 로고 */
+.app-kwu-logo {
+    position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+    font-size: 20px; font-weight: 900; color: #8a0e26; cursor: pointer;
+    text-shadow: 1px 1px 0px rgba(0,0,0,0.1); letter-spacing: 1px;
 }
-.app-logo { 
-    color: #8a0e26; margin: 0; font-size: 24px; 
-    position: absolute; left: 50%; transform: translateX(-50%); /* 절대 중앙 정렬 */
-}
-body.dark-mode .app-logo { color: #ff6b6b; } 
+body.dark-mode .app-kwu-logo { color: #ff6b6b; }
 
-/* 햄버거 메뉴 (세로 정렬) */
-.dropdown-content { 
-    display: none; position: absolute; right: 20px; top: 60px; 
-    background-color: #fff; min-width: 200px; 
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15); border-radius: 12px; 
-    z-index: 1000; border: 1px solid #eee; animation: fadeIn 0.2s; 
-    flex-direction: column; padding: 10px 0;
+/* 인트로 헤더 */
+#intro-header {
+    position: fixed; top: 0; left: 0; width: 100%; padding: 20px 40px;
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 2001; box-sizing: border-box; background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
 }
-.dropdown-content.show { display: flex; } /* flex로 변경하여 세로 정렬 */
-.dropdown-content a { 
-    color: #333; padding: 12px 20px; text-decoration: none; 
-    display: block; font-size: 15px; transition: 0.2s; text-align: left;
-}
-.dropdown-content a:hover { background-color: #f8f8f8; color: #8a0e26; }
-.close-menu { text-align: center !important; border-top: 1px solid #eee; margin-top: 5px; color: #999 !important; }
-
-/* 추천 화면 UI 개선 */
-.filter-container {
-    background: white; padding: 20px; border-radius: 15px; 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px;
-}
-.price-filter { background: transparent; padding: 0; border: none; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 20px;}
-.radio-group { gap: 20px; justify-content: center; }
-.category-buttons { gap: 10px; margin-bottom: 0; }
-.category-buttons button { 
-    background-color: #f8f9fa; color: #333; border: 1px solid #ddd; 
-    padding: 12px 0; font-size: 15px; transition: 0.2s; border-radius: 10px;
-}
-.category-buttons button:hover, .category-buttons button.active { 
-    background-color: #8a0e26; color: white; border-color: #8a0e26; transform: translateY(-2px);
-}
-
-/* 음식 카드 디자인 */
-.food-item { 
-    display: flex; flex-direction: column; padding: 25px; 
-    border: none; border-radius: 15px; background: #fff; 
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: 0.3s; position: relative; overflow: hidden;
-}
-.food-item:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-.food-info strong { font-size: 20px; margin-bottom: 10px; color: #222; }
-.food-meta { font-size: 15px; color: #666; margin-bottom: 20px; display: block; }
-.eat-btn { width: 100%; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 10px; }
-
-/* 다크모드 대응 */
-body.dark-mode .filter-container, body.dark-mode .food-item { background-color: #2d2d2d; border: 1px solid #444; }
-body.dark-mode .category-buttons button { background-color: #333; border-color: #555; color: #eee; }
-body.dark-mode .category-buttons button:hover { background-color: #ff6b6b; color: white; border-color: #ff6b6b; }
-body.dark-mode .food-info strong { color: #fff; }
-
-/* (나머지 CSS는 기존과 동일하게 유지 - 생략 없이 포함됨) */
-#screen-intro { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover; z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-.hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1; }
-.hero-content { position: relative; z-index: 2; color: white; padding: 20px; animation: fadeIn 1s ease-out; }
-.hero-content h1 { font-size: 60px; margin-bottom: 10px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
-.hero-subtitle { font-size: 28px; font-weight: 300; margin-bottom: 20px; }
-.hero-desc { font-size: 18px; line-height: 1.6; opacity: 0.9; margin-bottom: 40px; }
-#intro-header { position: fixed; top: 0; left: 0; width: 100%; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; z-index: 2001; box-sizing: border-box; background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent); }
 .intro-logo { font-size: 24px; font-weight: bold; color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); white-space: nowrap;}
 .intro-nav { display: flex; align-items: center; flex-wrap: nowrap; }
 .intro-nav a { color: white; text-decoration: none; margin-left: 20px; font-size: 15px; font-weight: 500; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); transition: 0.2s; white-space: nowrap; }
 .intro-nav a:hover { color: #ffcc00; transform: translateY(-2px); }
 .nav-divider { color: rgba(255,255,255,0.5); margin-left: 20px; }
-.container { max-width: 1200px; width: 95%; margin: 40px auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); position: relative; min-height: 80vh; }
-body.dark-mode { background-color: #121212; color: #eee; }
-body.dark-mode .container { background-color: #1e1e1e; box-shadow: 0 4px 10px rgba(255,255,255,0.1); }
-body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, body.dark-mode h4 { color: #eee; }
-body.dark-mode .status-card, body.dark-mode .feature-card { background-color: #2d2d2d; border: 1px solid #444; }
-body.dark-mode .status-card p { color: #ddd; }
-body.dark-mode .food-log-container { background-color: #2d2d2d; border: 1px solid #444; }
-body.dark-mode input, body.dark-mode select { background-color: #333; color: #fff; border: 1px solid #555; }
-body.dark-mode .modal-content { background-color: #2d2d2d; color: #eee; border: 1px solid #444; }
-body.dark-mode .receipt-paper { background-color: #fff; color: #000; }
-body.dark-mode .feature-card { background-color: #2d2d2d; border-color: #444; }
-body.dark-mode .feature-card h3 { color: #eee; }
-body.dark-mode .feature-card p { color: #aaa; }
-header#main-header { margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 10px; position: relative; }
-body.dark-mode header#main-header { border-bottom: 1px solid #444; }
-#global-back-btn { position: absolute; left: 0; background: none; border: none; font-size: 24px; cursor: pointer; color: #333; padding: 5px; }
-#hamburger-btn { position: absolute; right: 0; background: none; border: none; font-size: 24px; cursor: pointer; color: #333; padding: 5px; }
-body.dark-mode #hamburger-btn, body.dark-mode #global-back-btn { color: #fff; }
-.full-screen-section { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: #f4f4f4; z-index: 1000; overflow-y: auto; padding-top: 80px; box-sizing: border-box; }
-.center-flex-section { display: flex; justify-content: center; align-items: center; padding-top: 0; }
-.app-content-section { display: block; }
-body.dark-mode .full-screen-section { background-color: #121212; }
-.content-wrapper { max-width: 1200px; width: 95%; margin: 0 auto; padding: 20px; }
+
+/* 인트로 화면 */
+#screen-intro {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+    background: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+    z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+}
+.hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1; }
+.hero-content { position: relative; z-index: 2; color: white; padding: 20px; animation: fadeIn 1s ease-out; }
+.hero-content h1 { font-size: 60px; margin-bottom: 10px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
+.hero-subtitle { font-size: 28px; font-weight: 300; margin-bottom: 20px; }
+.hero-desc { font-size: 18px; line-height: 1.6; opacity: 0.9; margin-bottom: 40px; }
+
+/* 정보 화면 */
+#screen-features, #screen-help, #screen-creators {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+    background-color: #f9f9f9; z-index: 2000; overflow-y: auto;
+    display: flex; justify-content: center; align-items: flex-start; padding-top: 100px; box-sizing: border-box;
+}
 .info-screen-content { background: white; max-width: 800px; width: 90%; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; margin: 50px auto; animation: slideUp 0.5s ease-out; }
 .info-screen-content h2 { color: #8a0e26; margin-bottom: 30px; font-size: 28px; }
-body.dark-mode .info-screen-content { background-color: #1e1e1e; }
 .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
 .feature-card { padding: 20px; background: #fdfdfd; border: 1px solid #eee; border-radius: 10px; transition: 0.3s; }
 .feature-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
@@ -120,21 +61,61 @@ body.dark-mode .info-screen-content { background-color: #1e1e1e; }
 .version-info { color: #999; font-size: 12px; }
 .btn-back-intro { background: #333; color: white; border: none; padding: 10px 25px; border-radius: 20px; cursor: pointer; font-size: 14px; transition: 0.2s; }
 .btn-back-intro:hover { background: #555; }
+
+/* 앱 컨테이너 */
+.container { max-width: 1200px; margin: 40px auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); position: relative; min-height: 80vh; }
+
+/* 다크 모드 */
+body.dark-mode { background-color: #121212; color: #eee; }
+body.dark-mode .container, body.dark-mode .info-screen-content { background-color: #1e1e1e; box-shadow: 0 4px 10px rgba(255,255,255,0.1); }
+body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, body.dark-mode h4 { color: #eee; }
+body.dark-mode .status-card, body.dark-mode .feature-card { background-color: #2d2d2d; border: 1px solid #444; }
+body.dark-mode .status-card p { color: #ddd; }
+body.dark-mode .food-log-container { background-color: #2d2d2d; border: 1px solid #444; }
+body.dark-mode .food-item { background-color: #2d2d2d; border: 1px solid #444; box-shadow: none; }
+body.dark-mode input, body.dark-mode select { background-color: #333; color: #fff; border: 1px solid #555; }
+body.dark-mode .dropdown-content { background-color: #2d2d2d; border: 1px solid #444; }
+body.dark-mode .dropdown-content a { color: #eee; }
+body.dark-mode .dropdown-content a:hover { background-color: #444; }
+body.dark-mode #hamburger-btn { color: #fff; }
+body.dark-mode .modal-content { background-color: #2d2d2d; color: #eee; border: 1px solid #444; }
+body.dark-mode .receipt-paper { background-color: #fff; color: #000; }
+body.dark-mode .feature-card { background-color: #2d2d2d; border-color: #444; }
+body.dark-mode .feature-card h3 { color: #eee; }
+body.dark-mode .feature-card p { color: #aaa; }
+
+/* 헤더 */
+header#main-header { margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 10px; position: relative; }
+body.dark-mode header#main-header { border-bottom: 1px solid #444; }
+.header-content { display: flex; justify-content: center; align-items: center; position: relative; height: 40px; }
+#main-header h1 { color: #8a0e26; margin: 0; font-size: 24px; line-height: 40px; }
+body.dark-mode #main-header h1 { color: #ff6b6b; } 
+
+#hamburger-btn { position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 24px; cursor: pointer; color: #333; padding: 5px; }
+
+.dropdown-content { display: none; position: absolute; right: 10px; top: 50px; background-color: #fff; min-width: 180px; box-shadow: 0 8px 16px rgba(0,0,0,0.2); border-radius: 8px; z-index: 1000; border: 1px solid #eee; animation: fadeIn 0.2s; }
+.dropdown-content a { color: #333; padding: 12px 16px; text-decoration: none; display: block; font-size: 14px; }
+.dropdown-content a:hover { background-color: #f1f1f1; border-radius: 8px; }
+.show { display: block; }
+
+h2 { margin-top: 0; margin-bottom: 15px; font-size: 20px; }
+
+/* 버튼 */
 .btn-hero { background-color: #8a0e26; color: white; padding: 15px 50px; font-size: 18px; border: none; border-radius: 30px; cursor: pointer; font-weight: bold; transition: 0.3s; box-shadow: 0 4px 15px rgba(138, 14, 38, 0.4); }
 .btn-hero:hover { background-color: #a0122e; transform: translateY(-2px); }
-.auth-box { max-width: 400px; margin: 50px auto; padding: 40px; border: 1px solid #eee; border-radius: 15px; background: #fff; box-shadow: 0 5px 20px rgba(0,0,0,0.05); text-align: center; display: flex; flex-direction: column; }
-body.dark-mode .auth-box { background-color: #1e1e1e; border-color: #444; }
-.dashboard-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-@media (max-width: 768px) { .dashboard-layout { grid-template-columns: 1fr; } }
-.recommendation-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
 .btn-primary { background-color: #8a0e26; color: white; padding: 12px; width: 100%; font-size: 16px; margin-top: 10px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+.btn-primary:hover { background-color: #6d0b1e; }
 .btn-large { background-color: #8a0e26; color: white; padding: 15px; width: 100%; font-size: 18px; margin-top: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
-.btn-back { background-color: white; color: #555; border: 1px solid #ccc; padding: 8px 12px; margin-top: 25px; margin-bottom: 25px; display: inline-block; border-radius: 8px; cursor: pointer; font-weight: bold;}
+.btn-back { background-color: white; color: #555; border: 1px solid #ccc; padding: 8px 12px; margin-top: 0px; margin-bottom: 20px; display: inline-block; border-radius: 8px; cursor: pointer; font-weight: bold;}
 .btn-retry { background-color: #34495e; color: white; padding: 12px; width: 100%; margin-top: 20px; font-size: 16px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
 .eat-btn { background-color: #4CAF50; color: white; padding: 8px 16px; font-size: 14px; margin-left: 5px; border: none; border-radius: 8px; cursor: pointer; width: 100%; }
 .recipe-btn { background-color: #FF9800; color: white; padding: 8px 16px; font-size: 14px; border: none; border-radius: 8px; cursor: pointer; width: 100%; }
 .btn-receipt { background-color: #333; color: #fff; padding: 5px 10px; font-size: 12px; border-radius: 5px; border: none; cursor: pointer; }
 .btn-small { background-color: #666; color: white; padding: 5px 10px; font-size: 12px; border: none; border-radius: 8px; cursor: pointer; }
+
+/* 입력 폼 */
+.auth-box { max-width: 400px; margin: 50px auto; padding: 40px; border: 1px solid #eee; border-radius: 15px; background: #fff; box-shadow: 0 5px 20px rgba(0,0,0,0.05); text-align: center; display: flex; flex-direction: column; }
+body.dark-mode .auth-box { background-color: #1e1e1e; border-color: #444; }
 .input-group { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
 .input-group label { width: 65px; text-align: left; font-weight: bold; font-size: 14px; flex-shrink: 0; }
 input, select { padding: 12px; border-radius: 8px; border: 1px solid #ddd; font-size: 15px; width: 100%; box-sizing: border-box; margin-bottom: 0; }
@@ -145,6 +126,10 @@ input, select { padding: 12px; border-radius: 8px; border: 1px solid #ddd; font-
 .checkbox-label { font-size: 14px; color: #555; display: block; margin-top: 5px; margin-bottom: 10px; cursor: pointer; margin-left: 75px; }
 body.dark-mode .checkbox-label { color: #ddd; }
 .checkbox-label input { width: auto; margin-right: 5px; }
+
+/* 레이아웃 */
+.dashboard-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+@media (max-width: 768px) { .dashboard-layout { grid-template-columns: 1fr; } }
 .status-grid { display: flex; gap: 10px; margin-bottom: 15px; }
 .status-card { flex:1; background: #f8f9fa; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #eee; margin-bottom: 10px; }
 .status-card.highlight { border: 2px solid #8a0e26; background-color: #fff5f7; margin-bottom: 15px; }
@@ -160,6 +145,28 @@ body.dark-mode .progress-bar { background: #555; }
 #food-log-list li { padding: 8px 0; border-bottom: 1px solid #f9f9f9; font-size: 14px; display: flex; justify-content: space-between; }
 #food-log-list li:last-child { border-bottom: none; }
 .empty-log { color: #999; text-align: center; display: block; margin-top: 10px; }
+
+/* [수정] 추천 UI 압축 */
+.filter-container { background: white; padding: 15px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+.price-filter { background: transparent; padding: 0; border: none; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+body.dark-mode .filter-container { background-color: #2d2d2d; border: 1px solid #444; }
+/* [수정] 라디오 버튼 수직 정렬 fix */
+.radio-group { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; align-items: center; margin-top: 5px; }
+.radio-group label { display: flex; align-items: center; cursor: pointer; margin: 0; }
+.radio-group input { margin: 0 6px 0 0; transform: translateY(1px); }
+
+.category-buttons { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 0; }
+.category-buttons button { background-color: #f8f9fa; color: #333; padding: 10px 0; font-size: 14px; border-radius: 8px; border: 1px solid #ddd; }
+.recommendation-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
+.food-item { display: flex; flex-direction: column; padding: 20px; border: 1px solid #eee; border-radius: 12px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: 0.3s; }
+.food-item:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+.food-info { text-align: center; margin-bottom: 15px; }
+.food-info strong { font-size: 18px; display: block; margin-bottom: 8px; color: #333; }
+body.dark-mode .food-info strong { color: #fff; }
+.food-meta { font-size: 14px; color: #666; }
+.food-item div:last-child { width: 100%; display: flex; justify-content: center; gap: 10px; }
+
+/* 모달 & 영수증 */
 .modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
 .modal-content { background-color: #fefefe; margin: 5% auto; padding: 25px; border: 1px solid #888; width: 85%; max-width: 400px; border-radius: 12px; position: relative; max-height: 85vh; overflow-y: auto; }
 .close { float: right; font-size: 28px; font-weight: bold; cursor: pointer; color: #aaa; }
@@ -175,6 +182,7 @@ body.dark-mode .progress-bar { background: #555; }
 .receipt-footer { color: #666 !important; text-align: center; margin-top: 20px; font-size: 12px; }
 .receipt-comment { width: 100%; padding: 10px; margin-top: 15px; border: none; border-bottom: 1px dashed #333; background: #f9f9f9; font-family: 'Courier New', Courier, monospace; font-size: 14px; text-align: center; outline: none; color: #8a0e26; font-weight: bold; }
 .receipt-comment::placeholder { color: #b78484; }
+
 @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }

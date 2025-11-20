@@ -7,22 +7,108 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <header id="intro-header">
-            <div class="intro-logo">KWU</div>
-            <nav class="intro-nav">
-                <a href="#" onclick="showScreen('screen-features')">서비스 기능 소개</a>
-                <a href="#" onclick="showScreen('screen-help')">도움말</a>
-                <a href="#" onclick="showScreen('screen-creators')">만든 사람들</a>
-                <div class="nav-divider">|</div>
-                <a href="#" onclick="showScreen('screen-login', 'login')">로그인</a>
-                <a href="#" onclick="showScreen('screen-login', 'signup')">회원가입</a>
-            </nav>
-        </header>
+    
+    <header id="intro-header">
+        <div class="intro-logo">KWU</div>
+        <nav class="intro-nav">
+            <a href="#" onclick="showScreen('screen-features')">서비스 기능 소개</a>
+            <a href="#" onclick="showScreen('screen-help')">도움말</a>
+            <a href="#" onclick="showScreen('screen-creators')">만든 사람들</a>
+            <div class="nav-divider">|</div>
+            <a href="#" onclick="startApp()">로그인</a>
+            <a href="#" onclick="startApp()">회원가입</a>
+        </nav>
+    </header>
 
-        <header id="main-header" style="display: none;">
+    <section id="screen-intro">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>KW BOB</h1>
+            <p class="hero-subtitle">광운대생을 위한<br>스마트한 식단 관리 솔루션</p>
+            <p class="hero-desc">오늘 뭐 먹지?<br>지갑 사정도, 칼로리도<br>한 번에 챙겨보세요.</p>
+            <button onclick="startApp()" class="btn-hero">시작하기</button>
+        </div>
+    </section>
+
+    <section id="screen-features" style="display: none;">
+        <div class="info-screen-content">
+            <h2>💡 주요 기능 소개</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="icon">🥗</div>
+                    <h3>맞춤형 식단 추천</h3>
+                    <p>사용자의 BMI와 목표에 맞춰<br>최적의 메뉴를 추천합니다.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">💰</div>
+                    <h3>식비 방어 모드</h3>
+                    <p>한 달 예산을 설정하고<br>지출을 스마트하게 관리하세요.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">🧾</div>
+                    <h3>먹부림 영수증</h3>
+                    <p>오늘 먹은 식단을 영수증 형태로<br>발급받고 공유해보세요.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">🏫</div>
+                    <h3>학교 앞 찐맛집</h3>
+                    <p>광운대생이 즐겨 찾는<br>주변 식당 데이터를 제공합니다.</p>
+                </div>
+            </div>
+            <button onclick="showScreen('screen-intro')" class="btn-back-intro">메인으로 돌아가기</button>
+        </div>
+    </section>
+
+    <section id="screen-help" style="display: none;">
+        <div class="info-screen-content">
+            <h2>❓ 도움말 (사용법)</h2>
+            <div class="help-steps">
+                <div class="step">
+                    <span class="step-num">1</span>
+                    <h3>정보 입력</h3>
+                    <p>키, 몸무게, 목표, 식비 예산을 입력하고 가입하세요.</p>
+                </div>
+                <div class="step">
+                    <span class="step-num">2</span>
+                    <h3>메뉴 추천</h3>
+                    <p>원하는 카테고리(한식, 중식 등)를 선택하여 메뉴를 추천받으세요.</p>
+                </div>
+                <div class="step">
+                    <span class="step-num">3</span>
+                    <h3>기록 및 관리</h3>
+                    <p>'먹기' 버튼을 눌러 기록하고, 대시보드에서 상태를 확인하세요.</p>
+                </div>
+            </div>
+            <button onclick="showScreen('screen-intro')" class="btn-back-intro">메인으로 돌아가기</button>
+        </div>
+    </section>
+
+    <section id="screen-creators" style="display: none;">
+        <div class="info-screen-content">
+            <h2>👨‍💻 만든 사람들</h2>
+            <div class="creator-card">
+                <h3>광운대학교 컴퓨터정보공학부</h3>
+                <p class="team-name">Team KW BOB</p>
+                <ul class="member-list">
+                    <li>
+                        <strong>김승일 (2025403042)</strong>
+                        <span>Backend & Service Planning</span>
+                    </li>
+                    <li>
+                        <strong>임세헌 (2025403043)</strong>
+                        <span>Frontend & UI/UX Design</span>
+                    </li>
+                </ul>
+                <p class="version-info">Ver 1.0.0 | © 2025</p>
+            </div>
+            <button onclick="goBackFromCreators()" class="btn-back-intro">돌아가기</button>
+        </div>
+    </section>
+
+    <div class="container" id="app-container" style="display: none;">
+        <header id="main-header">
             <div class="header-content">
-                <button id="global-back-btn" onclick="handleBackBtn()" style="display: none;">
+                <button id="global-back-btn" onclick="handleBackBtn()" style="display: none;" title="메인화면">
                     🏠
                 </button>
 
@@ -43,92 +129,7 @@
             </div>
         </header>
 
-        <section id="screen-intro">
-            <div class="hero-overlay"></div>
-            <div class="hero-content">
-                <h1>KW BOB</h1>
-                <p class="hero-subtitle">광운대생을 위한<br>스마트한 식단 관리 솔루션</p>
-                <p class="hero-desc">건강한 식단부터 지갑 지키는 가성비 메뉴까지,<br>KW BOB이 당신의 대학 생활을 책임집니다.</p>
-                <button onclick="startApp()" class="btn-hero">시작하기</button>
-            </div>
-        </section>
-
-        <section id="screen-features" style="display: none;">
-            <div class="info-screen-content">
-                <h2>💡 주요 기능 소개</h2>
-                <div class="feature-grid">
-                    <div class="feature-card">
-                        <div class="icon">🥗</div>
-                        <h3>맞춤형 식단 추천</h3>
-                        <p>사용자의 BMI와 목표에 맞춰<br>최적의 메뉴를 추천합니다.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="icon">💰</div>
-                        <h3>식비 방어 모드</h3>
-                        <p>한 달 예산을 설정하고<br>지출을 스마트하게 관리하세요.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="icon">🧾</div>
-                        <h3>먹부림 영수증</h3>
-                        <p>오늘 먹은 식단을 영수증 형태로<br>발급받고 공유해보세요.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="icon">🏫</div>
-                        <h3>학교 앞 찐맛집</h3>
-                        <p>광운대생이 즐겨 찾는<br>주변 식당 데이터를 제공합니다.</p>
-                    </div>
-                </div>
-                <button onclick="showScreen('screen-intro')" class="btn-back-intro">메인으로 돌아가기</button>
-            </div>
-        </section>
-
-        <section id="screen-help" style="display: none;">
-            <div class="info-screen-content">
-                <h2>❓ 도움말 (사용법)</h2>
-                <div class="help-steps">
-                    <div class="step">
-                        <span class="step-num">1</span>
-                        <h3>정보 입력</h3>
-                        <p>키, 몸무게, 목표, 식비 예산을 입력하고 가입하세요.</p>
-                    </div>
-                    <div class="step">
-                        <span class="step-num">2</span>
-                        <h3>메뉴 추천</h3>
-                        <p>원하는 카테고리(한식, 중식 등)를 선택하여 메뉴를 추천받으세요.</p>
-                    </div>
-                    <div class="step">
-                        <span class="step-num">3</span>
-                        <h3>기록 및 관리</h3>
-                        <p>'먹기' 버튼을 눌러 기록하고, 대시보드에서 상태를 확인하세요.</p>
-                    </div>
-                </div>
-                <button onclick="showScreen('screen-intro')" class="btn-back-intro">메인으로 돌아가기</button>
-            </div>
-        </section>
-
-        <section id="screen-creators" style="display: none;">
-            <div class="info-screen-content">
-                <h2>👨‍💻 만든 사람들</h2>
-                <div class="creator-card">
-                    <h3>광운대학교 컴퓨터정보공학부</h3>
-                    <p class="team-name">Team KW BOB</p>
-                    <ul class="member-list">
-                        <li>
-                            <strong>김승일 (2025403042)</strong>
-                            <span>Backend & Service Planning</span>
-                        </li>
-                        <li>
-                            <strong>임세헌 (2025403043)</strong>
-                            <span>Frontend & UI/UX Design</span>
-                        </li>
-                    </ul>
-                    <p class="version-info">Ver 1.0.0 | © 2025</p>
-                </div>
-                <button onclick="goBackFromCreators()" class="btn-back-intro">돌아가기</button>
-            </div>
-        </section>
-
-        <section id="screen-login" style="display: none;">
+        <section id="screen-login">
             <div class="auth-box">
                 <h2 id="auth-title">로그인</h2>
                 <input type="text" id="username" placeholder="이메일 (아이디)">
@@ -169,7 +170,6 @@
                     <span id="auth-msg">계정이 없으신가요?</span>
                     <a href="#" onclick="toggleAuthMode()" id="auth-toggle-btn">회원가입</a>
                 </p>
-                <button onclick="showScreen('screen-intro')" class="btn-text">← 첫 화면으로</button>
             </div>
         </section>
 
@@ -222,7 +222,6 @@
             <h2>내 정보 수정</h2>
             <div class="auth-box">
                 <p class="signup-guide">변경할 정보를 입력해주세요.</p>
-                
                 <div class="input-group">
                     <label>닉네임</label>
                     <input type="text" id="edit-nickname" placeholder="닉네임">
@@ -239,7 +238,6 @@
                     <label>나이</label>
                     <input type="number" id="edit-age" placeholder="세">
                 </div>
-                
                 <div class="budget-group">
                     <div class="input-group">
                         <label>식비</label>
@@ -249,7 +247,6 @@
                         <input type="checkbox" id="edit-no-budget" onchange="toggleBudgetInput('edit-budget', 'edit-no-budget')"> 예산 상관없음
                     </label>
                 </div>
-
                 <div class="input-group">
                     <label>목표</label>
                     <select id="edit-goal">
@@ -258,7 +255,6 @@
                         <option value="gain">체중 증가 (벌크업)</option>
                     </select>
                 </div>
-
                 <button onclick="saveEditInfo()" class="btn-primary">수정 완료</button>
             </div>
         </section>
@@ -316,6 +312,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=final_v18"></script>
+    <script src="script.js?v=fix_final"></script>
 </body>
 </html>

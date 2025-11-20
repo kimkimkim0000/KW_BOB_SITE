@@ -521,8 +521,7 @@ function recommendFood(category) {
     let list = foodDatabase[category];
     const pPrice = document.querySelector('input[name="price"]:checked').value;
     
-    // [수정됨] 직접 요리(cook) 카테고리가 아니면 가격 필터 적용
-    // cook 카테고리는 가격 필터 무시 (항상 보여줌)
+    // [수정됨] cook 카테고리는 가격 필터 무시 (항상 보여줌)
     if(category !== 'cook' && pPrice !== "0") {
         list = list.filter(f => {
             if(pPrice==="1") return f.price < 10000; // 1만원 미만
@@ -567,12 +566,15 @@ function recommendFood(category) {
         div.className = 'food-item';
         let color = (userState.goal!=='maintain' && ((userState.goal==='lose'&&food.kcal<=target)||(userState.goal==='gain'&&food.kcal>=target))) ? '#4CAF50' : '#666';
         let recipeBtn = (category==='cook'&&food.recipe) ? `<button class="recipe-btn" onclick="showRecipe('${food.name}', '${food.recipe}')">레시피</button>` : '';
+        
+        // [수정됨] 요리(cook) 카테고리일 경우 가격 표시 안 함
+        let priceDisplay = (category === 'cook') ? '' : `<span class="food-meta">${food.price.toLocaleString()}원</span>`;
 
         div.innerHTML = `
             <div class="food-info">
                 <strong>[${food.restaurant}] ${food.name}</strong>
                 <span style="color:${color};font-weight:bold">(${food.kcal} kcal)</span>
-                <span class="food-meta">${food.price.toLocaleString()}원</span>
+                ${priceDisplay}
             </div>
             <div>${recipeBtn}<button class="eat-btn" onclick="addFood(${food.kcal}, '${food.name}', ${food.price})">먹기</button></div>
         `;

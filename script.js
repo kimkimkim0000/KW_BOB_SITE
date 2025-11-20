@@ -64,7 +64,7 @@ const foodDatabase = {
         { name: "제육덮밥", restaurant: "집밥", kcal: 700, price: 5000, recipe: "돼지고기/야채 + 고추장 양념 볶기" },
         { name: "짜장라면", restaurant: "집밥", kcal: 550, price: 1000, recipe: "면 삶기 + 물 8스푼 남기고 스프 볶기" },
         { name: "떡볶이", restaurant: "집밥", kcal: 500, price: 3000, recipe: "물 + 고추장/설탕 + 떡/어묵 졸이기" },
-        { name: "계란말이", restaurant: "집밥", kcal: 200, price: 1500, recipe: "계란물 + 다진야채 + 말아가며 굽기" },
+        { name: "계란말이", restaurant: "집밥", kcal: 200, price: 1500, recipe: "계란을 풀고 다진 당근, 파를 섞은 뒤 팬에 얇게 부어가며 돌돌 만다." },
         { name: "오트밀 죽", restaurant: "집밥", kcal: 300, price: 1500, recipe: "오트밀 + 우유 + 전자레인지 2분" }
     ]
 };
@@ -79,15 +79,17 @@ function startApp() {
     setDisplay('screen-intro', 'none');
     setDisplay('intro-header', 'none');
     setDisplay('app-container', 'block'); 
-    showScreen('screen-login');
-}
-
-function goBackFromCreators() {
+    
+    // [수정] 로그인 상태면 대시보드, 아니면 로그인
     if (userState.isLoggedIn) {
         showScreen('screen-dashboard');
     } else {
-        showScreen('screen-intro');
+        showScreen('screen-login');
     }
+}
+
+function goBackFromCreators() {
+    showScreen('screen-intro');
 }
 
 function showScreen(id, mode) {
@@ -128,35 +130,32 @@ function showScreen(id, mode) {
     // 헤더 제어
     const header = document.getElementById('main-header');
     const hamburger = document.getElementById('hamburger-btn');
-    const backBtn = document.getElementById('global-back-btn');
+    const backBtn = document.getElementById('global-back-btn'); // 이 버튼 삭제되었지만 안전을 위해 둠
 
     if (header) header.style.display = 'block';
 
     if (id === 'screen-login') {
         if(hamburger) hamburger.style.display = 'none';
-        if(backBtn) backBtn.style.display = 'block';
         
         // [수정] 회원가입 모드 처리
         if (mode === 'signup') {
             isSignupMode = false; 
-            toggleAuthMode(); // toggleAuthMode가 상태를 반전시키므로 false에서 호출해야 true(회원가입)가 됨
+            toggleAuthMode(); 
         } else {
             isSignupMode = true;
-            toggleAuthMode(); // true에서 호출하면 false(로그인)가 됨
+            toggleAuthMode(); 
         }
     } else if (id === 'screen-dashboard') {
         if(hamburger) hamburger.style.display = 'block';
-        if(backBtn) backBtn.style.display = 'none';
     } else {
         if(hamburger) hamburger.style.display = 'block';
-        if(backBtn) backBtn.style.display = 'block';
     }
     
     const dropdown = document.getElementById('dropdown-menu');
     if(dropdown) dropdown.classList.remove('show');
 }
 
-// [수정] 홈 버튼은 무조건 인트로로
+// [수정] 홈 버튼 등 뒤로가기 기능 필요없음 (인트로 이동은 햄버거 메뉴가 함)
 function handleBackBtn() {
     showScreen('screen-intro');
 }
@@ -273,7 +272,13 @@ function handleAuthAction() {
         const data = JSON.parse(dataStr);
         if(data.password === pw) {
             const today = new Date().toLocaleDateString();
-            userState = { ...userState, isLoggedIn:true, username:id, ...data, height:+data.height, weight:+data.weight, age:+data.age };
+            userState = { 
+                ...userState, 
+                isLoggedIn:true, 
+                username:id, 
+                ...data, 
+                height:+data.height, weight:+data.weight, age:+data.age 
+            };
             
             if (userState.lastDate !== today) {
                 userState.currentCalories = 0;

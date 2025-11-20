@@ -8,6 +8,17 @@
 </head>
 <body>
     <div class="container">
+        <header id="intro-header">
+            <div class="intro-header-content">
+                <div class="intro-logo">KWU</div>
+                <nav class="intro-nav">
+                    <a href="#" onclick="showScreen('screen-login', 'login')">로그인</a>
+                    <a href="#" onclick="showScreen('screen-login', 'signup')">회원가입</a>
+                    <a href="#" onclick="openAbout()">만든 사람들</a>
+                </nav>
+            </div>
+        </header>
+
         <header id="main-header" style="display: none;">
             <div class="header-content">
                 <button id="global-back-btn" onclick="showScreen('screen-intro')" style="display: none;" title="첫 화면으로">
@@ -248,6 +259,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=final_v15"></script>
+    <script src="script.js?v=final_v16"></script>
 </body>
 </html>

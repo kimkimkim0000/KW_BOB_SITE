@@ -11,7 +11,7 @@ let userState = {
 let lastSelectedCategory = ''; 
 let shownFoodNames = [];
 
-// 2. 음식 데이터베이스
+// 2. 음식 데이터베이스 (동일)
 const foodDatabase = {
     'korean': [
         { name: "야채김밥", restaurant: "김밥천국", kcal: 320, price: 3000 },
@@ -77,7 +77,6 @@ function startApp() {
 }
 
 function showScreen(id) {
-    // [NEW] 인트로 화면 처리
     const screens = ['screen-intro', 'screen-login', 'screen-dashboard', 'screen-recommendation', 'screen-edit-info'];
     screens.forEach(s => {
         const el = document.getElementById(s);

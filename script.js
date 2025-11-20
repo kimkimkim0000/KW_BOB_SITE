@@ -11,7 +11,7 @@ let userState = {
 let lastSelectedCategory = ''; 
 let shownFoodNames = [];
 
-// 2. 음식 데이터베이스 (동일)
+// 2. 음식 데이터베이스
 const foodDatabase = {
     'korean': [
         { name: "야채김밥", restaurant: "김밥천국", kcal: 320, price: 3000 },
@@ -83,10 +83,10 @@ function showScreen(id) {
         backBtn.style.display = 'none';
     } else if (id === 'screen-dashboard') {
         hamburger.style.display = 'block';
-        backBtn.style.display = 'none'; // 대시보드에서는 뒤로가기 안보임
+        backBtn.style.display = 'none'; 
     } else {
         hamburger.style.display = 'block';
-        backBtn.style.display = 'block'; // 그 외(추천/수정)에서는 보임
+        backBtn.style.display = 'block'; 
     }
     document.getElementById('dropdown-menu').classList.remove('show');
 }
@@ -124,11 +124,13 @@ function toggleDarkMode() {
     toggleMenu(); 
 }
 
+// [수정 1] 초기화 시 영수증 한줄평(receiptComment)도 삭제
 function resetDailyData() {
-    if(confirm("오늘의 식사 기록과 섭취 칼로리를 모두 초기화하시겠습니까?\n(지출 내역은 유지됩니다.)")) {
+    if(confirm("오늘의 식사 기록, 섭취 칼로리, 지출 내역을 모두 초기화하시겠습니까?")) {
         userState.currentCalories = 0;
+        userState.currentSpend = 0;
         userState.eatenLogs = [];
-        userState.receiptComment = ""; 
+        userState.receiptComment = ""; // 한줄평 초기화
         saveUserData();
         updateDashboardUI();
         alert("초기화되었습니다.");
@@ -150,7 +152,7 @@ function toggleBudgetInput(inputId, checkboxId) {
     const chk = document.getElementById(checkboxId).checked;
     const input = document.getElementById(inputId);
     input.disabled = chk;
-    input.placeholder = chk ? "예산 상관없음" : "한 달 식비 예산 (만원)";
+    input.placeholder = chk ? "예산 무제한" : "한 달 식비 예산 (만원)";
     if(chk) input.value = "";
 }
 
@@ -396,13 +398,11 @@ function saveUserData() {
     localStorage.setItem(userState.username, JSON.stringify(dataToSave));
 }
 
-// [NEW] 영수증 한줄평 저장 기능
 function saveReceiptComment(val) {
     userState.receiptComment = val;
-    saveUserData(); // 입력할 때마다 저장
+    saveUserData(); 
 }
 
-// [수정됨] 스마트한 성적표 멘트 로직 적용
 function openReceipt() {
     const modal = document.getElementById('receipt-modal');
     const content = document.getElementById('receipt-content');
@@ -429,7 +429,6 @@ function openReceipt() {
         });
     }
 
-    // [NEW] 스마트 멘트 로직
     const diff = userState.currentCalories - userState.recCalories;
     let grade = "A+";
     let message = "완벽해요! 👍";
@@ -441,10 +440,9 @@ function openReceipt() {
         grade = "F";
         message = "오늘은 좀 과식을 한 것 같아요 🐷";
     } else if (diff < -500) {
-        grade = "C"; // 너무 적게 먹어도 좋지 않음
-        message = "오늘의 당신은 소식좌인가요? 🐜";
+        grade = "C"; 
+        message = "오늘은 당신은 소식좌인가요? 🐜";
     } else {
-        // 적정 범위 내 (±500)
         const percentDiff = Math.abs(diff) / userState.recCalories * 100;
         if (percentDiff < 10) {
             grade = "A+"; message = "완벽해요! 👍";
@@ -470,7 +468,7 @@ function openReceipt() {
             <p>${message}</p>
         </div>
         <input type="text" class="receipt-comment" 
-               placeholder="한줄평을 입력하세요 (예: 오늘은 나이스 초이스였다!)" 
+               placeholder="오늘 음식 나이스 초이스 👍" 
                value="${userState.receiptComment || ''}" 
                oninput="saveReceiptComment(this.value)">
     `;

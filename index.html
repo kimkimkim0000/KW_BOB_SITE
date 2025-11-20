@@ -62,14 +62,8 @@
                 <h3>Team KW BOB</h3>
                 <p class="team-name">광운대학교 소프트웨어학부</p>
                 <ul class="member-list">
-                    <li>
-                        <strong>김승일 (2025403042)</strong>
-                        <span>Backend, Frontend & Planning</span>
-                    </li>
-                    <li>
-                        <strong>임세헌 (2025403043)</strong>
-                        <span>UI/UX Design</span>
-                    </li>
+                    <li><strong>김승일 (2025403042)</strong><span>Backend, Frontend & Planning</span></li>
+                    <li><strong>임세헌 (2025403043)</strong><span>Design</span></li>
                 </ul>
                 <p class="version-info">Ver 1.0.0 | © 2025</p>
             </div>
@@ -82,8 +76,12 @@
         <header id="main-header">
             <div class="header-content">
                 <div class="app-kwu-logo" onclick="showScreen('screen-intro')" title="랜딩페이지로 이동">KWU</div>
+
                 <h1>🍚 KW BOB 🍚</h1>
-                <button id="hamburger-btn" onclick="toggleMenu()">☰</button>
+                
+                <button id="hamburger-btn" onclick="toggleMenu()">
+                    ☰
+                </button>
             </div>
             
             <div id="dropdown-menu" class="dropdown-content">
@@ -206,31 +204,31 @@
             
             <h2>메뉴 추천</h2>
             
-            <div id="wallet-guard-msg" style="display:none; background:#ffebee; color:#c62828; padding:10px; border-radius:8px; margin-bottom:10px; font-size:14px;">🚨 <strong>식비 방어 모드 발동!</strong><br>남은 돈이 별로 없어요. 가성비 메뉴만 추천합니다!</div>
-            
-            <div class="filter-container">
-                <div class="price-filter">
-                    <h4>💰 가격대 선택</h4>
-                    <div class="radio-group">
-                        <label><input type="radio" name="price" value="0" checked> <span>상관없음</span></label>
-                        <label><input type="radio" name="price" value="1"> <span>1만원 이하</span></label>
-                        <label><input type="radio" name="price" value="2"> <span>1만원대</span></label>
-                        <label><input type="radio" name="price" value="3"> <span>2만원대</span></label>
-                        <label><input type="radio" name="price" value="4"> <span>3만원 초과</span></label>
-                    </div>
-                </div>
-                <div class="category-buttons">
-                    <button onclick="recommendFood('korean')">한식</button>
-                    <button onclick="recommendFood('chinese')">중식</button>
-                    <button onclick="recommendFood('western')">양식</button>
-                    <button onclick="recommendFood('japanese')">일식</button>
-                    <button onclick="recommendFood('snack')">분식</button>
-                    <button onclick="recommendFood('cook')">직접 요리</button>
+            <div id="wallet-guard-msg" style="display:none; background:#ffebee; color:#c62828; padding:10px; border-radius:8px; margin-bottom:10px; font-size:14px;">
+                🚨 <strong>식비 방어 모드 발동!</strong><br>남은 돈이 별로 없어요. 가성비 메뉴만 추천합니다!
+            </div>
+
+            <div class="price-filter">
+                <h4>💰 가격대 선택</h4>
+                <div class="radio-group">
+                    <label><input type="radio" name="price" value="0" checked> 상관없음</label>
+                    <label><input type="radio" name="price" value="1"> 1만원 미만</label>
+                    <label><input type="radio" name="price" value="2"> 1만원~2만원</label>
+                    <label><input type="radio" name="price" value="3"> 2만원 이상</label>
                 </div>
             </div>
-            
+
+            <div class="category-buttons">
+                <button onclick="recommendFood('korean')">한식</button>
+                <button onclick="recommendFood('chinese')">중식</button>
+                <button onclick="recommendFood('western')">양식</button>
+                <button onclick="recommendFood('japanese')">일식</button>
+                <button onclick="recommendFood('snack')">분식</button>
+                <button onclick="recommendFood('cook')">직접 요리</button>
+            </div>
+
             <div id="recommendation-area" class="recommendation-grid"></div>
-            
+
             <div style="text-align: center; margin-top: 20px;">
                 <button id="retry-btn" onclick="retryRecommendation()" class="btn-retry" style="display:none;">
                     🔄 마음에 안 들어요! (다른 메뉴 추천)
@@ -239,9 +237,24 @@
         </section>
     </div>
 
-    <div id="receipt-modal" class="modal"><div class="modal-content receipt-paper"><span class="close" onclick="closeModal('receipt-modal')">&times;</span><div id="receipt-content"></div><div class="receipt-footer"><button onclick="closeModal('receipt-modal')" class="btn-primary">닫기</button></div></div></div>
-    <div id="recipe-modal" class="modal"><div class="modal-content"><span class="close" onclick="closeModal('recipe-modal')">&times;</span><h3 id="recipe-title">요리 이름</h3><div id="recipe-body"></div></div></div>
+    <div id="receipt-modal" class="modal">
+        <div class="modal-content receipt-paper">
+            <span class="close" onclick="closeModal('receipt-modal')">&times;</span>
+            <div id="receipt-content"></div>
+            <div class="receipt-footer">
+                <button onclick="closeModal('receipt-modal')" class="btn-primary">닫기</button>
+            </div>
+        </div>
+    </div>
 
-    <script src="script.js?v=final_v34"></script>
+    <div id="recipe-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('recipe-modal')">&times;</span>
+            <h3 id="recipe-title">요리 이름</h3>
+            <div id="recipe-body"></div>
+        </div>
+    </div>
+
+    <script src="script.js?v=v36"></script>
 </body>
 </html>

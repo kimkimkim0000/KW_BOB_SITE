@@ -48,8 +48,7 @@
     </section>
 
     <section id="screen-features" class="full-screen-section scrollable-section" style="display: none;">
-        <div class="info-screen-content">
-            <h2>💡 주요 기능 소개</h2>
+        <div class="info-screen-content compact-content"> <h2>💡 주요 기능 소개</h2>
             <div class="feature-grid">
                 <div class="feature-card"><div class="icon">🥗</div><h3>맞춤형 추천</h3><p>BMI와 목표에 맞춰<br>메뉴를 추천합니다.</p></div>
                 <div class="feature-card"><div class="icon">💰</div><h3>식비 방어</h3><p>예산을 설정하고<br>지출을 관리하세요.</p></div>
@@ -64,9 +63,18 @@
         <div class="info-screen-content">
             <h2>도움말 ❓</h2>
             <div class="help-steps">
-                <div class="step"><span class="step-num">1</span><h3>정보 입력</h3><p>키, 몸무게, 예산을 입력하고 가입하세요.</p></div>
-                <div class="step"><span class="step-num">2</span><h3>메뉴 추천</h3><p>원하는 카테고리를 선택하여 추천받으세요.</p></div>
-                <div class="step"><span class="step-num">3</span><h3>기록 관리</h3><p>'먹기' 버튼으로 기록하고 상태를 확인하세요.</p></div>
+                <div class="step">
+                    <h3>1. 정보 입력</h3>
+                    <p>키, 몸무게, 예산을 입력하고 가입하세요.</p>
+                </div>
+                <div class="step">
+                    <h3>2. 메뉴 추천</h3>
+                    <p>원하는 카테고리를 선택하여 추천받으세요.</p>
+                </div>
+                <div class="step">
+                    <h3>3. 기록 관리</h3>
+                    <p>'먹기' 버튼으로 기록하고 상태를 확인하세요.</p>
+                </div>
             </div>
             <button onclick="showScreen('screen-intro')" class="btn-back-intro">메인화면으로</button>
         </div>
@@ -79,8 +87,14 @@
                 <h3>Team KW BOB</h3>
                 <p class="team-name">광운대학교 소프트웨어학부</p>
                 <ul class="member-list">
-                    <li><strong>김승일 (2025403042)</strong><span>Backend & Planning</span></li>
-                    <li><strong>임세헌 (2025403043)</strong><span>Frontend & Design</span></li>
+                    <li>
+                        <strong>김승일 (2025403042)</strong>
+                        <span>Backend, Frontend & Service Planning</span>
+                    </li>
+                    <li>
+                        <strong>임세헌 (2025403043)</strong>
+                        <span>UI/UX Design</span>
+                    </li>
                 </ul>
                 <p class="version-info">Ver 1.0.0 | © 2025</p>
             </div>
@@ -117,27 +131,20 @@
     <section id="screen-dashboard" class="full-screen-section app-content-section" style="display: none;">
         <div class="content-wrapper">
             <div class="header-row"><h3>반갑습니다, <span id="user-name-display">사용자</span>님!</h3></div>
-            
             <div class="dashboard-layout">
                 <div class="dash-left">
-                    <div class="food-log-container">
-                        <div class="log-header"><h4>📝 오늘의 식사 기록</h4><button onclick="openReceipt()" class="btn-receipt">🧾 영수증 발급</button></div>
-                        <ul id="food-log-list"><li class="empty-log">아직 먹은 음식이 없습니다.</li></ul>
-                    </div>
-                </div>
-
-                <div class="dash-right">
                     <div class="status-grid">
                         <div class="status-card"><p>목표: <span id="goal-display" style="font-weight:bold; color:#8a0e26;">-</span></p><p>BMI: <span id="bmi-display">-</span> (<span id="bmi-status">-</span>)</p></div>
                         <div class="status-card" id="wallet-card"><p>💰 남은 예산</p><p id="budget-display" style="font-size: 18px; font-weight: bold;">0원</p></div>
                     </div>
                     <div class="status-card"><p>일일 권장 섭취량: <span id="rec-cal">0</span> kcal</p></div>
                     <div class="status-card highlight"><p>오늘의 섭취량: <span id="current-cal">0</span> / <span id="rec-cal-target">0</span> kcal</p><div class="progress-bar"><div id="progress-fill" style="width: 0%"></div></div></div>
-                    
-                    <div style="margin-top: 20px;">
-                        <button onclick="showScreen('screen-recommendation')" class="btn-large">
-                            🍽️ 오늘 뭐 먹지? (메뉴 추천 받기)
-                        </button>
+                    <div style="margin-top: 20px;"><button onclick="showScreen('screen-recommendation')" class="btn-large">🍽️ 오늘 뭐 먹지? (메뉴 추천 받기)</button></div>
+                </div>
+                <div class="dash-right">
+                    <div class="food-log-container">
+                        <div class="log-header"><h4>📝 오늘의 식사 기록</h4><button onclick="openReceipt()" class="btn-receipt">🧾 영수증 발급</button></div>
+                        <ul id="food-log-list"><li class="empty-log">아직 먹은 음식이 없습니다.</li></ul>
                     </div>
                 </div>
             </div>
@@ -195,6 +202,6 @@
     <div id="receipt-modal" class="modal"><div class="modal-content receipt-paper"><span class="close" onclick="closeModal('receipt-modal')">&times;</span><div id="receipt-content"></div><div class="receipt-footer"><button onclick="closeModal('receipt-modal')" class="btn-primary">닫기</button></div></div></div>
     <div id="recipe-modal" class="modal"><div class="modal-content"><span class="close" onclick="closeModal('recipe-modal')">&times;</span><h3 id="recipe-title">요리 이름</h3><div id="recipe-body"></div></div></div>
 
-    <script src="script.js?v=final_v25_layout"></script>
+    <script src="script.js?v=final_v24"></script>
 </body>
 </html>

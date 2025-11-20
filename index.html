@@ -10,8 +10,8 @@
     <div class="container">
         <header>
             <div class="header-content">
-                <button id="global-back-btn" onclick="showScreen('screen-dashboard')" style="display: none;">
-                    ← HOME
+                <button id="global-back-btn" onclick="showScreen('screen-dashboard')" style="display: none;" title="메인화면">
+                    🏠
                 </button>
 
                 <h1>🍚 KW BOB 🍚</h1>
@@ -54,7 +54,7 @@
                     <div class="budget-group">
                         <input type="number" id="budget" placeholder="한 달 식비 예산 (만원)">
                         <label class="checkbox-label">
-                            <input type="checkbox" id="no-budget" onchange="toggleBudgetInput('budget', 'no-budget')"> 예산 상관없음
+                            <input type="checkbox" id="no-budget" onchange="toggleBudgetInput('budget', 'no-budget')"> 예산 상관없음 (무제한)
                         </label>
                     </div>
                     <select id="goal">
@@ -215,13 +215,16 @@
             <div style="text-align: left; padding: 10px; line-height: 1.6; font-size: 14px;">
                 <p><strong>1. 서비스 목적</strong><br>
                 광운대생들의 건강하고 경제적인 식생활을 위해 만든 맞춤형 식단 추천 서비스입니다.</p>
+                
                 <p><strong>2. 알고리즘</strong><br>
-                사용자의 정보를 바탕으로 <strong>Mifflin-St Jeor 공식</strong>을 사용하여 기초대사량을 계산합니다.<br>
+                사용자의 정보를 바탕으로 <strong>BMI공식과 BMR공식</strong>을 사용하여 사용자의 BMI수치와 일일 권장 섭취량을 계산합니다.<br>
                 - <strong>감량:</strong> 유지 칼로리 - 500kcal<br>
                 - <strong>증량:</strong> 유지 칼로리 + 500kcal</p>
+                
                 <p><strong>3. 개발팀 (광운대학교)</strong><br>
                 💻 <strong>Backend & 기획:</strong> 김승일 (2025403042)<br>
                 🎨 <strong>Frontend & Design:</strong> 임세헌 (2025403043)</p>
+                
                 <p style="margin-top:10px; color:#888; font-size:12px; text-align:center;">
                     Ver 1.0.0 | © 2025 KW BOB Team
                 </p>
@@ -229,6 +232,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=final_layout_fix"></script>
+    <script src="script.js?v=final_v10"></script>
 </body>
 </html>

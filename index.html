@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KW BOB - 광운대생 식단 추천</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <header id="intro-header">
+        <div class="intro-logo">KWU</div>
+        <nav class="intro-nav">
+            <a href="#" onclick="showScreen('screen-features')">기능 소개</a>
+            <a href="#" onclick="showScreen('screen-help')">도움말</a>
+            <a href="#" onclick="showScreen('screen-creators')">만든 사람들</a>
+            <div class="nav-divider">|</div>
+            <a href="#" onclick="startApp()">로그인</a>
+            <a href="#" onclick="startApp()">회원가입</a>
+        </nav>
+    </header>
+
+    <section id="screen-intro">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>KW BOB</h1>
+            <p class="hero-subtitle">광운대생을 위한<br>스마트한 식단 관리 솔루션</p>
+            <p class="hero-desc">오늘 뭐 먹지?<br>지갑 사정도, 칼로리도<br>한 번에 챙겨보세요.</p>
+            <button onclick="startApp()" class="btn-hero">시작하기</button>
+        </div>
+    </section>
+
+    <section id="screen-features" style="display: none;">
+        <div class="info-screen-content">
+            <h2>💡 주요 기능 소개</h2>
+            <div class="feature-grid">
+                <div class="feature-card"><div class="icon">🥗</div><h3>맞춤형 추천</h3><p>BMI와 목표에 맞춰<br>메뉴를 추천합니다.</p></div>
+                <div class="feature-card"><div class="icon">💰</div><h3>식비 방어</h3><p>예산을 설정하고<br>지출을 관리하세요.</p></div>
+                <div class="feature-card"><div class="icon">🧾</div><h3>먹부림 영수증</h3><p>식단을 영수증으로<br>기록하고 공유하세요.</p></div>
+                <div class="feature-card"><div class="icon">🏫</div><h3>학교 앞 맛집</h3><p>광운대 주변 식당<br>데이터를 제공합니다.</p></div>
+            </div>
+            <button onclick="showScreen('screen-intro')" class="btn-back-intro">메인화면으로</button>
+        </div>
+    </section>
+
+    <section id="screen-help" style="display: none;">
+        <div class="info-screen-content">
+            <h2>도움말 ❓</h2>
+            <div class="help-steps">
+                <div class="step"><span class="step-num">1</span><h3>정보 입력</h3><p>키, 몸무게, 예산을 입력하고 가입하세요.</p></div>
+                <div class="step"><span class="step-num">2</span><h3>메뉴 추천</h3><p>원하는 카테고리를 선택하여 추천받으세요.</p></div>
+                <div class="step"><span class="step-num">3</span><h3>기록 관리</h3><p>'먹기' 버튼으로 기록하고 상태를 확인하세요.</p></div>
+            </div>
+            <button onclick="showScreen('screen-intro')" class="btn-back-intro">메인화면으로</button>
+        </div>
+    </section>
+
+    <section id="screen-creators" style="display: none;">
+        <div class="info-screen-content">
+            <h2>👨‍💻 만든 사람들</h2>
+            <div class="creator-card">
+                <h3>Team KW BOB</h3>
+                <p class="team-name">광운대학교 소프트웨어학부</p>
+                <ul class="member-list">
+                    <li><strong>김승일 (2025403042)</strong><span>Backend & Planning</span></li>
+                    <li><strong>임세헌 (2025403043)</strong><span>Frontend & Design</span></li>
+                </ul>
+                <p class="version-info">Ver 1.0.0 | © 2025</p>
+            </div>
+            <button onclick="showScreen('screen-intro')" class="btn-back-intro">메인화면으로</button>
+        </div>
+    </section>
+
+    <div class="container" id="app-container" style="display: none;">
+        
+        <header id="main-header">
+            <div class="header-content">
+                <div class="app-kwu-logo" onclick="showScreen('screen-intro')" title="랜딩페이지로 이동">KWU</div>
+
+                <h1>🍚 KW BOB 🍚</h1>
+                
+                <button id="hamburger-btn" onclick="toggleMenu()">
+                    ☰
+                </button>
+            </div>
+            
+            <div id="dropdown-menu" class="dropdown-content">
+                <a href="#" onclick="showScreen('screen-intro')">🏠 첫 화면으로</a>
+                <a href="#" onclick="openEditInfo()">⚙️ 회원정보 수정</a>
+                <a href="#" onclick="toggleDarkMode()">🌙 다크 모드 ON/OFF</a>
+                <a href="#" onclick="resetDailyData()">🗑️ 오늘 기록 초기화</a>
+                <a href="#" onclick="logout()">🚪 로그아웃</a>
+                <a href="#" onclick="toggleMenu()" style="color:#999; border-top:1px solid #eee;">닫기</a>
+            </div>
+        </header>
+
+        <section id="screen-login">
+            <div class="auth-box">
+                <h2 id="auth-title">로그인</h2>
+                <input type="text" id="username" placeholder="이메일 (아이디)">
+                <input type="password" id="password" placeholder="비밀번호 (영문/숫자/특수문자 포함 8자↑)">
+                
+                <div id="signup-fields" style="display: none;">
+                    <hr>
+                    <p class="signup-guide">👇 정확한 분석을 위해 정보를 입력해주세요</p>
+                    
+                    <input type="text" id="nickname" placeholder="닉네임 (예: 광운대호랑이)">
+
+                    <div class="input-group">
+                        <input type="number" id="height" placeholder="키 (cm)">
+                        <input type="number" id="weight" placeholder="몸무게 (kg)">
+                    </div>
+                    <div class="input-group">
+                        <input type="number" id="age" placeholder="나이 (세)">
+                        <select id="gender">
+                            <option value="male">남성</option>
+                            <option value="female">여성</option>
+                        </select>
+                    </div>
+                    <div class="budget-group">
+                        <input type="number" id="budget" placeholder="한 달 식비 예산 (만원)">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="no-budget" onchange="toggleBudgetInput('budget', 'no-budget')"> 예산 상관없음 (무제한)
+                        </label>
+                    </div>
+                    <select id="goal">
+                        <option value="maintain">체중 유지</option>
+                        <option value="lose">체중 감량 (다이어트)</option>
+                        <option value="gain">체중 증가 (벌크업)</option>
+                    </select>
+                </div>
+
+                <button onclick="handleAuthAction()" id="auth-action-btn" class="btn-primary">로그인</button>
+                <p class="toggle-auth">
+                    <span id="auth-msg">계정이 없으신가요?</span>
+                    <a href="#" onclick="toggleAuthMode()" id="auth-toggle-btn">회원가입</a>
+                </p>
+            </div>
+        </section>
+
+        <section id="screen-dashboard" style="display: none;">
+            <div class="header-row">
+                <h3>반갑습니다, <span id="user-name-display">사용자</span>님!</h3>
+            </div>
+
+            <div class="status-grid">
+                <div class="status-card">
+                    <p>목표: <span id="goal-display" style="font-weight:bold; color:#8a0e26;">-</span></p>
+                    <p>BMI: <span id="bmi-display">-</span> (<span id="bmi-status">-</span>)</p>
+                </div>
+                <div class="status-card" id="wallet-card">
+                    <p>💰 남은 예산</p>
+                    <p id="budget-display" style="font-size: 18px; font-weight: bold;">0원</p>
+                </div>
+            </div>
+            
+            <div class="status-card">
+                <p>일일 권장 섭취량: <span id="rec-cal">0</span> kcal</p>
+            </div>
+
+            <div class="status-card highlight">
+                <p>오늘의 섭취량: <span id="current-cal">0</span> / <span id="rec-cal-target">0</span> kcal</p>
+                <div class="progress-bar">
+                    <div id="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="food-log-container">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h4>📝 오늘의 식사 기록</h4>
+                    <button onclick="openReceipt()" class="btn-receipt">🧾 영수증 발급</button>
+                </div>
+                <ul id="food-log-list">
+                    <li class="empty-log">아직 먹은 음식이 없습니다.</li>
+                </ul>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <button onclick="showScreen('screen-recommendation')" class="btn-large">
+                    🍽️ 오늘 뭐 먹지? (메뉴 추천 받기)
+                </button>
+            </div>
+        </section>
+
+        <section id="screen-edit-info" style="display: none;">
+            <button onclick="showScreen('screen-dashboard')" class="btn-back">← 돌아가기</button>
+            <h2>내 정보 수정</h2>
+            <div class="auth-box">
+                <div class="input-group"><label>닉네임</label><input type="text" id="edit-nickname"></div>
+                <div class="input-group"><label>키</label><input type="number" id="edit-height"></div>
+                <div class="input-group"><label>몸무게</label><input type="number" id="edit-weight"></div>
+                <div class="input-group"><label>나이</label><input type="number" id="edit-age"></div>
+                <div class="budget-group">
+                    <div class="input-group"><label>식비</label><input type="number" id="edit-budget"></div>
+                    <label class="checkbox-label"><input type="checkbox" id="edit-no-budget" onchange="toggleBudgetInput('edit-budget', 'edit-no-budget')"> 예산 상관없음</label>
+                </div>
+                <div class="input-group"><label>목표</label><select id="edit-goal"><option value="maintain">체중 유지</option><option value="lose">체중 감량</option><option value="gain">체중 증가</option></select></div>
+                <button onclick="saveEditInfo()" class="btn-primary">수정 완료</button>
+            </div>
+        </section>
+
+        <section id="screen-recommendation" style="display: none;">
+            <button onclick="showScreen('screen-dashboard')" class="btn-back">← 기록화면으로 돌아가기</button>
+            
+            <h2>메뉴 추천</h2>
+            
+            <div id="wallet-guard-msg" style="display:none; background:#ffebee; color:#c62828; padding:10px; border-radius:8px; margin-bottom:10px; font-size:14px;">
+                🚨 <strong>식비 방어 모드 발동!</strong><br>남은 돈이 별로 없어요. 가성비 메뉴만 추천합니다!
+            </div>
+
+            <div class="price-filter">
+                <h4>💰 가격대 선택</h4>
+                <div class="radio-group">
+                    <label><input type="radio" name="price" value="0" checked> 상관없음</label>
+                    <label><input type="radio" name="price" value="1"> 1만원 미만</label>
+                    <label><input type="radio" name="price" value="2"> 1만~1.2만원</label>
+                    <label><input type="radio" name="price" value="3"> 1.2만~1.5만원</label>
+                </div>
+            </div>
+
+            <div class="category-buttons">
+                <button onclick="recommendFood('korean')">한식</button>
+                <button onclick="recommendFood('chinese')">중식</button>
+                <button onclick="recommendFood('western')">양식</button>
+                <button onclick="recommendFood('japanese')">일식</button>
+                <button onclick="recommendFood('snack')">분식</button>
+                <button onclick="recommendFood('cook')">직접 요리</button>
+            </div>
+
+            <div id="recommendation-area" class="recommendation-grid"></div>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <button id="retry-btn" onclick="retryRecommendation()" class="btn-retry" style="display:none;">
+                    🔄 마음에 안 들어요! (다른 메뉴 추천)
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <div id="receipt-modal" class="modal">
+        <div class="modal-content receipt-paper">
+            <span class="close" onclick="closeModal('receipt-modal')">&times;</span>
+            <div id="receipt-content"></div>
+            <div class="receipt-footer">
+                <button onclick="closeModal('receipt-modal')" class="btn-primary">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="recipe-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('recipe-modal')">&times;</span>
+            <h3 id="recipe-title">요리 이름</h3>
+            <div id="recipe-body"></div>
+        </div>
+    </div>
+
+    <script src="script.js?v=final_real_data_v1"></script>
+</body>
+</html>

@@ -119,25 +119,25 @@
                 
                 <div class="input-group">
                     <label>키</label>
-                    <input type="number" id="edit-height" placeholder="키 (cm)">
+                    <input type="number" id="edit-height" placeholder="cm">
                 </div>
                 <div class="input-group">
                     <label>몸무게</label>
-                    <input type="number" id="edit-weight" placeholder="몸무게 (kg)">
+                    <input type="number" id="edit-weight" placeholder="kg">
                 </div>
                 <div class="input-group">
                     <label>나이</label>
-                    <input type="number" id="edit-age" placeholder="나이 (세)">
+                    <input type="number" id="edit-age" placeholder="세">
                 </div>
                 
-                <div class="input-group" style="align-items: flex-start;">
-                    <label style="margin-top: 12px;">식비</label>
-                    <div style="width: 100%;">
-                        <input type="number" id="edit-budget" placeholder="한 달 식비 예산 (만원)">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="edit-no-budget" onchange="toggleBudgetInput('edit-budget', 'edit-no-budget')"> 예산 상관없음
-                        </label>
+                <div class="budget-group">
+                    <div class="input-group">
+                        <label>식비</label>
+                        <input type="number" id="edit-budget" placeholder="한 달 예산 (만원)">
                     </div>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="edit-no-budget" onchange="toggleBudgetInput('edit-budget', 'edit-no-budget')"> 예산 상관없음
+                    </label>
                 </div>
 
                 <div class="input-group">
@@ -227,6 +227,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=final_v6"></script>
+    <script src="script.js?v=final_v7"></script>
 </body>
 </html>

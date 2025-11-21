@@ -150,8 +150,6 @@ body.dark-mode .full-screen-section { background-color: #121212; }
     gap: 20px;
     text-align: center;
 }
-/* 모바일에서는 한 줄로 보이게 할 경우 아래 미디어쿼리 추가 (필요없으면 삭제) */
-/* @media (max-width: 600px) { .feature-grid { grid-template-columns: 1fr; } } */
 
 .feature-card {
     background: #f9f9f9;
@@ -203,3 +201,30 @@ body.dark-mode .member-list li span { color: #999; }
 @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+
+/* 비밀번호 토글 아이콘 스타일 추가 */
+.password-wrapper {
+    position: relative;
+    width: 100%;
+    margin-bottom: 0; /* 기존 input margin 처리를 위해 조정 */
+}
+
+.password-wrapper input {
+    padding-right: 40px; /* 아이콘 공간 확보 */
+}
+
+#toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%; /* 상위 div 기준 중앙 정렬 */
+    transform: translateY(-50%); /* 정확한 수직 중앙 */
+    cursor: pointer;
+    font-size: 18px;
+    color: #888;
+    user-select: none;
+    margin-top: -5px; /* 미세 조정 */
+}
+
+#toggle-password:hover {
+    color: #333;
+}

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KW BOB - 광운대생 식단 추천</title>
+    <title>KW BOB - 광운대생 식단 관리 & 가계부</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -24,8 +24,8 @@
         <div class="hero-overlay"></div>
         <div class="hero-content">
             <h1>KW BOB</h1>
-            <p class="hero-subtitle">광운대생을 위한<br>스마트한 식단 관리 솔루션</p>
-            <p class="hero-desc">오늘 뭐 먹지?<br>지갑 사정도, 칼로리도<br>한 번에 챙겨보세요.</p>
+            <p class="hero-subtitle">광운대생을 위한<br>스마트한 식단 & 식비 관리</p>
+            <p class="hero-desc">오늘 뭐 먹지?<br>칼로리부터 지갑 사정까지<br>캘린더로 한눈에 관리하세요.</p>
             <button onclick="startApp()" class="btn-hero">시작하기</button>
         </div>
     </section>
@@ -34,10 +34,10 @@
         <div class="info-screen-content">
             <h2>💡 주요 기능 소개</h2>
             <div class="feature-grid">
-                <div class="feature-card"><div class="icon">🥗</div><h3>맞춤형 추천</h3><p>BMI와 목표에 맞춰<br>메뉴를 추천합니다.</p></div>
-                <div class="feature-card"><div class="icon">💰</div><h3>식비 방어</h3><p>예산을 설정하고<br>지출을 관리하세요.</p></div>
-                <div class="feature-card"><div class="icon">🧾</div><h3>먹부림 영수증</h3><p>식단을 영수증으로<br>기록하고 공유하세요.</p></div>
-                <div class="feature-card"><div class="icon">🏫</div><h3>학교 앞 맛집</h3><p>광운대 주변 식당<br>데이터를 제공합니다.</p></div>
+                <div class="feature-card"><div class="icon">🥗</div><h3>맞춤형 추천</h3><p>BMI와 목표에 맞춰<br>최적의 메뉴를 추천합니다.</p></div>
+                <div class="feature-card"><div class="icon">📅</div><h3>식비 가계부</h3><p>달력으로 월별 지출과<br>식사 기록을 관리하세요.</p></div>
+                <div class="feature-card"><div class="icon">💰</div><h3>식비 방어</h3><p>예산이 부족할 때<br>가성비 메뉴를 찾아줍니다.</p></div>
+                <div class="feature-card"><div class="icon">🧾</div><h3>먹부림 영수증</h3><p>오늘의 식단을 영수증<br>성적표로 확인하세요.</p></div>
             </div>
             <button onclick="showScreen('screen-intro')" class="btn-back-intro">메인화면으로</button>
         </div>
@@ -48,8 +48,8 @@
             <h2>도움말 ❓</h2>
             <div class="help-steps">
                 <div class="step"><span class="step-num">1</span><h3>정보 입력</h3><p>키, 몸무게, 예산을 입력하고 가입하세요.</p></div>
-                <div class="step"><span class="step-num">2</span><h3>메뉴 추천</h3><p>원하는 카테고리를 선택하여 추천받으세요.</p></div>
-                <div class="step"><span class="step-num">3</span><h3>기록 관리</h3><p>'먹기' 버튼으로 기록하고 상태를 확인하세요.</p></div>
+                <div class="step"><span class="step-num">2</span><h3>메뉴 추천 & 기록</h3><p>추천 메뉴를 선택하고 '먹기'를 누르면 자동 저장됩니다.</p></div>
+                <div class="step"><span class="step-num">3</span><h3>가계부 확인</h3><p>메뉴에서 '식비 가계부'를 열어 월별 지출을 관리하세요.</p></div>
             </div>
             <button onclick="showScreen('screen-intro')" class="btn-back-intro">메인화면으로</button>
         </div>
@@ -65,7 +65,7 @@
                     <li><strong>김승일 (2025403042)</strong><span>Backend, Frontend & Planning</span></li>
                     <li><strong>임세헌 (2025403043)</strong><span>Design</span></li>
                 </ul>
-                <p class="version-info">Ver 1.0.0 | © 2025</p>
+                <p class="version-info">Ver 1.1.0 (Ledger Added) | © 2025</p>
             </div>
             <button onclick="showScreen('screen-intro')" class="btn-back-intro">메인화면으로</button>
         </div>
@@ -85,7 +85,8 @@
             </div>
             
             <div id="dropdown-menu" class="dropdown-content">
-                <a href="#" onclick="showScreen('screen-intro')">🏠 첫 화면으로</a>
+                <a href="#" onclick="showScreen('screen-dashboard')">🏠 홈 (대시보드)</a>
+                <a href="#" onclick="openLedger()">📅 식비 가계부</a>
                 <a href="#" onclick="openEditInfo()">⚙️ 회원정보 수정</a>
                 <a href="#" onclick="toggleDarkMode()">🌙 다크 모드 ON/OFF</a>
                 <a href="#" onclick="resetDailyData()">🗑️ 오늘 기록 초기화</a>
@@ -186,6 +187,38 @@
             </div>
         </section>
 
+        <section id="screen-ledger" style="display: none;">
+            <button onclick="showScreen('screen-dashboard')" class="btn-back">← 홈으로</button>
+            <h2>📅 식비 가계부</h2>
+            
+            <div class="ledger-summary">
+                <div class="ledger-item">
+                    <span>이번 달 총 지출</span>
+                    <strong id="month-total-spend" style="color:#8a0e26; font-size:18px;">0원</strong>
+                </div>
+                <div class="ledger-item">
+                    <span>기록된 식사</span>
+                    <strong id="month-total-count">0끼</strong>
+                </div>
+            </div>
+
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <button onclick="changeMonth(-1)">◀</button>
+                    <h3 id="calendar-month-title">2025. 05</h3>
+                    <button onclick="changeMonth(1)">▶</button>
+                </div>
+                <div class="calendar-grid-header">
+                    <div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div>
+                </div>
+                <div id="calendar-grid" class="calendar-grid">
+                    </div>
+            </div>
+            <p style="text-align:center; font-size:12px; color:#888; margin-top:10px;">
+                * 날짜를 클릭하면 상세 영수증을 볼 수 있습니다.
+            </p>
+        </section>
+
         <section id="screen-edit-info" style="display: none;">
             <button onclick="showScreen('screen-dashboard')" class="btn-back">← 돌아가기</button>
             <h2>내 정보 수정</h2>
@@ -259,6 +292,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=v37"></script>
+    <script src="script.js?v=v38"></script>
 </body>
 </html>

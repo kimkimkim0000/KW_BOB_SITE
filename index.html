@@ -36,7 +36,7 @@
             <div class="feature-grid">
                 <div class="feature-card"><div class="icon">🥗</div><h3>맞춤형 추천</h3><p>BMI와 목표에 맞춰<br>최적의 메뉴를 추천합니다.</p></div>
                 <div class="feature-card"><div class="icon">📅</div><h3>식비 가계부</h3><p>달력으로 월별 지출과<br>식사 기록을 관리하세요.</p></div>
-                <div class="feature-card"><div class="icon">💰</div><h3>식비 방어</h3><p>예산이 부족할 때<br>가성비 메뉴를 찾아줍니다.</p></div>
+                <div class="feature-card"><div class="icon">✏️</div><h3>직접 기록</h3><p>편의점, 학식 등<br>모든 메뉴를 기록하세요.</p></div>
                 <div class="feature-card"><div class="icon">🧾</div><h3>먹부림 영수증</h3><p>오늘의 식단을 영수증<br>성적표로 확인하세요.</p></div>
             </div>
             <button onclick="showScreen('screen-intro')" class="btn-back-intro">메인화면으로</button>
@@ -48,7 +48,7 @@
             <h2>도움말 ❓</h2>
             <div class="help-steps">
                 <div class="step"><span class="step-num">1</span><h3>정보 입력</h3><p>키, 몸무게, 예산을 입력하고 가입하세요.</p></div>
-                <div class="step"><span class="step-num">2</span><h3>메뉴 추천 & 기록</h3><p>추천 메뉴를 선택하고 '먹기'를 누르면 자동 저장됩니다.</p></div>
+                <div class="step"><span class="step-num">2</span><h3>메뉴 기록</h3><p>추천을 받거나, '직접 입력'으로 나만의 메뉴를 기록하세요.</p></div>
                 <div class="step"><span class="step-num">3</span><h3>가계부 확인</h3><p>메뉴에서 '식비 가계부'를 열어 월별 지출을 관리하세요.</p></div>
             </div>
             <button onclick="showScreen('screen-intro')" class="btn-back-intro">메인화면으로</button>
@@ -65,7 +65,7 @@
                     <li><strong>김승일 (2025403042)</strong><span>Backend, Frontend & Planning</span></li>
                     <li><strong>임세헌 (2025403043)</strong><span>Design</span></li>
                 </ul>
-                <p class="version-info">Ver 1.1.0 (Ledger Added) | © 2025</p>
+                <p class="version-info">Ver 1.2.0 (Manual Input Added) | © 2025</p>
             </div>
             <button onclick="showScreen('screen-intro')" class="btn-back-intro">메인화면으로</button>
         </div>
@@ -173,7 +173,10 @@
             <div class="food-log-container">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <h4>📝 오늘의 식사 기록</h4>
-                    <button onclick="openReceipt()" class="btn-receipt">🧾 영수증 발급</button>
+                    <div>
+                        <button onclick="openManualInput()" class="btn-small" style="background-color:#8a0e26; margin-right:5px;">✏️ 직접 입력</button>
+                        <button onclick="openReceipt()" class="btn-receipt">🧾 영수증 발급</button>
+                    </div>
                 </div>
                 <ul id="food-log-list">
                     <li class="empty-log">아직 먹은 음식이 없습니다.</li>
@@ -284,6 +287,23 @@
         </div>
     </div>
 
+    <div id="manual-input-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('manual-input-modal')">&times;</span>
+            <h3>✏️ 메뉴 직접 기록</h3>
+            <p style="font-size:13px; color:#666; margin-bottom:15px;">편의점, 학식, 카페 등 추천 목록에 없는 메뉴를 기록하세요.</p>
+            
+            <div class="auth-box" style="padding:0;">
+                <input type="text" id="manual-name" placeholder="메뉴 이름 (예: 편의점 도시락)">
+                <div class="input-group">
+                    <input type="number" id="manual-kcal" placeholder="칼로리 (kcal)">
+                    <input type="number" id="manual-price" placeholder="가격 (원)">
+                </div>
+                <button onclick="submitManualInput()" class="btn-primary">기록하기</button>
+            </div>
+        </div>
+    </div>
+
     <div id="recipe-modal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('recipe-modal')">&times;</span>
@@ -292,6 +312,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=v39"></script>
+    <script src="script.js?v=v40"></script>
 </body>
 </html>

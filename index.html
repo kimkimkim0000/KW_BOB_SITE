@@ -98,7 +98,11 @@
             <div class="auth-box">
                 <h2 id="auth-title">로그인</h2>
                 <input type="text" id="username" placeholder="이메일 (아이디)">
-                <input type="password" id="password" placeholder="비밀번호 (영문/숫자/특수문자 포함 8자↑)">
+                
+                <div class="password-wrapper">
+                    <input type="password" id="password" placeholder="비밀번호 (영문/숫자/특수문자 포함 8자↑)">
+                    <span id="toggle-password" onclick="togglePasswordView()">👁️</span>
+                </div>
                 
                 <div id="signup-fields" style="display: none;">
                     <hr>
@@ -255,6 +259,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=v36"></script>
+    <script src="script.js?v=v37"></script>
 </body>
 </html>

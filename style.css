@@ -202,29 +202,62 @@ body.dark-mode .member-list li span { color: #999; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
 
-/* 비밀번호 토글 아이콘 스타일 추가 */
+/* 비밀번호 토글 아이콘 스타일 */
 .password-wrapper {
     position: relative;
     width: 100%;
-    margin-bottom: 0; /* 기존 input margin 처리를 위해 조정 */
+    margin-bottom: 0;
 }
-
-.password-wrapper input {
-    padding-right: 40px; /* 아이콘 공간 확보 */
-}
-
+.password-wrapper input { padding-right: 40px; }
 #toggle-password {
-    position: absolute;
-    right: 10px;
-    top: 50%; /* 상위 div 기준 중앙 정렬 */
-    transform: translateY(-50%); /* 정확한 수직 중앙 */
-    cursor: pointer;
-    font-size: 18px;
-    color: #888;
-    user-select: none;
-    margin-top: -5px; /* 미세 조정 */
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    cursor: pointer; font-size: 18px; color: #888; user-select: none; margin-top: -5px;
 }
+#toggle-password:hover { color: #333; }
 
-#toggle-password:hover {
-    color: #333;
+/* 가계부 캘린더 스타일 (NEW) */
+.ledger-summary {
+    display: flex; gap: 15px; margin-bottom: 20px;
 }
+.ledger-item {
+    flex: 1; background: #fff3f5; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #ffcdd2;
+}
+body.dark-mode .ledger-item { background: #2d1a1a; border-color: #444; }
+.ledger-item span { display: block; font-size: 13px; color: #666; margin-bottom: 5px; }
+body.dark-mode .ledger-item span { color: #aaa; }
+
+.calendar-container {
+    background: #fff; border-radius: 15px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+body.dark-mode .calendar-container { background: #2d2d2d; border: 1px solid #444; }
+
+.calendar-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;
+}
+.calendar-header h3 { margin: 0; font-size: 18px; color: #333; }
+body.dark-mode .calendar-header h3 { color: #fff; }
+.calendar-header button {
+    background: none; border: none; font-size: 18px; cursor: pointer; color: #555; padding: 5px 10px;
+}
+body.dark-mode .calendar-header button { color: #ccc; }
+
+.calendar-grid-header {
+    display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 13px; font-weight: bold; color: #888; margin-bottom: 10px;
+}
+.calendar-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px;
+}
+.calendar-day {
+    aspect-ratio: 1; border-radius: 8px; background: #f9f9f9; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; font-size: 12px; cursor: pointer; padding-top: 5px; transition: 0.2s; position: relative;
+}
+body.dark-mode .calendar-day { background: #333; color: #eee; }
+.calendar-day:hover { background: #eee; }
+body.dark-mode .calendar-day:hover { background: #444; }
+.calendar-day.empty { background: transparent; cursor: default; }
+
+.cal-date { font-weight: bold; margin-bottom: 2px; }
+.cal-spend { font-size: 10px; color: #555; }
+body.dark-mode .cal-spend { color: #ccc; }
+.cal-status { width: 6px; height: 6px; border-radius: 50%; background: #ddd; margin-top: 4px; }
+.cal-status.good { background: #4CAF50; }
+.cal-status.bad { background: red; }

@@ -5,13 +5,16 @@ let userState = {
     recCalories: 0, currentCalories: 0,
     monthlyBudget: 0, currentSpend: 0,
     eatenLogs: [], lastDate: "",
+    history: {}, // { "YYYY-MM-DD": { logs: [], totalKcal: 0, totalSpend: 0 } }
     receiptComment: ""
 };
 
 let lastSelectedCategory = ''; 
 let shownFoodNames = [];
+let currentYear = new Date().getFullYear();
+let currentMonth = new Date().getMonth();
 
-// 2. 음식 데이터베이스 (보내주신 PDF 전체 데이터 반영)
+// 2. 음식 데이터베이스
 const foodDatabase = {
     'korean': [
         { restaurant: "김밥천국", name: "순두부백반", price: 6500, kcal: 430 },
@@ -250,7 +253,8 @@ function showScreen(id, mode) {
     
     ['screen-features', 'screen-help', 'screen-creators'].forEach(s => setDisplay(s, 'none'));
 
-    ['screen-login','screen-dashboard','screen-recommendation', 'screen-edit-info'].forEach(s => {
+    // screen-ledger 추가됨
+    ['screen-login','screen-dashboard','screen-recommendation', 'screen-edit-info', 'screen-ledger'].forEach(s => {
         setDisplay(s, s === id ? 'block' : 'none');
     });
     
@@ -271,7 +275,7 @@ function showScreen(id, mode) {
             isSignupMode = true;
             toggleAuthMode(); 
         }
-    } else if (id === 'screen-dashboard') {
+    } else if (id === 'screen-dashboard' || id === 'screen-ledger') {
         if(hamburger) hamburger.style.display = 'block';
     } else {
         if(hamburger) hamburger.style.display = 'block';
@@ -322,6 +326,13 @@ function resetDailyData() {
         userState.currentSpend = 0;
         userState.eatenLogs = [];
         userState.receiptComment = ""; 
+
+        // 오늘 날짜 히스토리도 초기화
+        const todayKey = new Date().toLocaleDateString();
+        if(userState.history && userState.history[todayKey]) {
+            delete userState.history[todayKey];
+        }
+
         saveUserData();
         updateDashboardUI();
         alert("초기화되었습니다.");
@@ -378,7 +389,8 @@ function handleAuthAction() {
             password: pw, nickname: nick,
             height: h, weight: w, age: a, gender: g, goal: goal,
             monthlyBudget: parseInt(budgetVal), currentSpend: 0,
-            currentCalories: 0, eatenLogs: [], lastDate: "", receiptComment: ""
+            currentCalories: 0, eatenLogs: [], lastDate: "", 
+            history: {}, receiptComment: ""
         };
         localStorage.setItem(id, JSON.stringify(userData));
         alert("가입 완료!"); 
@@ -391,7 +403,16 @@ function handleAuthAction() {
         const data = JSON.parse(dataStr);
         if(data.password === pw) {
             const today = new Date().toLocaleDateString();
-            userState = { ...userState, isLoggedIn:true, username:id, ...data, height:+data.height, weight:+data.weight, age:+data.age };
+            userState = { 
+                ...userState, 
+                isLoggedIn:true, 
+                username:id, 
+                ...data, 
+                height:+data.height, 
+                weight:+data.weight, 
+                age:+data.age,
+                history: data.history || {} // 구버전 호환
+            };
             
             if (userState.lastDate !== today) {
                 userState.currentCalories = 0;
@@ -499,7 +520,13 @@ function updateDashboardUI() {
     } else {
         const remain = userState.monthlyBudget - userState.currentSpend;
         budgetEl.innerText = remain.toLocaleString() + "원";
-        budgetEl.style.color = remain < 30000 ? "red" : "#333";
+        
+        // 다크모드 대응 로직 수정
+        if (remain < 30000) {
+            budgetEl.style.color = "#ff4444"; 
+        } else {
+            budgetEl.style.color = ""; 
+        }
     }
 
     const list = document.getElementById('food-log-list');
@@ -521,7 +548,7 @@ function recommendFood(category) {
     let list = foodDatabase[category];
     const pPrice = document.querySelector('input[name="price"]:checked').value;
     
-    // Cook 카테고리는 가격 필터 무시 (항상 보여줌)
+    // Cook 카테고리는 가격 필터 무시
     if(category !== 'cook' && pPrice !== "0") {
         list = list.filter(f => {
             if(pPrice==="1") return f.price < 10000; // 1만원 미만
@@ -537,17 +564,14 @@ function recommendFood(category) {
 
     if (isLowBudget) list = list.filter(f => f.price <= 8000);
 
-    // 칼로리 추천 로직 수정: 오차 범위 ±100kcal 적용
+    // 오차 범위 ±100kcal 적용
     const target = Math.round(userState.recCalories/3);
     
     if(userState.goal === 'lose') {
-        // 다이어트: 목표보다 낮으면 좋지만, 목표 + 100kcal까지는 허용
         list = list.filter(f => f.kcal <= target + 100);
     } else if(userState.goal === 'gain') {
-        // 벌크업: 목표보다 높으면 좋지만, 목표 - 100kcal까지는 허용
         list = list.filter(f => f.kcal >= target - 100);
     } else {
-        // 유지: 목표 기준 ±100kcal 범위 내
         list = list.filter(f => f.kcal >= target - 100 && f.kcal <= target + 100);
     }
 
@@ -575,7 +599,6 @@ function recommendFood(category) {
         const div = document.createElement('div');
         div.className = 'food-item';
         
-        // 추천 기준 충족 시 초록색 강조 (오차범위 로직 반영)
         let isRecommended = false;
         if (userState.goal === 'lose' && food.kcal <= target + 100) isRecommended = true;
         else if (userState.goal === 'gain' && food.kcal >= target - 100) isRecommended = true;
@@ -584,7 +607,7 @@ function recommendFood(category) {
         let color = isRecommended ? '#4CAF50' : '#666';
         let recipeBtn = (category==='cook'&&food.recipe) ? `<button class="recipe-btn" onclick="showRecipe('${food.name}', '${food.recipe}')">레시피</button>` : '';
         
-        // 모든 카테고리(요리 포함)에서 가격 표시
+        // 가격 표시
         let priceDisplay = `<span class="food-meta">${food.price.toLocaleString()}원</span>`;
 
         div.innerHTML = `
@@ -608,6 +631,17 @@ function addFood(kcal, name, price) {
         userState.currentSpend += price;
         userState.eatenLogs.push({ name: name, kcal: kcal, price: price });
         
+        // [가계부용] History에 데이터 저장
+        const todayKey = new Date().toLocaleDateString();
+        if(!userState.history) userState.history = {};
+        if(!userState.history[todayKey]) {
+            userState.history[todayKey] = { logs: [], totalKcal: 0, totalSpend: 0 };
+        }
+        
+        userState.history[todayKey].logs.push({ name: name, kcal: kcal, price: price });
+        userState.history[todayKey].totalKcal += kcal;
+        userState.history[todayKey].totalSpend += price;
+
         saveUserData();
         updateDashboardUI();
         showScreen('screen-dashboard');
@@ -627,11 +661,16 @@ function saveReceiptComment(val) {
     saveUserData(); 
 }
 
-function openReceipt() {
+function openReceipt(dateKey = null, customData = null) {
     const modal = document.getElementById('receipt-modal');
     const content = document.getElementById('receipt-content');
-    const today = new Date().toLocaleDateString();
     
+    // 기본은 오늘 데이터, 인자가 있으면 그 데이터 사용 (가계부)
+    const today = dateKey ? dateKey : new Date().toLocaleDateString();
+    const logs = customData ? customData.logs : userState.eatenLogs;
+    const totalKcal = customData ? customData.totalKcal : userState.currentCalories;
+    const totalSpend = customData ? customData.totalSpend : userState.currentSpend;
+
     let html = `
         <div class="receipt-header">
             <h2>KW BOB RECEIPT</h2>
@@ -640,10 +679,10 @@ function openReceipt() {
         <div class="receipt-body">
     `;
     
-    if (userState.eatenLogs.length === 0) {
+    if (!logs || logs.length === 0) {
         html += `<p style="text-align:center;">기록된 식사가 없습니다.</p>`;
     } else {
-        userState.eatenLogs.forEach(log => {
+        logs.forEach(log => {
             html += `
                 <div class="receipt-item">
                     <span>${log.name}</span>
@@ -653,19 +692,19 @@ function openReceipt() {
         });
     }
 
-    const diff = userState.currentCalories - userState.recCalories;
+    const diff = totalKcal - userState.recCalories;
     let grade = "A+";
     let message = "완벽해요! 👍";
 
-    if (userState.currentCalories === 0) {
+    if (totalKcal === 0) {
         grade = "NONE";
-        message = "아직 식사 전이군요?";
+        message = "식사 기록이 없습니다.";
     } else if (diff > 500) {
         grade = "F";
-        message = "오늘은 좀 과식을 한 것 같아요 🐷";
+        message = "과식 주의 🐷";
     } else if (diff < -500) {
         grade = "C"; 
-        message = "오늘은 당신은 소식좌인가요? 🐜";
+        message = "너무 적게 드셨네요 🐜";
     } else {
         const percentDiff = Math.abs(diff) / userState.recCalories * 100;
         if (percentDiff < 10) {
@@ -680,23 +719,27 @@ function openReceipt() {
         <div class="receipt-divider"></div>
         <div class="receipt-total">
             <span>Total Kcal</span>
-            <span>${userState.currentCalories}</span>
+            <span>${totalKcal}</span>
         </div>
         <div class="receipt-total">
             <span>Total Price</span>
-            <span>${userState.currentSpend.toLocaleString()} 원</span>
+            <span>${totalSpend.toLocaleString()} 원</span>
         </div>
         <div class="receipt-grade">
-            <h3>오늘의 성적표</h3>
+            <h3>성적표</h3>
             <span style="color:${grade==='F'?'red':(grade==='A+'?'#4CAF50':'#333')}">${grade}</span>
             <p>${message}</p>
         </div>
-        <input type="text" class="receipt-comment" 
-               placeholder="한 줄 문구 (예: 오늘 음식 나이스 초이스)" 
-               value="${userState.receiptComment || ''}" 
-               oninput="saveReceiptComment(this.value)">
     `;
     
+    // 오늘 날짜일 때만 코멘트 입력 가능
+    if (!dateKey || dateKey === new Date().toLocaleDateString()) {
+         html += `<input type="text" class="receipt-comment" 
+               placeholder="한 줄 문구 (예: 오늘 음식 나이스 초이스)" 
+               value="${userState.receiptComment || ''}" 
+               oninput="saveReceiptComment(this.value)">`;
+    }
+
     content.innerHTML = html;
     modal.style.display = 'block';
 }
@@ -707,7 +750,6 @@ function showRecipe(t, c) {
     document.getElementById('recipe-modal').style.display = 'block';
 }
 
-// 비밀번호 보기/숨기기 토글 함수
 function togglePasswordView() {
     const pwInput = document.getElementById('password');
     const icon = document.getElementById('toggle-password');
@@ -719,4 +761,71 @@ function togglePasswordView() {
         pwInput.type = 'password';
         icon.innerText = '👁️';
     }
+}
+
+// --- 가계부 기능 (NEW) ---
+function openLedger() {
+    toggleMenu();
+    showScreen('screen-ledger');
+    renderCalendar(currentYear, currentMonth);
+}
+
+function changeMonth(delta) {
+    currentMonth += delta;
+    if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+    if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+    renderCalendar(currentYear, currentMonth);
+}
+
+function renderCalendar(year, month) {
+    const grid = document.getElementById('calendar-grid');
+    const title = document.getElementById('calendar-month-title');
+    
+    title.innerText = `${year}. ${(month + 1).toString().padStart(2, '0')}`;
+    grid.innerHTML = "";
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const lastDate = new Date(year, month + 1, 0).getDate();
+    
+    let monthlySpend = 0;
+    let monthlyCount = 0;
+
+    // 빈 칸 채우기
+    for(let i=0; i<firstDay; i++) {
+        const div = document.createElement('div');
+        div.className = 'calendar-day empty';
+        grid.appendChild(div);
+    }
+
+    for(let d=1; d<=lastDate; d++) {
+        const dateKey = new Date(year, month, d).toLocaleDateString();
+        const data = userState.history && userState.history[dateKey];
+        
+        const div = document.createElement('div');
+        div.className = 'calendar-day';
+        
+        let content = `<span class="cal-date">${d}</span>`;
+        
+        if (data && data.totalSpend > 0) {
+            content += `<span class="cal-spend">${(data.totalSpend/10000).toFixed(1)}만</span>`;
+            
+            // 칼로리 상태 점 표시
+            const diff = data.totalKcal - userState.recCalories;
+            const isBad = Math.abs(diff) > 500; // 500kcal 이상 차이나면 빨강
+            content += `<div class="cal-status ${isBad?'bad':'good'}"></div>`;
+
+            // 월 통계 집계
+            monthlySpend += data.totalSpend;
+            monthlyCount += 1; // 끼니 수가 아니라 기록된 날짜 수
+
+            div.onclick = () => openReceipt(dateKey, data);
+        }
+
+        div.innerHTML = content;
+        grid.appendChild(div);
+    }
+
+    // 월 통계 업데이트
+    document.getElementById('month-total-spend').innerText = monthlySpend.toLocaleString() + "원";
+    document.getElementById('month-total-count').innerText = monthlyCount + "일 기록";
 }

@@ -521,7 +521,7 @@ function recommendFood(category) {
     let list = foodDatabase[category];
     const pPrice = document.querySelector('input[name="price"]:checked').value;
     
-    // [수정됨] cook 카테고리는 가격 필터 무시 (항상 보여줌)
+    // Cook 카테고리는 가격 필터 무시 (항상 보여줌)
     if(category !== 'cook' && pPrice !== "0") {
         list = list.filter(f => {
             if(pPrice==="1") return f.price < 10000; // 1만원 미만
@@ -537,19 +537,29 @@ function recommendFood(category) {
 
     if (isLowBudget) list = list.filter(f => f.price <= 8000);
 
+    // 칼로리 추천 로직 수정: 오차 범위 ±100kcal 적용
     const target = Math.round(userState.recCalories/3);
-    if(userState.goal==='lose') list = list.filter(f => f.kcal <= target);
-    else if(userState.goal==='gain') list = list.filter(f => f.kcal >= target);
+    
+    if(userState.goal === 'lose') {
+        // 다이어트: 목표보다 낮으면 좋지만, 목표 + 100kcal까지는 허용
+        list = list.filter(f => f.kcal <= target + 100);
+    } else if(userState.goal === 'gain') {
+        // 벌크업: 목표보다 높으면 좋지만, 목표 - 100kcal까지는 허용
+        list = list.filter(f => f.kcal >= target - 100);
+    } else {
+        // 유지: 목표 기준 ±100kcal 범위 내
+        list = list.filter(f => f.kcal >= target - 100 && f.kcal <= target + 100);
+    }
 
     let available = list.filter(f => !shownFoodNames.includes(f.name));
     const container = document.getElementById('recommendation-area');
     
-    let msg = userState.goal==='lose' ? `(목표: ${target}kcal ↓)` : (userState.goal==='gain' ? `(목표: ${target}kcal ↑)` : "(균형)");
+    let msg = userState.goal==='lose' ? `(권장: ${target}kcal ↓)` : (userState.goal==='gain' ? `(권장: ${target}kcal ↑)` : `(권장: ${target}kcal ±100)`);
     container.innerHTML = `<h3>'${category}' 결과 <span style="font-size:14px;color:#666">${msg}</span></h3>`;
 
     if(available.length === 0) {
         if(list.length === 0) {
-            container.innerHTML += `<p>조건에 맞는 음식이 없습니다.</p>`;
+            container.innerHTML += `<p>조건에 맞는 음식이 없습니다.<br>다른 카테고리나 가격대를 선택해보세요.</p>`;
             document.getElementById('retry-btn').style.display = 'none';
         } else {
             alert("모든 메뉴를 다 보셨습니다! 다시 처음부터 추천합니다.");
@@ -564,11 +574,18 @@ function recommendFood(category) {
     selected.forEach(food => {
         const div = document.createElement('div');
         div.className = 'food-item';
-        let color = (userState.goal!=='maintain' && ((userState.goal==='lose'&&food.kcal<=target)||(userState.goal==='gain'&&food.kcal>=target))) ? '#4CAF50' : '#666';
+        
+        // 추천 기준 충족 시 초록색 강조 (오차범위 로직 반영)
+        let isRecommended = false;
+        if (userState.goal === 'lose' && food.kcal <= target + 100) isRecommended = true;
+        else if (userState.goal === 'gain' && food.kcal >= target - 100) isRecommended = true;
+        else if (userState.goal === 'maintain' && food.kcal >= target - 100 && food.kcal <= target + 100) isRecommended = true;
+
+        let color = isRecommended ? '#4CAF50' : '#666';
         let recipeBtn = (category==='cook'&&food.recipe) ? `<button class="recipe-btn" onclick="showRecipe('${food.name}', '${food.recipe}')">레시피</button>` : '';
         
-        // [수정됨] 요리(cook) 카테고리일 경우 가격 표시 안 함
-        let priceDisplay = (category === 'cook') ? '' : `<span class="food-meta">${food.price.toLocaleString()}원</span>`;
+        // 모든 카테고리(요리 포함)에서 가격 표시
+        let priceDisplay = `<span class="food-meta">${food.price.toLocaleString()}원</span>`;
 
         div.innerHTML = `
             <div class="food-info">
@@ -688,4 +705,18 @@ function showRecipe(t, c) {
     document.getElementById('recipe-title').innerText = t;
     document.getElementById('recipe-body').innerHTML = c;
     document.getElementById('recipe-modal').style.display = 'block';
+}
+
+// 비밀번호 보기/숨기기 토글 함수
+function togglePasswordView() {
+    const pwInput = document.getElementById('password');
+    const icon = document.getElementById('toggle-password');
+    
+    if (pwInput.type === 'password') {
+        pwInput.type = 'text';
+        icon.innerText = '🔓';
+    } else {
+        pwInput.type = 'password';
+        icon.innerText = '👁️';
+    }
 }

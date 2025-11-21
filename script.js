@@ -306,8 +306,10 @@ window.onclick = function(event) {
     }
     const m1 = document.getElementById('receipt-modal');
     const m2 = document.getElementById('recipe-modal');
+    const m3 = document.getElementById('manual-input-modal');
     if (event.target == m1) m1.style.display = 'none';
     if (event.target == m2) m2.style.display = 'none';
+    if (event.target == m3) m3.style.display = 'none';
 }
 
 function openAbout() {
@@ -828,4 +830,29 @@ function renderCalendar(year, month) {
     // 월 통계 업데이트
     document.getElementById('month-total-spend').innerText = monthlySpend.toLocaleString() + "원";
     document.getElementById('month-total-count').innerText = monthlyCount + "일 기록";
+}
+
+// --- 직접 입력 기능 (NEW) ---
+function openManualInput() {
+    document.getElementById('manual-input-modal').style.display = 'block';
+}
+
+function submitManualInput() {
+    const name = document.getElementById('manual-name').value;
+    const kcal = parseInt(document.getElementById('manual-kcal').value);
+    const price = parseInt(document.getElementById('manual-price').value);
+
+    if(!name || isNaN(kcal) || isNaN(price)) {
+        alert("모든 항목을 정확히 입력해주세요.");
+        return;
+    }
+
+    // addFood 함수 재활용 (가계부/영수증 자동 반영)
+    addFood(kcal, name, price);
+
+    // 입력창 초기화 및 닫기
+    document.getElementById('manual-name').value = "";
+    document.getElementById('manual-kcal').value = "";
+    document.getElementById('manual-price').value = "";
+    closeModal('manual-input-modal');
 }
